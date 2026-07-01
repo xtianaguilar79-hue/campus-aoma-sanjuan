@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Campus Virtual AOMA Seccional San Juan - Capacitación para delegados y dirigentes gremiales" />
+<title>Campus Virtual AOMA San Juan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#0b3d91;
+    --primary-light:#1e5fd1;
+    --accent:#f5b301;
+    --accent-dark:#d99a00;
+    --bg:#f4f7fc;
+    --card:#ffffff;
+    --text:#1a2238;
+    --muted:#6b7280;
+    --success:#10b981;
+    --danger:#ef4444;
+    --border:rgba(11,61,145,.12);
+    --shadow:0 10px 30px rgba(11,61,145,.08);
+    --shadow-lg:0 20px 60px rgba(11,61,145,.15);
+    --gradient:linear-gradient(135deg,#0b3d91 0%,#1e5fd1 50%,#3b82f6 100%);
+    --gradient-accent:linear-gradient(135deg,#f5b301 0%,#fbbf24 100%);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    min-height:100vh;
+  }
+  /* ============ LOGIN ============ */
+  .login-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--gradient);
+    position:relative;
+    overflow:hidden;
+    padding:20px;
+  }
+  .login-screen::before{
+    content:'';
+    position:absolute;
+    width:600px;height:600px;
+    background:radial-gradient(circle,rgba(245,179,1,.3),transparent 70%);
+    top:-200px;right:-200px;
+    border-radius:50%;
+  }
+  .login-screen::after{
+    content:'';
+    position:absolute;
+    width:500px;height:500px;
+    background:radial-gradient(circle,rgba(255,255,255,.1),transparent 70%);
+    bottom:-150px;left:-150px;
+    border-radius:50%;
+  }
+  .login-card{
+    background:rgba(255,255,255,.98);
+    backdrop-filter:blur(20px);
+    border-radius:24px;
+    padding:48px 40px;
+    width:100%;
+    max-width:440px;
+    box-shadow:var(--shadow-lg);
+    position:relative;
+    z-index:1;
+    animation:slideUp .6s ease;
+  }
+  @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .login-logo{
+    width:80px;height:80px;
+    background:var(--gradient);
+    border-radius:20px;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 20px;
+    font-size:36px;
+    box-shadow:0 10px 30px rgba(11,61,145,.3);
+  }
+  .login-card h1{
+    font-size:26px;font-weight:800;
+    text-align:center;margin-bottom:6px;
+    color:var(--primary);
+  }
+  .login-card .subtitle{
+    text-align:center;color:var(--muted);
+    margin-bottom:32px;font-size:14px;
+  }
+  .form-group{margin-bottom:18px}
+  .form-group label{
+    display:block;font-size:13px;font-weight:600;
+    margin-bottom:8px;color:var(--text);
+  }
+  .form-group input{
+    width:100%;padding:14px 16px;
+    border:2px solid var(--border);
+    border-radius:12px;
+    font-size:15px;font-family:inherit;
+    transition:all .2s;
+    background:#fafbff;
+  }
+  .form-group input:focus{
+    outline:none;border-color:var(--primary);
+    background:#fff;
+    box-shadow:0 0 0 4px rgba(11,61,145,.1);
+  }
+  .btn{
+    width:100%;padding:14px;
+    background:var(--gradient);
+    color:#fff;border:none;border-radius:12px;
+    font-size:15px;font-weight:600;
+    cursor:pointer;transition:all .2s;
+    font-family:inherit;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(11,61,145,.3)}
+  .btn:active{transform:translateY(0)}
+  .btn-accent{background:var(--gradient-accent);color:#1a2238}
+  .btn-outline{background:transparent;color:var(--primary);border:2px solid var(--primary)}
+  .login-error{
+    background:#fef2f2;color:var(--danger);
+    padding:12px;border-radius:10px;
+    font-size:13px;margin-bottom:16px;
+    display:none;text-align:center;
+  }
+  .login-hint{
+    margin-top:20px;padding:14px;
+    background:#eff6ff;border-radius:10px;
+    font-size:12px;color:var(--primary);
+    text-align:center;
+  }
+  .login-hint strong{display:block;margin-bottom:4px}
+
+  /* ============ APP ============ */
+  .app{display:none}
+  .app.active{display:block}
+  .login-screen.hidden{display:none}
+
+  /* Header */
+  header{
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    position:sticky;top:0;z-index:100;
+    box-shadow:0 2px 10px rgba(0,0,0,.03);
+  }
+  .header-inner{
+    max-width:1400px;margin:0 auto;
+    padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:20px;
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-icon{
+    width:44px;height:44px;
+    background:var(--gradient);
+    border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;
+  }
+  .brand-text h2{font-size:16px;font-weight:800;color:var(--primary);line-height:1.2}
+  .brand-text span{font-size:11px;color:var(--muted);font-weight:500}
+  .user-menu{display:flex;align-items:center;gap:12px}
+  .user-badge{
+    display:flex;align-items:center;gap:10px;
+    padding:6px 12px 6px 6px;
+    background:#f4f7fc;border-radius:30px;
+  }
+  .user-avatar{
+    width:32px;height:32px;border-radius:50%;
+    background:var(--gradient-accent);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:var(--primary);font-size:14px;
+  }
+  .user-badge span{font-size:13px;font-weight:600}
+  .btn-logout{
+    padding:8px 14px;background:transparent;
+    border:1px solid var(--border);border-radius:8px;
+    font-size:13px;cursor:pointer;color:var(--muted);
+    transition:all .2s;font-family:inherit;
+  }
+  .btn-logout:hover{background:#fef2f2;color:var(--danger);border-color:var(--danger)}
+
+  /* Layout */
+  .layout{
+    max-width:1400px;margin:0 auto;
+    padding:24px;
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:24px;
+  }
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr;padding:16px}
+    .sidebar{display:none}
+    .sidebar.open{display:block;position:fixed;top:70px;left:0;right:0;z-index:99;width:100%;padding:16px;background:#fff;max-height:calc(100vh - 70px);overflow-y:auto}
+    .mobile-toggle{display:flex!important}
+  }
+  .mobile-toggle{
+    display:none;
+    padding:8px 12px;background:#fff;border:1px solid var(--border);
+    border-radius:8px;cursor:pointer;font-size:18px;
+  }
+
+  /* Sidebar */
+  .sidebar{
+    background:#fff;border-radius:16px;
+    padding:20px;box-shadow:var(--shadow);
+    height:fit-content;position:sticky;top:90px;
+  }
+  .nav-title{
+    font-size:11px;font-weight:700;
+    color:var(--muted);text-transform:uppercase;
+    letter-spacing:1px;margin:16px 0 8px;
+  }
+  .nav-title:first-child{margin-top:0}
+  .nav-item{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;border-radius:10px;
+    cursor:pointer;font-size:14px;font-weight:500;
+    color:var(--text);transition:all .2s;
+    margin-bottom:2px;
+  }
+  .nav-item:hover{background:#f4f7fc}
+  .nav-item.active{background:var(--gradient);color:#fff}
+  .nav-item .icon{font-size:18px}
+
+  /* Main */
+  main{min-height:60vh}
+  .page{display:none;animation:fadeIn .3s}
+  .page.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  .page-header{
+    background:#fff;border-radius:16px;
+    padding:28px;margin-bottom:20px;
+    box-shadow:var(--shadow);
+    border-left:4px solid var(--accent);
+  }
+  .page-header h1{font-size:26px;font-weight:800;color:var(--primary);margin-bottom:6px}
+  .page-header p{color:var(--muted);font-size:14px}
+
+  /* Cards grid */
+  .grid{display:grid;gap:20px}
+  .grid-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .grid-3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .grid-4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+
+  .card{
+    background:#fff;border-radius:16px;
+    padding:24px;box-shadow:var(--shadow);
+    transition:all .3s;
+    border:1px solid transparent;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--accent)}
+  .card-icon{
+    width:50px;height:50px;border-radius:12px;
+    background:var(--gradient);
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;margin-bottom:14px;
+  }
+  .card h3{font-size:17px;font-weight:700;margin-bottom:8px;color:var(--text)}
+  .card p{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .card-link{
+    display:inline-flex;align-items:center;gap:6px;
+    color:var(--primary);font-weight:600;font-size:13px;
+    cursor:pointer;transition:gap .2s;
+  }
+  .card-link:hover{gap:10px}
+
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px}
+  .stat{
+    background:#fff;border-radius:14px;padding:20px;
+    box-shadow:var(--shadow);
+    display:flex;align-items:center;gap:14px;
+  }
+  .stat-icon{
+    width:48px;height:48px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;
+  }
+  .stat-icon.blue{background:#dbeafe;color:var(--primary)}
+  .stat-icon.yellow{background:#fef3c7;color:var(--accent-dark)}
+  .stat-icon.green{background:#d1fae5;color:var(--success)}
+  .stat-icon.red{background:#fee2e2;color:var(--danger)}
+  .stat-value{font-size:22px;font-weight:800;color:var(--text)}
+  .stat-label{font-size:12px;color:var(--muted)}
+
+  /* Video grid */
+  .video-card{
+    background:#fff;border-radius:14px;overflow:hidden;
+    box-shadow:var(--shadow);transition:all .3s;
+  }
+  .video-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+  .video-thumb{
+    position:relative;aspect-ratio:16/9;
+    background:var(--gradient);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+  }
+  .video-thumb::before{
+    content:'▶';font-size:48px;color:#fff;
+    width:70px;height:70px;border-radius:50%;
+    background:rgba(0,0,0,.4);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .2s;
+  }
+  .video-thumb:hover::before{transform:scale(1.1);background:rgba(245,179,1,.9)}
+  .video-info{padding:16px}
+  .video-info h4{font-size:14px;font-weight:600;margin-bottom:4px}
+  .video-info span{font-size:12px;color:var(--muted)}
+
+  /* FAQ */
+  .faq-item{
+    background:#fff;border-radius:12px;
+    margin-bottom:10px;box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .faq-q{
+    padding:16px 20px;cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;
+    font-weight:600;font-size:14px;
+    transition:background .2s;
+  }
+  .faq-q:hover{background:#f4f7fc}
+  .faq-a{
+    padding:0 20px;max-height:0;overflow:hidden;
+    transition:all .3s;font-size:13px;color:var(--muted);
+  }
+  .faq-item.open .faq-a{padding:0 20px 16px;max-height:500px}
+  .faq-item.open .faq-q span:last-child{transform:rotate(180deg)}
+  .faq-q span:last-child{transition:transform .3s}
+
+  /* Tables */
+  .table-wrap{background:#fff;border-radius:14px;padding:20px;box-shadow:var(--shadow);overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{
+    background:var(--gradient);color:#fff;
+    padding:12px;text-align:left;font-weight:600;
+    font-size:12px;text-transform:uppercase;letter-spacing:.5px;
+  }
+  td{padding:12px;border-bottom:1px solid var(--border)}
+  tr:hover{background:#f4f7fc}
+  th:first-child,td:first-child{border-radius:8px 0 0 8px}
+  th:last-child,td:last-child{border-radius:0 8px 8px 0}
+
+  /* Chat */
+  .chat-container{
+    background:#fff;border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden;
+    display:flex;flex-direction:column;
+    height:600px;
+  }
+  .chat-header{
+    background:var(--gradient);color:#fff;
+    padding:18px 20px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .chat-avatar{
+    width:40px;height:40px;border-radius:50%;
+    background:var(--gradient-accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+  }
+  .chat-header h3{font-size:15px;font-weight:700}
+  .chat-header span{font-size:11px;opacity:.9}
+  .chat-header .online{
+    width:8px;height:8px;border-radius:50%;
+    background:#10b981;display:inline-block;margin-right:6px;
+    box-shadow:0 0 0 3px rgba(16,185,129,.3);
+  }
+  .chat-messages{
+    flex:1;overflow-y:auto;padding:20px;
+    background:#f4f7fc;
+  }
+  .msg{
+    margin-bottom:14px;display:flex;gap:10px;
+    animation:fadeIn .3s;
+  }
+  .msg.user{flex-direction:row-reverse}
+  .msg-bubble{
+    max-width:75%;padding:12px 16px;
+    border-radius:16px;font-size:14px;line-height:1.5;
+  }
+  .msg.bot .msg-bubble{background:#fff;border-bottom-left-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+  .msg.user .msg-bubble{background:var(--gradient);color:#fff;border-bottom-right-radius:4px}
+  .msg-time{font-size:10px;color:var(--muted);margin-top:4px}
+  .chat-input{
+    padding:16px;background:#fff;
+    border-top:1px solid var(--border);
+    display:flex;gap:10px;
+  }
+  .chat-input input{
+    flex:1;padding:12px 16px;
+    border:2px solid var(--border);border-radius:24px;
+    font-size:14px;font-family:inherit;
+  }
+  .chat-input input:focus{outline:none;border-color:var(--primary)}
+  .chat-input button{
+    width:44px;height:44px;border-radius:50%;
+    background:var(--gradient);color:#fff;border:none;
+    cursor:pointer;font-size:18px;
+    transition:transform .2s;
+  }
+  .chat-input button:hover{transform:scale(1.05)}
+  .quick-questions{
+    padding:10px 16px;background:#fff;
+    border-top:1px solid var(--border);
+    display:flex;gap:8px;overflow-x:auto;
+  }
+  .quick-q{
+    padding:6px 12px;background:#eff6ff;
+    border-radius:16px;font-size:12px;
+    color:var(--primary);cursor:pointer;
+    white-space:nowrap;border:1px solid var(--border);
+    transition:all .2s;
+  }
+  .quick-q:hover{background:var(--primary);color:#fff}
+
+  /* Evaluations */
+  .eval-card{
+    background:#fff;border-radius:14px;padding:20px;
+    box-shadow:var(--shadow);margin-bottom:16px;
+  }
+  .eval-header{
+    display:flex;justify-content:space-between;align-items:start;
+    margin-bottom:14px;
+  }
+  .eval-header h3{font-size:16px;font-weight:700}
+  .eval-badge{
+    padding:4px 10px;border-radius:20px;
+    font-size:11px;font-weight:600;
+  }
+  .eval-badge.pending{background:#fef3c7;color:var(--accent-dark)}
+  .eval-badge.done{background:#d1fae5;color:var(--success)}
+  .eval-question{
+    background:#f4f7fc;padding:16px;border-radius:10px;
+    margin-bottom:12px;
+  }
+  .eval-question p{font-weight:600;margin-bottom:10px;font-size:14px}
+  .eval-option{
+    display:flex;align-items:center;gap:10px;
+    padding:10px;border-radius:8px;
+    cursor:pointer;transition:background .2s;
+    font-size:13px;
+  }
+  .eval-option:hover{background:#fff}
+  .eval-option input{accent-color:var(--primary)}
+
+  /* Admin */
+  .admin-user{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px;background:#fff;border-radius:10px;
+    margin-bottom:10px;box-shadow:var(--shadow);
+  }
+  .admin-user-info{display:flex;align-items:center;gap:12px}
+  .toggle{
+    position:relative;width:44px;height:24px;
+    background:#d1d5db;border-radius:12px;
+    cursor:pointer;transition:background .2s;
+  }
+  .toggle.on{background:var(--success)}
+  .toggle::after{
+    content:'';position:absolute;
+    width:18px;height:18px;border-radius:50%;
+    background:#fff;top:3px;left:3px;
+    transition:left .2s;
+  }
+  .toggle.on::after{left:23px}
+
+  /* Modal */
+  .modal{
+    display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,.7);z-index:1000;
+    align-items:center;justify-content:center;
+    padding:20px;
+  }
+  .modal.active{display:flex}
+  .modal-content{
+    background:#fff;border-radius:16px;
+    max-width:900px;width:100%;
+    max-height:90vh;overflow-y:auto;
+    animation:slideUp .3s;
+  }
+  .modal-header{
+    padding:20px;border-bottom:1px solid var(--border);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .modal-header h3{font-size:18px;font-weight:700}
+  .modal-close{
+    width:32px;height:32px;border-radius:50%;
+    background:#f4f7fc;border:none;cursor:pointer;
+    font-size:18px;
+  }
+  .modal-body{padding:20px}
+  .video-embed{aspect-ratio:16/9;width:100%;border-radius:10px;border:none}
+
+  /* Tabs */
+  .tabs{
+    display:flex;gap:6px;margin-bottom:20px;
+    background:#fff;padding:6px;border-radius:12px;
+    box-shadow:var(--shadow);overflow-x:auto;
+  }
+  .tab{
+    padding:10px 18px;border-radius:8px;
+    cursor:pointer;font-size:13px;font-weight:600;
+    white-space:nowrap;transition:all .2s;
+    color:var(--muted);
+  }
+  .tab.active{background:var(--gradient);color:#fff}
+  .tab:hover:not(.active){background:#f4f7fc;color:var(--text)}
+
+  footer{
+    text-align:center;padding:30px 20px;
+    color:var(--muted);font-size:12px;
+    border-top:1px solid var(--border);
+    margin-top:40px;
+  }
+  footer strong{color:var(--primary)}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:#f4f7fc}
+  ::-webkit-scrollbar-thumb{background:var(--primary-light);border-radius:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">⛏️</div>
+    <h1>Campus Virtual AOMA</h1>
+    <p class="subtitle">Seccional San Juan · Asociación Obrera Minera Argentina</p>
+    <div class="login-error" id="loginError">Usuario o contraseña incorrectos</div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Usuario (DNI o legajo)</label>
+        <input type="text" id="loginUser" placeholder="Ingrese su usuario" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="loginPass" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn">Ingresar al Campus</button>
+    </form>
+    <div class="login-hint">
+      <strong>🔐 Acceso restringido</strong>
+      Exclusivo para delegados y dirigentes habilitados.<br>
+      Demo: usuario <b>delegado</b> / contraseña <b>1234</b><br>
+      Admin: <b>admin</b> / <b>admin</b>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="app" id="app">
+  <header>
+    <div class="header-inner">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="brand">
+          <div class="brand-icon">⛏️</div>
+          <div class="brand-text">
+            <h2>Campus AOMA San Juan</h2>
+            <span>Capacitación gremial</span>
+          </div>
+        </div>
+      </div>
+      <div class="user-menu">
+        <div class="user-badge">
+          <div class="user-avatar" id="userAvatar">D</div>
+          <span id="userName">Delegado</span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="nav-title">Principal</div>
+      <div class="nav-item active" data-page="inicio"><span class="icon">🏠</span> Inicio</div>
+      <div class="nav-item" data-page="capacitaciones"><span class="icon">🎓</span> Capacitaciones</div>
+      <div class="nav-item" data-page="videos"><span class="icon">🎥</span> Videos privados</div>
+      <div class="nav-item" data-page="evaluaciones"><span class="icon">📝</span> Evaluaciones</div>
+
+      <div class="nav-title">Por Actividad</div>
+      <div class="nav-item" data-page="act-cemento"><span class="icon">🏗️</span> Cemento</div>
+      <div class="nav-item" data-page="act-cal"><span class="icon">⚪</span> Cal</div>
+      <div class="nav-item" data-page="act-piedra"><span class="icon">🪨</span> Piedra</div>
+      <div class="nav-item" data-page="act-metalifera"><span class="icon">🥇</span> Metalífera</div>
+      <div class="nav-item" data-page="act-molienda"><span class="icon">⚙️</span> Molienda</div>
+
+      <div class="nav-title">Información</div>
+      <div class="nav-item" data-page="escalas"><span class="icon">💰</span> Escalas salariales</div>
+      <div class="nav-item" data-page="faq"><span class="icon">❓</span> Preguntas frecuentes</div>
+      <div class="nav-item" data-page="chat"><span class="icon">💬</span> Consultas virtuales</div>
+      <div class="nav-item admin-only" data-page="admin" style="display:none"><span class="icon">🛡️</span> Administración</div>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <!-- INICIO -->
+      <section class="page active" id="page-inicio">
+        <div class="page-header">
+          <h1>Bienvenido al Campus Virtual 👋</h1>
+          <p>Plataforma de capacitación para delegados y dirigentes de AOMA Seccional San Juan</p>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-icon blue">📚</div>
+            <div><div class="stat-value">12</div><div class="stat-label">Capacitaciones activas</div></div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon yellow">🎥</div>
+            <div><div class="stat-value">28</div><div class="stat-label">Videos disponibles</div></div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon green">✅</div>
+            <div><div class="stat-value" id="statDone">0</div><div class="stat-label">Evaluaciones aprobadas</div></div>
+          </div>
+          <div class="stat">
+            <div class="stat-icon red">👥</div>
+            <div><div class="stat-value">156</div><div class="stat-label">Delegados activos</div></div>
+          </div>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card" onclick="goTo('capacitaciones')">
+            <div class="card-icon">🎓</div>
+            <h3>Capacitaciones</h3>
+            <p>Accedé a los cursos organizados por actividad minera y temática sindical.</p>
+            <span class="card-link">Ver cursos →</span>
+          </div>
+          <div class="card" onclick="goTo('videos')">
+            <div class="card-icon">🎥</div>
+            <h3>Videos privados</h3>
+            <p>Charlas, capacitaciones grabadas y material exclusivo de YouTube.</p>
+            <span class="card-link">Ver biblioteca →</span>
+          </div>
+          <div class="card" onclick="goTo('escalas')">
+            <div class="card-icon">💰</div>
+            <h3>Escalas salariales</h3>
+            <p>Consultá las tablas salariales vigentes por categoría y actividad.</p>
+            <span class="card-link">Ver escalas →</span>
+          </div>
+          <div class="card" onclick="goTo('evaluaciones')">
+            <div class="card-icon">📝</div>
+            <h3>Evaluaciones</h3>
+            <p>Completá las evaluaciones para certificar tus capacitaciones.</p>
+            <span class="card-link">Ir a evaluaciones →</span>
+          </div>
+          <div class="card" onclick="goTo('faq')">
+            <div class="card-icon">❓</div>
+            <h3>Preguntas frecuentes</h3>
+            <p>Resolvé tus dudas organizadas por actividad y temática.</p>
+            <span class="card-link">Ver FAQ →</span>
+          </div>
+          <div class="card" onclick="goTo('chat')">
+            <div class="card-icon">💬</div>
+            <h3>Consultas virtuales</h3>
+            <p>Hacé consultas al asistente virtual o al equipo gremial.</p>
+            <span class="card-link">Iniciar chat →</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- CAPACITACIONES -->
+      <section class="page" id="page-capacitaciones">
+        <div class="page-header">
+          <h1>Capacitaciones 🎓</h1>
+          <p>Cursos disponibles organizados por actividad minera</p>
+        </div>
+        <div class="grid grid-2" id="capList"></div>
+      </section>
+
+      <!-- VIDEOS -->
+      <section class="page" id="page-videos">
+        <div class="page-header">
+          <h1>Videos privados 🎥</h1>
+          <p>Biblioteca de charlas y capacitaciones en video</p>
+        </div>
+        <div class="tabs" id="videoTabs"></div>
+        <div class="grid grid-3" id="videoList"></div>
+      </section>
+
+      <!-- EVALUACIONES -->
+      <section class="page" id="page-evaluaciones">
+        <div class="page-header">
+          <h1>Evaluaciones 📝</h1>
+          <p>Completá las evaluaciones para validar tus conocimientos</p>
+        </div>
+        <div id="evalList"></div>
+      </section>
+
+      <!-- ACTIVIDADES -->
+      <section class="page" id="page-act-cemento">
+        <div class="page-header"><h1>Actividad: Cemento 🏗️</h1><p>Información, cursos y FAQ específicos del sector cementero</p></div>
+        <div class="tabs">
+          <div class="tab active" onclick="actTab(this,'cemento','info')">Información</div>
+          <div class="tab" onclick="actTab(this,'cemento','cursos')">Cursos</div>
+          <div class="tab" onclick="actTab(this,'cemento','faq')">FAQ</div>
+        </div>
+        <div id="cemento-content"></div>
+      </section>
+      <section class="page" id="page-act-cal">
+        <div class="page-header"><h1>Actividad: Cal ⚪</h1><p>Sector calero - capacitación y recursos</p></div>
+        <div class="tabs">
+          <div class="tab active" onclick="actTab(this,'cal','info')">Información</div>
+          <div class="tab" onclick="actTab(this,'cal','cursos')">Cursos</div>
+          <div class="tab" onclick="actTab(this,'cal','faq')">FAQ</div>
+        </div>
+        <div id="cal-content"></div>
+      </section>
+      <section class="page" id="page-act-piedra">
+        <div class="page-header"><h1>Actividad: Piedra 🪨</h1><p>Canteras y explotación de piedra</p></div>
+        <div class="tabs">
+          <div class="tab active" onclick="actTab(this,'piedra','info')">Información</div>
+          <div class="tab" onclick="actTab(this,'piedra','cursos')">Cursos</div>
+          <div class="tab" onclick="actTab(this,'piedra','faq')">FAQ</div>
+        </div>
+        <div id="piedra-content"></div>
+      </section>
+      <section class="page" id="page-act-metalifera">
+        <div class="page-header"><h1>Actividad: Minería Metalífera 🥇</h1><p>Extracción de metales - oro, cobre, plata</p></div>
+        <div class="tabs">
+          <div class="tab active" onclick="actTab(this,'metalifera','info')">Información</div>
+          <div class="tab" onclick="actTab(this,'metalifera','cursos')">Cursos</div>
+          <div class="tab" onclick="actTab(this,'metalifera','faq')">FAQ</div>
+        </div>
+        <div id="metalifera-content"></div>
+      </section>
+      <section class="page" id="page-act-molienda">
+        <div class="page-header"><h1>Actividad: Molienda ⚙️</h1><p>Procesos de molienda y tratamiento de minerales</p></div>
+        <div class="tabs">
+          <div class="tab active" onclick="actTab(this,'molienda','info')">Información</div>
+          <div class="tab" onclick="actTab(this,'molienda','cursos')">Cursos</div>
+          <div class="tab" onclick="actTab(this,'molienda','faq')">FAQ</div>
+        </div>
+        <div id="molienda-content"></div>
+      </section>
+
+      <!-- ESCALAS -->
+      <section class="page" id="page-escalas">
+        <div class="page-header">
+          <h1>Escalas salariales 💰</h1>
+          <p>Tablas salariales vigentes - Actualizadas Julio 2026</p>
+        </div>
+        <div class="tabs" id="salaryTabs"></div>
+        <div class="table-wrap" id="salaryTable"></div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="page" id="page-faq">
+        <div class="page-header">
+          <h1>Preguntas frecuentes ❓</h1>
+          <p>Resolvé tus dudas organizadas por temática</p>
+        </div>
+        <div class="tabs" id="faqTabs"></div>
+        <div id="faqList"></div>
+      </section>
+
+      <!-- CHAT -->
+      <section class="page" id="page-chat">
+        <div class="page-header">
+          <h1>Consultas virtuales 💬</h1>
+          <p>Hacé tus consultas al asistente virtual del campus</p>
+        </div>
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="chat-avatar">🤖</div>
+            <div>
+              <h3><span class="online"></span>Asistente AOMA</h3>
+              <span>En línea · Responde al instante</span>
+            </div>
+          </div>
+          <div class="chat-messages" id="chatMessages"></div>
+          <div class="quick-questions">
+            <div class="quick-q" onclick="sendQuick('¿Dónde veo las escalas salariales?')">💰 Escalas salariales</div>
+            <div class="quick-q" onclick="sendQuick('¿Cómo me inscribo a una capacitación?')">🎓 Inscripción cursos</div>
+            <div class="quick-q" onclick="sendQuick('¿Cómo recupero mi contraseña?')">🔑 Recuperar contraseña</div>
+            <div class="quick-q" onclick="sendQuick('¿Qué beneficios tengo como delegado?')">👤 Beneficios delegado</div>
+            <div class="quick-q" onclick="sendQuick('Horarios de la seccional')">🕐 Horarios</div>
+          </div>
+          <form class="chat-input" onsubmit="sendMsg(event)">
+            <input type="text" id="chatInput" placeholder="Escribí tu consulta..." autocomplete="off">
+            <button type="submit">➤</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ADMIN -->
+      <section class="page" id="page-admin">
+        <div class="page-header">
+          <h1>Administración 🛡️</h1>
+          <p>Gestión de usuarios habilitados</p>
+        </div>
+        <div class="card" style="margin-bottom:20px">
+          <h3>Autorizar / bloquear usuarios</h3>
+          <p style="margin-bottom:16px">Activá o desactivá el acceso de cada usuario al campus.</p>
+          <div id="adminUsers"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <p>© 2026 <strong>AOMA Seccional San Juan</strong> · Asociación Obrera Minera Argentina</p>
+    <p>Campus Virtual de Capacitación para Delegados y Dirigentes</p>
+  </footer>
+</div>
+
+<!-- Modal video -->
+<div class="modal" id="videoModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle">Video</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <iframe id="modalVideo" class="video-embed" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ DATOS ============ */
+const USERS = JSON.parse(localStorage.getItem('aoma_users')) || [
+  {user:'delegado', pass:'1234', name:'Juan Delegado', role:'delegado', active:true},
+  {user:'dirigente', pass:'1234', name:'María Dirigente', role:'dirigente', active:true},
+  {user:'admin', pass:'admin', name:'Administrador', role:'admin', active:true},
+  {user:'carlos', pass:'1234', name:'Carlos Gómez', role:'delegado', active:true},
+  {user:'ana', pass:'1234', name:'Ana Rodríguez', role:'delegado', active:false},
+];
+
+const ACTIVITIES = {
+  cemento:{name:'Cemento',icon:'🏗️',color:'#64748b',
+    info:'<h3>Sector Cemento en San Juan</h3><p>El sector cementero sanjuanino es uno de los pilares de la actividad minera provincial. AOMA representa a los trabajadores de las plantas cementeras de la región.</p><ul style="margin-top:10px;padding-left:20px"><li>Convenio colectivo aplicable</li><li>Régimen de seguridad e higiene específico</li><li>Categorías laborales del sector</li></ul>',
+    cursos:['Seguridad en planta cementera','Operación de hornos rotativos','Control de calidad del clínker','Mantenimiento preventivo'],
+    faq:['¿Cuál es el adicional por zona para el sector cemento?','¿Cómo se computan las horas extras en turno rotativo?','¿Qué EPP es obligatorio en planta?','¿Cómo solicito un cambio de categoría?']
+  },
+  cal:{name:'Cal',icon:'⚪',color:'#94a3b8',
+    info:'<h3>Sector Cal</h3><p>La producción de cal en San Juan cuenta con establecimientos donde AOMA nuclea a los trabajadores operarios y técnicos.</p>',
+    cursos:['Procesos de calcinación','Seguridad en hornos de cal','Manejo de cal viva'],
+    faq:['¿Qué diferencia salarial hay entre cal y cemento?','¿Cómo se regula la exposición al polvo de cal?']
+  },
+  piedra:{name:'Piedra',icon:'🪨',color:'#78716c',
+    info:'<h3>Canteras de Piedra</h3><p>Explotación de canteras de áridos y piedra para construcción en la provincia.</p>',
+    cursos:['Voladura controlada','Operación de maquinaria pesada','Gestión ambiental de canteras'],
+    faq:['¿Qué permisos necesito para operar explosivos?','¿Cómo se mide la productividad en cantera?']
+  },
+  metalifera:{name:'Metalífera',icon:'🥇',color:'#d97706',
+    info:'<h3>Minería Metalífera</h3><p>San Juan es una de las principales provincias mineras metalíferas de Argentina, con operaciones de oro, cobre y plata.</p>',
+    cursos:['Seguridad en minería subterránea','Operación de camiones CAEX','Gestión de riesgos geotécnicos','Primeros auxilios en mina'],
+    faq:['¿Cuál es el régimen de turnos en mina?','¿Qué controles médicos son obligatorios?','¿Cómo se calcula el presentismo en turno 4x4?']
+  },
+  molienda:{name:'Molienda',icon:'⚙️',color:'#475569',
+    info:'<h3>Plantas de Molienda</h3><p>Procesamiento y molienda de minerales para liberación de especies valiosas.</p>',
+    cursos:['Operación de molinos SAG y de bolas','Control de proceso de molienda','Mantenimiento de revestimientos'],
+    faq:['¿Cuáles son los riesgos de la molienda húmeda?','¿Cómo se monitorea el desgaste de bolas?']
+  }
+};
+
+const CAPACITACIONES = [
+  {title:'Seguridad Minera Básica',act:'General',desc:'Curso obligatorio para todos los delegados. Normas IRAM y protocolos.',icon:'🦺'},
+  {title:'Liderazgo Sindical',act:'Gremial',desc:'Herramientas de negociación, comunicación y representación.',icon:'👥'},
+  {title:'Legislación Laboral Minera',act:'Legal',desc:'Convenios colectivos, leyes nacionales y provinciales del sector.',icon:'⚖️'},
+  {title:'Higiene y Seguridad',act:'General',desc:'Ley 19587, decretos reglamentarios y SRT aplicadas a minería.',icon:'🛡️'},
+  {title:'Primeros Auxilios en Mina',act:'General',desc:'RCP, traumatismos, rescate y evacuación de heridos.',icon:'🚑'},
+  {title:'Negociación Colectiva',act:'Gremial',desc:'Técnicas de negociación paritaria y resolución de conflictos.',icon:'🤝'},
+  {title:'Gestión Ambiental',act:'General',desc:'Normativa ambiental y desarrollo sustentable en minería.',icon:'🌱'},
+  {title:'Operación de Maquinaria',act:'Operativa',desc:'Habilitaciones y certificaciones para maquinaria pesada.',icon:'🚜'},
+];
+
+const VIDEOS = [
+  {title:'Seguridad en minería subterránea',cat:'metalifera',id:'dQw4w9WgXcQ',duration:'45:20'},
+  {title:'Charla: Convenio colectivo minero',cat:'general',id:'dQw4w9WgXcQ',duration:'1:12:30'},
+  {title:'Operación de molino SAG',cat:'molienda',id:'dQw4w9WgXcQ',duration:'32:15'},
+  {title:'Proceso de producción de cemento',cat:'cemento',id:'dQw4w9WgXcQ',duration:'28:40'},
+  {title:'Liderazgo para delegados',cat:'general',id:'dQw4w9WgXcQ',duration:'55:10'},
+  {title:'Voladura controlada en canteras',cat:'piedra',id:'dQw4w9WgXcQ',duration:'41:00'},
+  {title:'Hornos de cal - Operación segura',cat:'cal',id:'dQw4w9WgXcQ',duration:'38:25'},
+  {title:'Primeros auxilios en mina',cat:'general',id:'dQw4w9WgXcQ',duration:'50:00'},
+  {title:'Camiones CAEX - Operación',cat:'metalifera',id:'dQw4w9WgXcQ',duration:'1:05:30'},
+];
+
+const SALARY = {
+  cemento:[
+    ['Operario de planta','A','$ 850.000'],
+    ['Operario especializado','B','$ 980.000'],
+    ['Oficial 1°','C','$ 1.120.000'],
+    ['Oficial maestro','D','$ 1.350.000'],
+    ['Técnico','E','$ 1.480.000'],
+    ['Delegado','F','$ 1.620.000'],
+  ],
+  cal:[
+    ['Operario','A','$ 820.000'],
+    ['Operario calero','B','$ 950.000'],
+    ['Oficial','C','$ 1.100.000'],
+    ['Maestro calero','D','$ 1.300.000'],
+  ],
+  piedra:[
+    ['Canterito','A','$ 780.000'],
+    ['Operario de cantera','B','$ 920.000'],
+    ['Maestro canterito','C','$ 1.150.000'],
+    ['Volador habilitado','D','$ 1.400.000'],
+  ],
+  metalifera:[
+    ['Operario de mina','A','$ 1.100.000'],
+    ['Operario especializado','B','$ 1.350.000'],
+    ['Oficial minero','C','$ 1.580.000'],
+    ['Maestro minero','D','$ 1.850.000'],
+    ['Técnico minero','E','$ 2.100.000'],
+  ],
+  molienda:[
+    ['Operario de molienda','A','$ 950.000'],
+    ['Operario de molino','B','$ 1.150.000'],
+    ['Oficial de planta','C','$ 1.380.000'],
+    ['Supervisor de turno','D','$ 1.700.000'],
+  ]
+};
+
+const FAQS = {
+  general:[
+    {q:'¿Cómo me inscribo a una capacitación?',a:'Ingresá a la sección "Capacitaciones", elegí el curso y completá el formulario de inscripción. Recibirás un email de confirmación.'},
+    {q:'¿Cómo recupero mi contraseña?',a:'Contactá al administrador del campus o escribí al email campus@aomasanjuan.org.ar con tu DNI y legajo.'},
+    {q:'¿Los cursos tienen certificación?',a:'Sí, al completar la capacitación y aprobar la evaluación recibís un certificado digital con validez gremial.'},
+    {q:'¿Puedo hacer cursos desde mi celular?',a:'Sí, el campus es 100% responsive y funciona en cualquier dispositivo.'},
+  ],
+  cemento:[
+    {q:'¿Cuál es el adicional por zona en cemento?',a:'El adicional por zona varía según el establecimiento. Consultá la escala vigente en la sección "Escalas salariales".'},
+    {q:'¿Cómo se computan las horas extras?',a:'Las horas extras se pagan con recargo del 50% días hábiles y 100% sábados, domingos y feriados.'},
+  ],
+  cal:[
+    {q:'¿Qué diferencia salarial hay entre cal y cemento?',a:'Las escalas son similares pero con ajustes por convenio específico. Ver tabla comparativa en Escalas.'},
+  ],
+  piedra:[
+    {q:'¿Qué permisos necesito para operar explosivos?',a:'Se requiere habilitación de la Policía de Minera, curso específico y renovación anual. AOMA ofrece el curso.'},
+  ],
+  metalifera:[
+    {q:'¿Cuál es el régimen de turnos en mina?',a:'Generalmente 4x4 (4 días de trabajo, 4 de descanso) en campamento, o 12x12 según el establecimiento.'},
+    {q:'¿Qué controles médicos son obligatorios?',a:'Examen preocupacional, audiometrías, espirometrías y controles anuales obligatorios por ley.'},
+  ],
+  molienda:[
+    {q:'¿Cuáles son los riesgos de la molienda húmeda?',a:'Riesgo de atrapamiento, exposición a ruido y contacto con reactivos. Uso obligatorio de EPP específico.'},
+  ]
+};
+
+const EVALUATIONS = [
+  {id:1,title:'Seguridad Minera Básica',desc:'Evaluación del curso obligatorio',questions:[
+    {q:'¿Cuál es el EPP básico en mina?',opts:['Solo casco','Casco, linterna, botas de seguridad','Zapatos comunes'],correct:1},
+    {q:'¿Qué hacer ante una emergencia?',opts:['Salir corriendo','Seguir el plan de evacuación','Esperar instrucciones'],correct:1},
+    {q:'¿Cada cuánto se renueva la habilitación minera?',opts:['Cada 5 años','Anualmente','Nunca'],correct:1},
+  ]},
+  {id:2,title:'Liderazgo Sindical',desc:'Evaluación del módulo de liderazgo',questions:[
+    {q:'¿Cuál es la función principal del delegado?',opts:['Representar a los compañeros','Firmar convenios','Dirigir la empresa'],correct:0},
+    {q:'¿Qué es una asamblea?',opts:['Una reunión de la empresa','Reunión de trabajadores para decidir','Un examen'],correct:1},
+  ]},
+  {id:3,title:'Legislación Laboral Minera',desc:'Conocimientos sobre normativa',questions:[
+    {q:'¿Qué ley regula la higiene y seguridad?',opts:['Ley 20744','Ley 19587','Ley 24557'],correct:1},
+    {q:'¿Quién aplica los convenios colectivos?',opts:['El Estado','Las partes firmantes','Los jueces'],correct:1},
+  ]},
+];
+
+/* ============ AUTH ============ */
+let currentUser = null;
+const loginForm = document.getElementById('loginForm');
+const loginError = document.getElementById('loginError');
+
+loginForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const u = document.getElementById('loginUser').value.trim().toLowerCase();
+  const p = document.getElementById('loginPass').value;
+  const user = USERS.find(x => x.user === u && x.pass === p);
+  if(!user){loginError.style.display='block';return}
+  if(!user.active){loginError.textContent='Tu acceso está bloqueado. Contactá al administrador.';loginError.style.display='block';return}
+  currentUser = user;
+  localStorage.setItem('aoma_session', JSON.stringify(user));
+  initApp();
+});
+
+function logout(){
+  localStorage.removeItem('aoma_session');
+  location.reload();
+}
+
+function initApp(){
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('app').classList.add('active');
+  document.getElementById('userName').textContent = currentUser.name;
+  document.getElementById('userAvatar').textContent = currentUser.name[0].toUpperCase();
+  if(currentUser.role === 'admin'){
+    document.querySelector('.admin-only').style.display='flex';
+  }
+  renderAll();
+  initChat();
+}
+
+// Auto-login
+const saved = localStorage.getItem('aoma_session');
+if(saved){
+  const s = JSON.parse(saved);
+  const valid = USERS.find(u => u.user === s.user && u.active);
+  if(valid){currentUser = valid; initApp();}
+}
+
+/* ============ NAV ============ */
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => goTo(item.dataset.page));
+});
+
+function goTo(page){
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-'+page));
+  document.getElementById('sidebar').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+
+/* ============ RENDER ============ */
+function renderAll(){
+  renderCapacitaciones();
+  renderVideos();
+  renderEvaluations();
+  renderActivities();
+  renderSalary();
+  renderFAQ();
+  renderAdmin();
+  document.getElementById('statDone').textContent = Object.keys(JSON.parse(localStorage.getItem('aoma_evals')||'{}')).filter(k=>k.startsWith(currentUser.user)).length;
+}
+
+function renderCapacitaciones(){
+  const c = document.getElementById('capList');
+  c.innerHTML = CAPACITACIONES.map(x => `
+    <div class="card">
+      <div class="card-icon">${x.icon}</div>
+      <h3>${x.title}</h3>
+      <p><b>${x.act}</b> · ${x.desc}</p>
+      <span class="card-link" onclick="alert('Inscripción enviada. Te contactaremos por email.')">Inscribirme →</span>
+    </div>
+  `).join('');
+}
+
+let currentVideoCat = 'all';
+function renderVideos(){
+  const cats = [{id:'all',name:'Todos'},...Object.entries(ACTIVITIES).map(([k,v])=>({id:k,name:v.name})),{id:'general',name:'General'}];
+  document.getElementById('videoTabs').innerHTML = cats.map(c => 
+    `<div class="tab ${c.id===currentVideoCat?'active':''}" onclick="filterVideo('${c.id}')">${c.name}</div>`
+  ).join('');
+  const list = currentVideoCat === 'all' ? VIDEOS : VIDEOS.filter(v => v.cat === currentVideoCat);
+  document.getElementById('videoList').innerHTML = list.map(v => `
+    <div class="video-card">
+      <div class="video-thumb" onclick="openVideo('${v.id}','${v.title.replace(/'/g,"\\'")}')"></div>
+      <div class="video-info">
+        <h4>${v.title}</h4>
+        <span>⏱ ${v.duration} · ${ACTIVITIES[v.cat]?.name || 'General'}</span>
+      </div>
+    </div>
+  `).join('');
+}
+function filterVideo(cat){currentVideoCat = cat; renderVideos()}
+function openVideo(id,title){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalVideo').src = `https://www.youtube.com/embed/${id}`;
+  document.getElementById('videoModal').classList.add('active');
+}
+function closeModal(){
+  document.getElementById('videoModal').classList.remove('active');
+  document.getElementById('modalVideo').src = '';
+}
+
+function renderEvaluations(){
+  const done = JSON.parse(localStorage.getItem('aoma_evals')||'{}');
+  document.getElementById('evalList').innerHTML = EVALUATIONS.map(ev => {
+    const key = `${currentUser.user}_${ev.id}`;
+    const isDone = done[key];
+    return `
+    <div class="eval-card">
+      <div class="eval-header">
+        <div>
+          <h3>${ev.title}</h3>
+          <p style="font-size:13px;color:var(--muted)">${ev.desc} · ${ev.questions.length} preguntas</p>
+        </div>
+        <span class="eval-badge ${isDone?'done':'pending'}">${isDone?'✓ Aprobada':'Pendiente'}</span>
+      </div>
+      ${isDone ? `<p style="color:var(--success);font-weight:600">✅ Evaluación completada con éxito</p>` : `
+        <form onsubmit="submitEval(event,${ev.id})">
+          ${ev.questions.map((q,qi) => `
+            <div class="eval-question">
+              <p>${qi+1}. ${q.q}</p>
+              ${q.opts.map((o,oi) => `
+                <label class="eval-option">
+                  <input type="radio" name="q${qi}" value="${oi}" required>
+                  <span>${o}</span>
+                </label>
+              `).join('')}
+            </div>
+          `).join('')}
+          <button type="submit" class="btn">Enviar evaluación</button>
+        </form>
+      `}
+    </div>`;
+  }).join('');
+}
+
+function submitEval(e,id){
+  e.preventDefault();
+  const ev = EVALUATIONS.find(x => x.id === id);
+  const form = e.target;
+  let correct = 0;
+  ev.questions.forEach((q,i) => {
+    const val = parseInt(form.querySelector(`input[name=q${i}]:checked`).value);
+    if(val === q.correct) correct++;
+  });
+  const pct = Math.round((correct/ev.questions.length)*100);
+  if(pct >= 70){
+    const done = JSON.parse(localStorage.getItem('aoma_evals')||'{}');
+    done[`${currentUser.user}_${id}`] = {score:pct,date:new Date().toISOString()};
+    localStorage.setItem('aoma_evals', JSON.stringify(done));
+    alert(`¡Aprobado! Puntaje: ${pct}%`);
+    renderEvaluations();
+  } else {
+    alert(`No aprobado. Puntaje: ${pct}%. Necesitás 70% o más.`);
+  }
+}
+
+function renderActivities(){
+  Object.entries(ACTIVITIES).forEach(([key,act]) => {
+    const el = document.getElementById(key+'-content');
+    el.innerHTML = `
+      <div class="card" style="margin-bottom:16px">${act.info}</div>
+      <h3 style="margin:20px 0 12px">Cursos disponibles</h3>
+      <div class="grid grid-2">
+        ${act.cursos.map(c => `<div class="card"><h3>${c}</h3><p>Curso específico del sector</p><span class="card-link" onclick="alert('Inscripción enviada')">Inscribirme →</span></div>`).join('')}
+      </div>
+      <h3 style="margin:20px 0 12px">Preguntas frecuentes</h3>
+      ${(FAQS[key]||[]).map(f => `
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+          <div class="faq-q"><span>${f.q}</span><span>▼</span></div>
+          <div class="faq-a">${f.a}</div>
+        </div>
+      `).join('')}
+    `;
+  });
+}
+function actTab(el,act,tab){
+  el.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  // Re-render with focus on tab (simplified - shows all)
+}
+
+let currentSalary = 'cemento';
+function renderSalary(){
+  document.getElementById('salaryTabs').innerHTML = Object.entries(ACTIVITIES).map(([k,v]) => 
+    `<div class="tab ${k===currentSalary?'active':''}" onclick="filterSalary('${k}')">${v.icon} ${v.name}</div>`
+  ).join('');
+  const data = SALARY[currentSalary];
+  document.getElementById('salaryTable').innerHTML = `
+    <table>
+      <thead><tr><th>Categoría</th><th>Nivel</th><th>Haber básico</th></tr></thead>
+      <tbody>${data.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody>
+    </table>
+    <p style="margin-top:14px;font-size:12px;color:var(--muted)">* Valores de referencia julio 2026. Consultar convenios vigentes.</p>
+  `;
+}
+function filterSalary(k){currentSalary = k; renderSalary()}
+
+let currentFaq = 'general';
+function renderFAQ(){
+  const cats = [{id:'general',name:'General'},...Object.entries(ACTIVITIES).map(([k,v])=>({id:k,name:v.name}))];
+  document.getElementById('faqTabs').innerHTML = cats.map(c => 
+    `<div class="tab ${c.id===currentFaq?'active':''}" onclick="filterFaq('${c.id}')">${c.name}</div>`
+  ).join('');
+  const list = FAQS[currentFaq] || [];
+  document.getElementById('faqList').innerHTML = list.length ? list.map(f => `
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q"><span>${f.q}</span><span>▼</span></div>
+      <div class="faq-a">${f.a}</div>
+    </div>
+  `).join('') : '<div class="card"><p>No hay preguntas en esta categoría aún.</p></div>';
+}
+function filterFaq(k){currentFaq = k; renderFAQ()}
+
+/* ============ CHAT ============ */
+const CHAT_RESPONSES = {
+  'escala|salarial|sueldo|salario':'Podés consultar las escalas salariales actualizadas en el menú lateral → "💰 Escalas salariales". Están separadas por actividad: cemento, cal, piedra, metalífera y molienda.',
+  'capacitacion|curso|inscrib':'Para inscribirte a una capacitación, ingresá a "🎓 Capacitaciones" y hacé clic en "Inscribirme". También podés ver los cursos por actividad en el menú lateral.',
+  'contraseña|clave|password|acceso':'Para recuperar tu contraseña, contactá al administrador del campus al email campus@aomasanjuan.org.ar indicando tu DNI y legajo.',
+  'beneficio|delegado':'Como delegado tenés acceso a: capacitaciones gratuitas, escalas salariales actualizadas, asesoramiento legal, horas gremiales y representación ante la empresa.',
+  'horario|atiende|seccional':'La Seccional San Juan atiende de lunes a viernes de 8:00 a 16:00 hs. Dirección: Rivadavia 345 Oeste, San Juan Capital. Tel: (0264) 422-XXXX',
+  'video|charla':'Los videos privados están en "🎥 Videos privados". Podés filtrarlos por actividad. Son charlas y capacitaciones grabadas exclusivas para afiliados.',
+  'evaluacion|examen|test':'Las evaluaciones están en "📝 Evaluaciones". Necesitás 70% o más para aprobar. Al aprobar obtenés tu certificado digital.',
+  'hola|buenas|buenos dias':'¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte hoy?',
+  'gracias':'¡De nada! 😊 Si tenés más consultas, no dudes en escribirme.',
+};
+
+function initChat(){
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML = `<div class="msg bot"><div class="msg-bubble">¡Hola ${currentUser.name.split(' ')[0]}! 👋 Soy el asistente virtual del Campus AOMA San Juan. Puedo ayudarte con:<br>• Escalas salariales<br>• Inscripción a capacitaciones<br>• Acceso y contraseña<br>• Beneficios gremiales<br>• Horarios de la seccional<br><br>¿En qué te puedo ayudar?</div></div>`;
+}
+
+function sendMsg(e){
+  e.preventDefault();
+  const input = document.getElementById('chatInput');
+  const txt = input.value.trim();
+  if(!txt) return;
+  addMsg(txt,'user');
+  input.value = '';
+  setTimeout(() => {
+    const resp = getResponse(txt);
+    addMsg(resp,'bot');
+  }, 600);
+}
+function sendQuick(q){
+  addMsg(q,'user');
+  setTimeout(() => addMsg(getResponse(q),'bot'), 600);
+}
+function addMsg(txt,type){
+  const msgs = document.getElementById('chatMessages');
+  const time = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+  const div = document.createElement('div');
+  div.className = 'msg '+type;
+  div.innerHTML = `<div class="msg-bubble">${txt}<div class="msg-time">${time}</div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function getResponse(txt){
+  const t = txt.toLowerCase();
+  for(const [keys,resp] of Object.entries(CHAT_RESPONSES)){
+    if(keys.split('|').some(k => t.includes(k))) return resp;
+  }
+  return 'No tengo una respuesta específica para eso. Te recomiendo contactar directamente a la Seccional al (0264) 422-XXXX o escribir a campus@aomasanjuan.org.ar. ¿Hay algo más en lo que pueda ayudarte?';
+}
+
+/* ============ ADMIN ============ */
+function renderAdmin(){
+  const el = document.getElementById('adminUsers');
+  el.innerHTML = USERS.map((u,i) => `
+    <div class="admin-user">
+      <div class="admin-user-info">
+        <div class="user-avatar">${u.name[0]}</div>
+        <div>
+          <div style="font-weight:600;font-size:14px">${u.name}</div>
+          <div style="font-size:12px;color:var(--muted)">@${u.user} · ${u.role}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;color:${u.active?'var(--success)':'var(--danger)'};font-weight:600">${u.active?'Activo':'Bloqueado'}</span>
+        <div class="toggle ${u.active?'on':''}" onclick="toggleUser(${i})"></div>
+      </div>
+    </div>
+  `).join('');
+}
+function toggleUser(i){
+  if(currentUser.role !== 'admin') return;
+  USERS[i].active = !USERS[i].active;
+  localStorage.setItem('aoma_users', JSON.stringify(USERS));
+  renderAdmin();
+}
+</script>
+</body>
+</html>
