@@ -1,0 +1,147 @@
+/* Responsive Design */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .header-center {
+        display: none;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    :root {
+        --header-height: 60px;
+    }
+    
+    .header-container {
+        padding: 0 1rem;
+    }
+    
+    .brand-title {
+        font-size: var(--text-sm);
+    }
+    
+    .brand-subtitle {
+        display: none;
+    }
+    
+    .user-info {
+        display: none;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section {
+        padding: 1.5rem;
+    }
+    
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chat-window {
+        width: calc(100vw - 2rem);
+        right: -1rem;
+        height: 70vh;
+    }
+    
+    .modal-content {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    .table-container {
+        font-size: var(--text-xs);
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .login-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .login-title {
+        font-size: var(--text-2xl);
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .dashboard-title {
+        font-size: var(--text-2xl);
+    }
+    
+    .stat-value {
+        font-size: var(--text-2xl);
+    }
+    
+    .btn {
+        padding: 0.75rem 1rem;
+        font-size: var(--text-sm);
+    }
+    
+    .course-image {
+        height: 150px;
+    }
+}
+
+/* Print */
+@media print {
+    .no-print,
+    .header,
+    .sidebar,
+    .chat-widget,
+    .btn {
+        display: none !important;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .main-content {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+/* Landscape mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .chat-window {
+        height: 300px;
+    }
+    
+    .login-container {
+        padding: 1rem;
+    }
+}
