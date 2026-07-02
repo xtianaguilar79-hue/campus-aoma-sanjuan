@@ -187,6 +187,7 @@ function getLeyes() {
     if (typeof LEY_LCT_20744 !== 'undefined') leyes.push(LEY_LCT_20744);
     if (typeof LEY_19587 !== 'undefined') leyes.push(LEY_19587);
     if (typeof LEY_24557 !== 'undefined') leyes.push(LEY_24557);
+    if (typeof LEY_24013 !== 'undefined') leyes.push(LEY_24013);
     if (typeof LEY_23551 !== 'undefined') leyes.push(LEY_23551);
     
     // Fallback a DATA si no hay archivos separados
