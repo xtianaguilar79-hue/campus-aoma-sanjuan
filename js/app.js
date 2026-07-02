@@ -58,7 +58,7 @@ function showApp() {
     document.getElementById('userRole').textContent = roleText;
     document.getElementById('userAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
     
-    navigateTo('dashboard');
+    navigateTo('inicio');
 }
 
 function handleLogin(e) {
@@ -147,7 +147,7 @@ function navigateTo(page) {
 
 function renderPage(page, container) {
     switch (page) {
-        case 'dashboard':
+        case 'inicio':
             renderDashboard(container);
             break;
         case 'cursos':
