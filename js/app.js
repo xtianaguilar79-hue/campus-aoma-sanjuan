@@ -1,33 +1,21 @@
 // ============================================
 // APLICACIÓN PRINCIPAL - CAMPUS VIRTUAL AOMA
 // ============================================
-// Este archivo contiene toda la lógica:
-// - Login / Logout
-// - Navegación entre páginas
-// - Renderizado de contenido
-// - Chat virtual
-// - Modo oscuro
-// ============================================
 
-// ============================================
-// 1. ESTADO GLOBAL
-// ============================================
 let currentUser = null;
 let currentPage = 'dashboard';
 let isDarkMode = false;
 
 // ============================================
-// 2. INICIALIZACIÓN
+// INICIALIZACIÓN
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    console.log(' AOMA Campus: Iniciando...');
+    console.log('🚀 AOMA Campus: Iniciando...');
     
-    // Ocultar loading
     setTimeout(() => {
         document.getElementById('loadingScreen').classList.add('hidden');
     }, 800);
     
-    // Verificar sesión guardada
     const savedSession = localStorage.getItem('aoma_session');
     if (savedSession) {
         try {
@@ -41,10 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
         showLogin();
     }
     
-    // Configurar eventos
     setupEvents();
     
-    // Cargar tema guardado
     const savedTheme = localStorage.getItem('aoma_theme');
     if (savedTheme === 'dark') {
         toggleTheme();
@@ -52,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
-// 3. LOGIN / LOGOUT
+// LOGIN / LOGOUT
 // ============================================
 function showLogin() {
     document.getElementById('loginScreen').classList.remove('hidden');
@@ -63,14 +49,12 @@ function showApp() {
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     
-    // Actualizar info de usuario en header
     document.getElementById('userName').textContent = currentUser.name;
     const roleText = currentUser.role === 'admin' ? 'Administrador' : 
                      currentUser.role === 'dirigente' ? 'Dirigente' : 'Delegado';
     document.getElementById('userRole').textContent = roleText;
     document.getElementById('userAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
     
-    // Renderizar dashboard
     navigateTo('dashboard');
 }
 
@@ -84,13 +68,10 @@ function handleLogin(e) {
     const btnText = document.querySelector('.btn-text');
     const btnLoader = document.querySelector('.btn-loader');
     
-    // Mostrar loading
     btnText.classList.add('hidden');
     btnLoader.classList.remove('hidden');
     
-    // Simular delay
     setTimeout(() => {
-        // Buscar usuario
         const user = DATA.usuarios.find(u => u.username === username && u.password === password);
         
         if (!user) {
@@ -109,7 +90,6 @@ function handleLogin(e) {
             return;
         }
         
-        // Login exitoso
         currentUser = user;
         localStorage.setItem('aoma_session', JSON.stringify(user));
         errorDiv.classList.add('hidden');
@@ -139,22 +119,19 @@ function togglePassword() {
 }
 
 // ============================================
-// 4. NAVEGACIÓN
+// NAVEGACIÓN
 // ============================================
 function navigateTo(page) {
     currentPage = page;
     
-    // Actualizar nav activa
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.toggle('active', item.dataset.page === page);
     });
     
-    // Cerrar sidebar en móvil
     if (window.innerWidth < 1024) {
         document.getElementById('sidebar').classList.add('hidden');
     }
     
-    // Renderizar página
     const content = document.getElementById('pageContent');
     content.innerHTML = '<div class="empty-state"><div class="loading-spinner"></div><p>Cargando...</p></div>';
     
@@ -200,14 +177,34 @@ function renderPage(page, container) {
 }
 
 // ============================================
-// 5. RENDERIZADO DE PÁGINAS
+// OBTENER LEYES Y CONVENIOS DE ARCHIVOS SEPARADOS
+// ============================================
+function getLeyes() {
+    const leyes = [];
+    if (typeof LEY_LCT_20744 !== 'undefined') leyes.push(LEY_LCT_20744);
+    if (typeof LEY_19587 !== 'undefined') leyes.push(LEY_19587);
+    if (typeof LEY_24557 !== 'undefined') leyes.push(LEY_24557);
+    if (typeof LEY_23551 !== 'undefined') leyes.push(LEY_23551);
+    return leyes;
+}
+
+function getConvenios() {
+    const convenios = [];
+    if (typeof CTT_302_75 !== 'undefined') convenios.push(CTT_302_75);
+    if (typeof CTT_36_89 !== 'undefined') convenios.push(CTT_36_89);
+    if (typeof CTT_238_94 !== 'undefined') convenios.push(CTT_238_94);
+    return convenios;
+}
+
+// ============================================
+// RENDERIZADO DE PÁGINAS
 // ============================================
 
-// --- DASHBOARD ---
 function renderDashboard(container) {
     const actCount = Object.keys(DATA.actividades).length;
-    const convCount = DATA.convenios.length;
+    const convCount = getConvenios().length;
     const cursoCount = DATA.cursos.length;
+    const leyCount = getLeyes().length;
     
     container.innerHTML = `
         <div class="page-header">
@@ -217,12 +214,12 @@ function renderDashboard(container) {
         
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon">📚</div>
+                <div class="stat-icon"></div>
                 <div class="stat-value">${convCount}</div>
                 <div class="stat-label">Convenios CCT</div>
             </div>
             <div class="stat-card accent">
-                <div class="stat-icon">🏭</div>
+                <div class="stat-icon"></div>
                 <div class="stat-value">${actCount}</div>
                 <div class="stat-label">Actividades</div>
             </div>
@@ -233,8 +230,8 @@ function renderDashboard(container) {
             </div>
             <div class="stat-card warning">
                 <div class="stat-icon">⚖️</div>
-                <div class="stat-value">${DATA.leyes.length}</div>
-                <div class="stat-label">Leyess laborales</div>
+                <div class="stat-value">${leyCount}</div>
+                <div class="stat-label">Leyes laborales</div>
             </div>
         </div>
         
@@ -264,7 +261,6 @@ function renderDashboard(container) {
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">Últimas Noticias</h2>
-                <a href="#" class="section-link" onclick="event.preventDefault()">Ver todas <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="cards-grid">
                 ${DATA.noticias.slice(0, 3).map(n => `
@@ -287,11 +283,10 @@ function renderDashboard(container) {
     `;
 }
 
-// --- CURSOS ---
 function renderCursos(container) {
     container.innerHTML = `
         <div class="page-header">
-            <h1>Capacitaciones 🎓</h1>
+            <h1>Capacitaciones </h1>
             <p>Cursos disponibles organizados por actividad minera</p>
         </div>
         <div class="cards-grid">
@@ -341,7 +336,7 @@ function showCursoDetalle(cursoId) {
         </div>
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon">‍🏫</div>
+                <div class="stat-icon">👨‍🏫</div>
                 <div class="stat-label">Instructor</div>
                 <div style="font-weight: 600; margin-top: 0.5rem;">${curso.instructor}</div>
             </div>
@@ -380,18 +375,19 @@ function inscribirse(cursoId) {
     showToast('✅ Inscripción enviada al curso: ' + curso.titulo, 'success');
 }
 
-// --- CONVENIOS ---
 function renderConvenios(container) {
+    const convenios = getConvenios();
+    
     container.innerHTML = `
         <div class="page-header">
-            <h1>Convenios Colectivos de Trabajo </h1>
+            <h1>Convenios Colectivos de Trabajo 📋</h1>
             <p>Normativas vigentes por actividad</p>
         </div>
         <div class="cards-grid">
-            ${DATA.convenios.map(c => {
+            ${convenios.map(c => {
                 const act = DATA.actividades[c.actividad];
                 return `
-                    <div class="card" onclick="showConvenioDetalle(${c.id})">
+                    <div class="card" onclick="showConvenioDetalle('${c.numero}')">
                         <div class="card-header" style="background: var(--gradient-primary);">
                             <i class="fas fa-file-contract"></i>
                             <span class="card-badge">${c.numero}</span>
@@ -411,8 +407,9 @@ function renderConvenios(container) {
     `;
 }
 
-function showConvenioDetalle(id) {
-    const conv = DATA.convenios.find(c => c.id === id);
+function showConvenioDetalle(numero) {
+    const convenios = getConvenios();
+    const conv = convenios.find(c => c.numero === numero);
     if (!conv) return;
     
     const container = document.getElementById('pageContent');
@@ -436,7 +433,6 @@ function showConvenioDetalle(id) {
     `;
 }
 
-// --- ESCALAS SALARIALES ---
 function renderEscalas(container) {
     container.innerHTML = `
         <div class="page-header">
@@ -480,16 +476,17 @@ function renderEscalas(container) {
     `;
 }
 
-// --- LEGISLACIÓN ---
 function renderLegislacion(container) {
+    const leyes = getLeyes();
+    
     container.innerHTML = `
         <div class="page-header">
             <h1>Legislación Laboral ⚖️</h1>
             <p>Leyes y normativas laborales aplicables al sector minero</p>
         </div>
         <div class="cards-grid">
-            ${DATA.leyes.map(l => `
-                <div class="card" onclick="showLeyDetalle(${l.id})">
+            ${leyes.map(l => `
+                <div class="card" onclick="showLeyDetalle('${l.numero}')">
                     <div class="card-header" style="background: linear-gradient(135deg, #0b3d91, #1e5fd1);">
                         <i class="fas fa-balance-scale"></i>
                         <span class="card-badge">${l.numero}</span>
@@ -505,8 +502,9 @@ function renderLegislacion(container) {
     `;
 }
 
-function showLeyDetalle(id) {
-    const ley = DATA.leyes.find(l => l.id === id);
+function showLeyDetalle(numero) {
+    const leyes = getLeyes();
+    const ley = leyes.find(l => l.numero === numero);
     if (!ley) return;
     
     const container = document.getElementById('pageContent');
@@ -529,7 +527,6 @@ function showLeyDetalle(id) {
     `;
 }
 
-// --- FAQ ---
 function renderFAQ(container) {
     container.innerHTML = `
         <div class="page-header">
@@ -568,7 +565,6 @@ function toggleFaq(id) {
     }
 }
 
-// --- ACTIVIDAD ---
 function renderActividad(container, activityId) {
     const act = DATA.actividades[activityId];
     if (!act) {
@@ -580,7 +576,7 @@ function renderActividad(container, activityId) {
     const videosAct = DATA.videos.filter(v => v.categoria === activityId);
     const faqsAct = DATA.faqs[activityId] || [];
     const escalasAct = DATA.escalas[activityId] || [];
-    const conveniosAct = DATA.convenios.filter(c => c.actividad === activityId);
+    const conveniosAct = getConvenios().filter(c => c.actividad === activityId);
     
     container.innerHTML = `
         <div class="activity-hero">
@@ -601,7 +597,7 @@ function renderActividad(container, activityId) {
                     <h2 class="section-title">Convenio Colectivo</h2>
                 </div>
                 ${conveniosAct.map(c => `
-                    <div class="card" onclick="showConvenioDetalle(${c.id})" style="cursor: pointer;">
+                    <div class="card" onclick="showConvenioDetalle('${c.numero}')" style="cursor: pointer;">
                         <div class="card-body">
                             <div class="card-category">${c.numero}</div>
                             <h3 class="card-title">${c.titulo}</h3>
@@ -705,7 +701,7 @@ function renderActividad(container, activityId) {
 }
 
 // ============================================
-// 6. CHAT
+// CHAT
 // ============================================
 function openChat() {
     const chatWindow = document.getElementById('chatWindow');
@@ -731,17 +727,11 @@ function initChatMessages() {
     const quickReplies = document.getElementById('chatQuickReplies');
     
     if (messages.children.length === 0) {
-        addChatMessage('bot', `¡Hola ${currentUser.name.split(' ')[0]}!  Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte?`);
+        addChatMessage('bot', `¡Hola ${currentUser.name.split(' ')[0]}! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte?`);
     }
     
     if (quickReplies.children.length === 0) {
-        const replies = [
-            '💰 Escalas salariales',
-            '📋 Convenios CCT',
-            '⚖️ Leyes laborales',
-            ' Cursos',
-            '🔑 Contraseña'
-        ];
+        const replies = [' Escalas salariales', '📋 Convenios CCT', '⚖️ Leyes laborales', '🎓 Cursos', '🔑 Contraseña'];
         replies.forEach(text => {
             const btn = document.createElement('button');
             btn.className = 'quick-reply';
@@ -755,7 +745,6 @@ function initChatMessages() {
 function sendChatMessage(text) {
     addChatMessage('user', text);
     
-    // Mostrar "escribiendo..."
     const messages = document.getElementById('chatMessages');
     const typing = document.createElement('div');
     typing.className = 'chat-message bot';
@@ -763,15 +752,14 @@ function sendChatMessage(text) {
     typing.innerHTML = `
         <div class="chat-message-avatar"><i class="fas fa-robot"></i></div>
         <div class="chat-message-content" style="display: flex; gap: 4px;">
-            <span class="typing-dot" style="width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; animation: bounce 1s infinite;"></span>
-            <span class="typing-dot" style="width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; animation: bounce 1s infinite 0.2s;"></span>
-            <span class="typing-dot" style="width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; animation: bounce 1s infinite 0.4s;"></span>
+            <span style="width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; animation: bounce 1s infinite;"></span>
+            <span style="width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; animation: bounce 1s infinite 0.2s;"></span>
+            <span style="width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; animation: bounce 1s infinite 0.4s;"></span>
         </div>
     `;
     messages.appendChild(typing);
     messages.scrollTop = messages.scrollHeight;
     
-    // Respuesta del bot
     setTimeout(() => {
         document.getElementById('typingIndicator')?.remove();
         const response = getBotResponse(text);
@@ -804,7 +792,6 @@ function addChatMessage(type, text) {
 function getBotResponse(userMessage) {
     const q = userMessage.toLowerCase();
     
-    // Buscar en respuestas predefinidas
     for (const [patterns, response] of Object.entries(DATA.chatResponses)) {
         if (patterns === 'default') continue;
         const patternList = patterns.split('|');
@@ -813,7 +800,6 @@ function getBotResponse(userMessage) {
         }
     }
     
-    // Buscar en FAQs
     for (const [cat, faqs] of Object.entries(DATA.faqs)) {
         for (const faq of faqs) {
             if (faq.pregunta.toLowerCase().includes(q) || faq.respuesta.toLowerCase().includes(q)) {
@@ -822,15 +808,13 @@ function getBotResponse(userMessage) {
         }
     }
     
-    // Buscar en convenios
-    for (const conv of DATA.convenios) {
+    for (const conv of getConvenios()) {
         if (conv.titulo.toLowerCase().includes(q) || conv.resumen.toLowerCase().includes(q)) {
             return `📋 Encontré: <strong>${conv.titulo}</strong><br><br>${conv.resumen}<br><br>Podés consultarlo completo en "Convenios CCT".`;
         }
     }
     
-    // Buscar en leyes
-    for (const ley of DATA.leyes) {
+    for (const ley of getLeyes()) {
         if (ley.titulo.toLowerCase().includes(q) || ley.resumen.toLowerCase().includes(q)) {
             return `⚖️ <strong>${ley.numero} - ${ley.titulo}</strong><br><br>${ley.resumen}`;
         }
@@ -910,7 +894,7 @@ function addChatPageMessage(type, text) {
 }
 
 // ============================================
-// 7. MODO OSCURO
+// MODO OSCURO
 // ============================================
 function toggleTheme() {
     isDarkMode = !isDarkMode;
@@ -924,7 +908,7 @@ function toggleTheme() {
 }
 
 // ============================================
-// 8. TOAST NOTIFICATIONS
+// TOAST NOTIFICATIONS
 // ============================================
 function showToast(message, type = 'info') {
     const container = document.getElementById('toastContainer');
@@ -966,16 +950,14 @@ function showToast(message, type = 'info') {
 }
 
 // ============================================
-// 9. EVENTOS
+// EVENTOS
 // ============================================
 function setupEvents() {
-    // Login form
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
     
-    // Menu toggle
     const menuBtn = document.getElementById('menuBtn');
     if (menuBtn) {
         menuBtn.addEventListener('click', (e) => {
@@ -985,7 +967,6 @@ function setupEvents() {
         });
     }
     
-    // Cerrar sidebar al hacer click fuera en móvil
     document.addEventListener('click', (e) => {
         const sidebar = document.getElementById('sidebar');
         const menuBtn = document.getElementById('menuBtn');
@@ -997,7 +978,6 @@ function setupEvents() {
         }
     });
     
-    // Navegación del sidebar
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -1009,13 +989,11 @@ function setupEvents() {
         });
     });
     
-    // Theme toggle
     const themeBtn = document.getElementById('themeBtn');
     if (themeBtn) {
         themeBtn.addEventListener('click', toggleTheme);
     }
     
-    // Chat
     const chatBtn = document.getElementById('chatBtn');
     const chatClose = document.getElementById('chatClose');
     const chatForm = document.getElementById('chatForm');
@@ -1034,14 +1012,12 @@ function setupEvents() {
         });
     }
     
-    // Escape para cerrar modales
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeChat();
         }
     });
     
-    // Resize
     window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) {
             document.getElementById('sidebar').classList.remove('hidden');

@@ -1,21 +1,12 @@
 // ============================================
 // BASE DE DATOS - CAMPUS VIRTUAL AOMA SAN JUAN
-// ============================================
-// Este archivo contiene TODO el contenido:
-// - Actividades
-// - Convenios CCT
-// - Leyes laborales
-// - Escalas salariales
-// - Cursos
-// - Videos
-// - FAQs
-// - Noticias
+// Datos estructurados (sin leyes ni convenios)
 // ============================================
 
 const DATA = {
     
     // ==========================================
-    // 1. ACTIVIDADES DE AOMA (ESTRUCTURA REAL)
+    // 1. ACTIVIDADES DE AOMA
     // ==========================================
     actividades: {
         'mineria-extractiva': {
@@ -61,199 +52,7 @@ const DATA = {
     },
 
     // ==========================================
-    // 2. CONVENIOS COLECTIVOS DE TRABAJO
-    // ==========================================
-    convenios: [
-        {
-            id: 1,
-            numero: 'CTT 302/75',
-            titulo: 'Convenio Colectivo de Trabajo N° 302/75',
-            categoria: 'Minería General',
-            actividad: 'mineria-extractiva',
-            fecha: '1975-01-01',
-            actualizado: '2024-06-01',
-            resumen: 'Convenio marco para la actividad minera en Argentina. Aplica a empresas como Veladero, Gualcamayo y Vicuña.',
-            contenido: `
-                <h3>Capítulo I - Ámbito de aplicación</h3>
-                <p>El presente convenio regula las relaciones laborales en la actividad minera, comprendiendo todas las empresas que exploten minas, canteras y establecimientos de beneficio de minerales en todo el territorio nacional.</p>
-                
-                <h3>Capítulo II - Jornada de trabajo</h3>
-                <p>La jornada normal de trabajo será de 8 horas diarias o 48 semanales para trabajo diurno. Para trabajo subterráneo, la jornada será de 6 horas diarias o 36 semanales.</p>
-                
-                <h3>Capítulo III - Remuneraciones</h3>
-                <p>Los trabajadores percibirán las remuneraciones establecidas en las escalas salariales vigentes, que se actualizarán semestralmente mediante negociación paritaria entre la AOMA y las empresas.</p>
-                
-                <h3>Capítulo IV - Licencias</h3>
-                <p>Licencia anual ordinaria: 14 días corridos para antigüedad hasta 5 años, 21 días de 5 a 10 años, 28 días de 10 a 20 años, y 35 días más de 20 años de antigüedad.</p>
-                
-                <h3>Capítulo V - Adicionales</h3>
-                <p>Adicional por zona (según ubicación geográfica del establecimiento), adicional por tarea insalubre, adicional por antigüedad (1% por año), adicional por título profesional.</p>
-                
-                <h3>Capítulo VI - Delegados Sindicales</h3>
-                <p>Los delegados sindicales gozarán de fuero sindical conforme a la Ley 23.551. Tendrán derecho a horas gremiales para el ejercicio de sus funciones de representación.</p>
-            `,
-            archivo: null
-        },
-        {
-            id: 2,
-            numero: 'CTT 36/89',
-            titulo: 'Convenio Colectivo de Trabajo N° 36/89',
-            categoria: 'Cal y Piedra',
-            actividad: 'cal-piedra',
-            fecha: '1989-01-01',
-            actualizado: '2024-06-01',
-            resumen: 'Convenio para trabajadores de la industria de la cal y canteras de piedra.',
-            contenido: `
-                <h3>Ámbito de aplicación</h3>
-                <p>Comprende a todos los trabajadores de la industria de la cal y canteras de piedra, incluyendo calizas, dolomitas, mármoles, granitos y materiales para la construcción.</p>
-                
-                <h3>Categorías profesionales</h3>
-                <ul>
-                    <li><strong>Categoría A:</strong> Operario / Canterito</li>
-                    <li><strong>Categoría B:</strong> Operario calero / Operario de cantera</li>
-                    <li><strong>Categoría C:</strong> Oficial</li>
-                    <li><strong>Categoría D:</strong> Maestro calero / Maestro canterito</li>
-                    <li><strong>Categoría E:</strong> Volador habilitado</li>
-                </ul>
-                
-                <h3>Adicionales específicos</h3>
-                <p>Adicional por zona según provincia, adicional por exposición a polvo de cal/piedra, adicional por trabajo con explosivos (voladores), adicional por antigüedad.</p>
-                
-                <h3>Seguridad e higiene</h3>
-                <p>Uso obligatorio de EPP: casco, lentes de seguridad, protección auditiva, calzado de seguridad, mascarilla contra polvo. Controles médicos periódicos incluyendo espirometrías.</p>
-            `,
-            archivo: null
-        },
-        {
-            id: 3,
-            numero: 'CTT 238/94',
-            titulo: 'Convenio Colectivo de Trabajo N° 238/94',
-            categoria: 'Cemento',
-            actividad: 'cemento',
-            fecha: '1994-01-01',
-            actualizado: '2024-06-01',
-            resumen: 'Convenio específico para trabajadores de la industria del cemento.',
-            contenido: `
-                <h3>Ámbito de aplicación</h3>
-                <p>Comprende a todos los trabajadores de la industria del cemento, incluyendo plantas de producción, canteras asociadas, centros de distribución y laboratorios de control de calidad.</p>
-                
-                <h3>Categorías profesionales</h3>
-                <ul>
-                    <li><strong>Categoría A:</strong> Operario de planta</li>
-                    <li><strong>Categoría B:</strong> Operario especializado</li>
-                    <li><strong>Categoría C:</strong> Oficial 1°</li>
-                    <li><strong>Categoría D:</strong> Oficial maestro</li>
-                    <li><strong>Categoría E:</strong> Técnico</li>
-                    <li><strong>Categoría F:</strong> Delegado sindical</li>
-                </ul>
-                
-                <h3>Adicionales específicos</h3>
-                <p>Adicional por zona según provincia, adicional por exposición a polvo de cemento, adicional por trabajo en horno rotativo, adicional por antigüedad.</p>
-                
-                <h3>Condiciones especiales</h3>
-                <p>Reconocimiento de la insalubridad del trabajo en planta. Controles médicos específicos: espirometrías anuales, audiometrías, exámenes dermatológicos.</p>
-            `,
-            archivo: null
-        }
-    ],
-
-    // ==========================================
-    // 3. LEYES LABORALES
-    // ==========================================
-    leyes: [
-        {
-            id: 1,
-            numero: 'LCT 20.744',
-            titulo: 'Ley de Contrato de Trabajo',
-            categoria: 'Laboral General',
-            resumen: 'Regula las relaciones individuales de trabajo en Argentina.',
-            contenido: `
-                <h3>Artículo 1° - Objeto</h3>
-                <p>Esta ley es aplicable a toda relación de trabajo por la cual una persona física realice actos, ejecute obras o preste servicios, mediante remuneración, para otra persona.</p>
-                
-                <h3>Artículo 2° - Contrato de trabajo</h3>
-                <p>Se considera contrato de trabajo cuando una persona se obligue a realizar actos, ejecutar obras o prestar servicios a otra, bajo su dependencia, mediante una remuneración.</p>
-                
-                <h3>Artículo 92° - Período de prueba</h3>
-                <p>Los primeros 3 meses de relación laboral se consideran período de prueba. Durante este período, cualquiera de las partes puede extinguir la relación sin expresión de causa.</p>
-                
-                <h3>Artículo 245° - Indemnización por antigüedad</h3>
-                <p>Un mes de sueldo por cada año de servicio o fracción mayor a 3 meses, tomando como base la mejor remuneración mensual, normal y habitual devengada en el último año.</p>
-                
-                <h3>Artículo 247° - Preaviso</h3>
-                <p>El empleador que decida extinguir el contrato de trabajo deberá notificar al trabajador con un preaviso de 15 días si no hubiere transcurrido el período de prueba, o de 2 meses si el trabajador tuviera más de 5 años de antigüedad.</p>
-            `,
-            archivo: null
-        },
-        {
-            id: 2,
-            numero: 'Ley 19.587',
-            titulo: 'Ley de Higiene y Seguridad en el Trabajo',
-            categoria: 'Seguridad',
-            resumen: 'Establece las normas mínimas de higiene y seguridad en el trabajo.',
-            contenido: `
-                <h3>Objeto de la ley</h3>
-                <p>Establecer las normas mínimas de higiene y seguridad en el trabajo en todo el territorio nacional, aplicable a todas las actividades laborales.</p>
-                
-                <h3>Obligaciones del empleador</h3>
-                <ul>
-                    <li>Proveer elementos de protección personal adecuados</li>
-                    <li>Capacitar a los trabajadores en materia de seguridad</li>
-                    <li>Realizar controles médicos preocupacionales y periódicos</li>
-                    <li>Mantener los lugares de trabajo en condiciones seguras</li>
-                    <li>Implementar servicios de higiene y seguridad</li>
-                </ul>
-                
-                <h3>Obligaciones del trabajador</h3>
-                <ul>
-                    <li>Usar correctamente los EPP provistos</li>
-                    <li>Cumplir con las normas de seguridad establecidas</li>
-                    <li>Reportar condiciones inseguras o actos inseguros</li>
-                    <li>Someterse a los exámenes médicos obligatorios</li>
-                </ul>
-            `,
-            archivo: null
-        },
-        {
-            id: 3,
-            numero: 'Ley 24.557',
-            titulo: 'Ley de Riesgos del Trabajo',
-            categoria: 'Seguridad',
-            resumen: 'Sistema de riesgos del trabajo y ART.',
-            contenido: `
-                <h3>Accidentes de trabajo</h3>
-                <p>Se considera accidente de trabajo a todo acontecimiento súbito y violento ocurrido por el hecho o en ocasión del trabajo, que produzca en el trabajador una lesión funcional o corporal, permanente o transitoria.</p>
-                
-                <h3>Enfermedades profesionales</h3>
-                <p>Listado de enfermedades profesionales reconocidas, incluyendo silicosis, hipoacusia por ruido, enfermedades osteoarticulares, entre otras específicas del sector minero.</p>
-                
-                <h3>Prestaciones</h3>
-                <p>Asistencia médica y farmacéutica, prestaciones en dinero (incapacidad temporaria, invalidez, muerte), rehabilitación profesional.</p>
-            `,
-            archivo: null
-        },
-        {
-            id: 4,
-            numero: 'Ley 23.551',
-            titulo: 'Ley de Asociaciones Sindicales',
-            categoria: 'Gremial',
-            resumen: 'Regula los sindicatos y la actividad gremial.',
-            contenido: `
-                <h3>Personería gremial</h3>
-                <p>Reconocimiento oficial de la asociación sindical más representativa. La AOMA cuenta con personería gremial para representar a los trabajadores mineros.</p>
-                
-                <h3>Delegados sindicales</h3>
-                <p>Elección, funciones y fuero de los delegados sindicales. Los delegados gozan de estabilidad en el empleo y no pueden ser despedidos sin causa justificada.</p>
-                
-                <h3>Tutela sindical</h3>
-                <p>Protección contra el despido de dirigentes y candidatos a dirigentes sindicales. Fuero sindical durante el mandato y 1 año posterior.</p>
-            `,
-            archivo: null
-        }
-    ],
-
-    // ==========================================
-    // 4. ESCALAS SALARIALES
+    // 2. ESCALAS SALARIALES
     // ==========================================
     escalas: {
         'mineria-extractiva': [
@@ -288,7 +87,7 @@ const DATA = {
     },
 
     // ==========================================
-    // 5. CURSOS / CAPACITACIONES
+    // 3. CURSOS / CAPACITACIONES
     // ==========================================
     cursos: [
         {
@@ -372,14 +171,8 @@ const DATA = {
     ],
 
     // ==========================================
-    // 6. VIDEOS DE YOUTUBE
+    // 4. VIDEOS DE YOUTUBE
     // ==========================================
-    // Para agregar videos reales:
-    // 1. Abrí el video en YouTube
-    // 2. Copiá el ID (lo que viene después de v=)
-    //    Ejemplo: https://www.youtube.com/watch?v=ABC123XYZ
-    //    El ID es: ABC123XYZ
-    // 3. Reemplazá 'dQw4w9WgXcQ' por el ID real
     videos: [
         {
             id: 1,
@@ -428,7 +221,7 @@ const DATA = {
     ],
 
     // ==========================================
-    // 7. PREGUNTAS FRECUENTES
+    // 5. PREGUNTAS FRECUENTES
     // ==========================================
     faqs: {
         general: [
@@ -455,7 +248,7 @@ const DATA = {
     },
 
     // ==========================================
-    // 8. NOTICIAS
+    // 6. NOTICIAS
     // ==========================================
     noticias: [
         {
@@ -494,7 +287,7 @@ const DATA = {
     ],
 
     // ==========================================
-    // 9. USUARIOS POR DEFECTO
+    // 7. USUARIOS POR DEFECTO
     // ==========================================
     usuarios: [
         {
@@ -529,84 +322,27 @@ const DATA = {
     ],
 
     // ==========================================
-    // 10. RESPUESTAS DEL CHAT
+    // 8. RESPUESTAS DEL CHAT
     // ==========================================
     chatResponses: {
         'hola|buenas|buenos días': '¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte hoy?',
         'gracias|thanks': '¡De nada! 😊 Estoy aquí para lo que necesites.',
-        'adiós|chau|bye': '¡Hasta luego!  Que tengas un excelente día.',
-        'escala|salarial|sueldo': ' Podés consultar las escalas salariales actualizadas en el menú lateral → "Escalas Salariales". Están separadas por actividad: Minería Extractiva, Cemento, Cal y Piedra, y Molienda.',
+        'adiós|chau|bye': '¡Hasta luego! 👋 Que tengas un excelente día.',
+        'escala|salarial|sueldo': '💰 Podés consultar las escalas salariales actualizadas en el menú lateral → "Escalas Salariales". Están separadas por actividad: Minería Extractiva, Cemento, Cal y Piedra, y Molienda.',
         'convenio|ctt': '📋 Tenemos 3 convenios colectivos cargados: CTT 302/75 (Minería), CTT 36/89 (Cal y Piedra) y CTT 238/94 (Cemento). Podés consultarlos en "Convenios CCT".',
         'ley|legislación|legislacion': '⚖️ Tenemos 4 leyes laborales cargadas: LCT 20.744, Ley 19.587, Ley 24.557 y Ley 23.551. Podés consultarlas en "Legislación".',
-        'curso|capacitacion|capacitación': ' Tenemos 6 cursos disponibles. Podés verlos todos en "Capacitaciones".',
+        'curso|capacitacion|capacitación': '🎓 Tenemos 6 cursos disponibles. Podés verlos todos en "Capacitaciones".',
         'video|charla': '🎥 Tenemos 4 videos en la biblioteca. Podés verlos en la sección de videos.',
         'contraseña|clave|password': '🔑 Para recuperar tu contraseña, contactá al administrador al email campus@aomasanjuan.org.ar indicando tu DNI y legajo.',
         'horario|atiende|dirección': '🕐 La Seccional San Juan atiende de lunes a viernes de 8:00 a 16:00 hs. Dirección: Rivadavia 345 Oeste, San Juan Capital. Tel: (0264) 422-XXXX',
-        'beneficio|delegado': ' Como delegado tenés acceso a: capacitaciones gratuitas, escalas salariales actualizadas, asesoramiento legal, horas gremiales y representación ante la empresa.',
+        'beneficio|delegado': '👤 Como delegado tenés acceso a: capacitaciones gratuitas, escalas salariales actualizadas, asesoramiento legal, horas gremiales y representación ante la empresa.',
         'certificado': '🎓 Al completar un curso y aprobar la evaluación, obtenés un certificado digital con validez gremial.',
         'default': 'No encontré información específica sobre eso. Te recomiendo revisar las secciones del menú lateral o contactar a la Seccional al (0264) 422-XXXX.'
     }
 };
 
 // ============================================
-// FUNCIÓN DE BÚSQUEDA GLOBAL
-// ============================================
-DATA.buscar = function(query) {
-    const q = query.toLowerCase().trim();
-    if (q.length < 2) return null;
-    
-    const resultados = {
-        cursos: [],
-        videos: [],
-        convenios: [],
-        leyes: [],
-        faqs: [],
-        noticias: []
-    };
-
-    this.cursos.forEach(c => {
-        if (c.titulo.toLowerCase().includes(q) || c.descripcion.toLowerCase().includes(q)) {
-            resultados.cursos.push(c);
-        }
-    });
-
-    this.videos.forEach(v => {
-        if (v.titulo.toLowerCase().includes(q) || v.descripcion.toLowerCase().includes(q)) {
-            resultados.videos.push(v);
-        }
-    });
-
-    this.convenios.forEach(c => {
-        if (c.titulo.toLowerCase().includes(q) || c.resumen.toLowerCase().includes(q)) {
-            resultados.convenios.push(c);
-        }
-    });
-
-    this.leyes.forEach(l => {
-        if (l.titulo.toLowerCase().includes(q) || l.resumen.toLowerCase().includes(q)) {
-            resultados.leyes.push(l);
-        }
-    });
-
-    Object.entries(this.faqs).forEach(([cat, items]) => {
-        items.forEach(f => {
-            if (f.pregunta.toLowerCase().includes(q) || f.respuesta.toLowerCase().includes(q)) {
-                resultados.faqs.push({ ...f, categoria: cat });
-            }
-        });
-    });
-
-    this.noticias.forEach(n => {
-        if (n.titulo.toLowerCase().includes(q) || n.resumen.toLowerCase().includes(q)) {
-            resultados.noticias.push(n);
-        }
-    });
-
-    return resultados;
-};
-
-// ============================================
-// FUNCIÓN DE FORMATEO DE MONEDA
+// FUNCIONES AUXILIARES
 // ============================================
 DATA.formatCurrency = function(amount) {
     return new Intl.NumberFormat('es-AR', {
@@ -616,9 +352,6 @@ DATA.formatCurrency = function(amount) {
     }).format(amount);
 };
 
-// ============================================
-// FUNCIÓN DE FORMATEO DE FECHA
-// ============================================
 DATA.formatDate = function(dateString) {
     if (!dateString) return '-';
     const date = new Date(dateString);
@@ -638,7 +371,5 @@ if (typeof window !== 'undefined') {
 
 console.log('✅ Base de datos AOMA cargada');
 console.log('📋 ' + Object.keys(DATA.actividades).length + ' actividades');
-console.log(' ' + DATA.convenios.length + ' convenios');
-console.log('⚖️ ' + DATA.leyes.length + ' leyes');
 console.log('🎓 ' + DATA.cursos.length + ' cursos');
-console.log('🎥 ' + DATA.videos.length + ' videos');
+console.log(' ' + DATA.videos.length + ' videos');
