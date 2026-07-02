@@ -1590,3 +1590,136 @@ body {
 [data-theme="dark"] .nota-modificacion {
     background: rgba(245, 158, 11, 0.1);
 }
+/* ============================================
+   BARRA DE BÚSQUEDA INTERNA (LEYES/CONVENIOS)
+   ============================================ */
+.search-bar-container {
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.search-bar-container .search-icon {
+    color: var(--primary);
+    font-size: 1.125rem;
+}
+
+.search-bar-container input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    background: var(--bg-input);
+    color: var(--text-primary);
+}
+
+.search-bar-container input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.search-bar-container .search-count {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.search-bar-container .btn-search-nav {
+    width: 32px;
+    height: 32px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.search-bar-container .btn-search-nav:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.search-bar-container .btn-search-nav:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.search-bar-container .btn-search-nav:disabled:hover {
+    background: var(--bg-input);
+    color: var(--text-secondary);
+}
+
+/* Resaltado de coincidencias */
+.search-highlight {
+    background: #fef08a;
+    color: #1f2937;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.search-highlight.active {
+    background: #f59e0b;
+    color: white;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="dark"] .search-highlight {
+    background: #854d0e;
+    color: #fef3c7;
+}
+
+[data-theme="dark"] .search-highlight.active {
+    background: #f59e0b;
+    color: #0f172a;
+}
+
+/* Botón flotante de búsqueda */
+.floating-search-btn {
+    position: fixed;
+    bottom: 6rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition);
+    z-index: 90;
+    display: none;
+}
+
+.floating-search-btn.visible {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.floating-search-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Indicador de búsqueda activa en el contenido */
+.ley-content.searching {
+    scroll-behavior: smooth;
+}
