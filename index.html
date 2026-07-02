@@ -1,431 +1,182 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es" class="h-full bg-slate-950">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Virtual Premium | AOMA Seccional San Juan</title>
-    
-    <!-- Tipografía Profesional (Coursera / Notion) -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-    
-    <!-- Iconografía Técnica Industrial -->
+    <title>Campus Virtual Premium - AOMA San Juan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Vinculación corregida a tu archivo: style.css -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="css/style.css">
-
-    <style>
-        /* Estilos estructurales del Layout Base (No modifican funcionalidad) */
-        :root {
-            --sidebar-width: 260px;
-            --topbar-height: 70px;
-        }
-
-        html, body {
-            height: 100%;
-            overflow: hidden;
-            background-color: var(--bg-app);
-        }
-
-        .hidden { display: none !important; }
-
-        /* --- Pantalla de Autenticación Premium --- */
-        .auth-screen-wrapper {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle at top right, rgba(59, 146, 255, 0.08), transparent), var(--bg-app);
-            padding: var(--space-4);
-        }
-
-        /* --- Contenedor de la Plataforma Core --- */
-        .platform-container {
-            display: flex;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Sidebar Navegación Lateral (Estilo Notion) */
-        .platform-sidebar {
-            width: var(--sidebar-width);
-            background: var(--bg-surface);
-            border-right: 1px solid var(--border-subtle);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            z-index: 10;
-        }
-
-        .sidebar-brand {
-            padding: var(--space-5) var(--space-6);
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-        }
-
-        .sidebar-nav-list {
-            list-style: none;
-            padding: var(--space-4) var(--space-3);
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .sidebar-nav-item a {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-3) var(--space-4);
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: var(--font-sm);
-            font-weight: var(--weight-medium);
-            border-radius: var(--radius-sm);
-            transition: all 0.15s ease;
-        }
-
-        .sidebar-nav-item a:hover, .sidebar-nav-item.active a {
-            background: rgba(59, 146, 255, 0.08);
-            color: var(--primary-light);
-        }
-
-        /* Área de Contenido Principal con Topbar */
-        .platform-view-space {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .platform-topbar {
-            height: var(--topbar-height);
-            background: var(--bg-surface);
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 var(--space-6);
-        }
-
-        .dynamic-stage {
-            flex-grow: 1;
-            overflow-y: auto;
-            background: var(--bg-app);
-        }
-
-        /* --- Sistema de Notificaciones Flotantes (Toast) --- */
-        #toast-container {
-            position: fixed;
-            bottom: var(--space-6);
-            right: var(--space-6);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-2);
-        }
-    </style>
 </head>
-<body>
+<body class="h-full font-sans antialiased text-slate-200 selection:bg-cyan-500/30 selection:text-cyan-200">
 
-    <!-- ================================================================= -->
-    <!-- 1. MÓDULO DE AUTENTICACIÓN (LOGIN)                                -->
-    <!-- ================================================================= -->
-    <div id="auth-layout-wrapper" class="auth-screen-wrapper">
-        <div class="card-premium animate-slide-up" style="width: 100%; max-width: 420px; padding: var(--space-8);">
-            <div style="text-align: center; margin-bottom: var(--space-6);">
-                <div style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: rgba(59,146,255,0.1); border-radius: var(--radius-md); margin-bottom: var(--space-3); border: 1px solid rgba(59,146,255,0.2);">
-                    <i class="fa-solid fa-helmet-safety" style="color: var(--primary); font-size: var(--font-2xl);"></i>
-                </div>
-                <h1 style="font-size: var(--font-xl); font-weight: var(--weight-bold); color: var(--text-main); letter-spacing: -0.025em;">AOMA San Juan</h1>
-                <p style="color: var(--text-muted); font-size: var(--font-sm);">Campus Virtual de Capacitación Sindical</p>
+    <div id="auth-layout-wrapper" class="hidden min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
+        <div class="sm:mx-auto w-full sm:max-w-md text-center">
+            <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/20 mb-6">
+                <i data-lucide="shield-check" class="h-9 w-9 text-white animate-pulse"></i>
             </div>
+            <h2 class="text-3xl font-bold tracking-tight text-white font-display">AOMA San Juan</h2>
+            <p class="mt-2 text-sm text-slate-400">Campus Virtual de Capacitación Sindical Premium</p>
+        </div>
 
-            <form id="login-form">
-                <div class="form-group">
-                    <label class="form-label" for="login-email">Legajo Digital / Email</label>
-                    <input type="email" id="login-email" class="form-input" required placeholder="nombre@afiliado.com" autocomplete="username">
-                </div>
-                <div class="form-group" style="margin-bottom: var(--space-5);">
-                    <label class="form-label" for="login-password">Contraseña de Acceso</label>
-                    <input type="password" id="login-password" class="form-input" required placeholder="••••••••" autocomplete="current-password">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <span>Ingresar a la Plataforma</span> <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                </button>
-            </form>
+        <div class="mt-8 sm:mx-auto w-full sm:max-w-md px-4 sm:px-0">
+            <div class="glass-panel border border-white/10 px-6 py-8 shadow-2xl rounded-2xl sm:px-10 backdrop-blur-xl bg-slate-900/40">
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="login-email" class="block text-sm font-medium text-slate-300">Correo Electrónico</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-lucide="mail" class="h-5 w-5 text-slate-500"></i>
+                            </div>
+                            <input id="login-email" name="email" type="email" autocomplete="email" required 
+                                class="block w-full pl-10 pr-4 py-2.5 bg-slate-950/60 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all text-sm" 
+                                placeholder="ejemplo@aoma.org">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="login-password" class="block text-sm font-medium text-slate-300">Contraseña Segura</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-lucide="lock" class="h-5 w-5 text-slate-500"></i>
+                            </div>
+                            <input id="login-password" name="password" type="password" autocomplete="current-password" required 
+                                class="block w-full pl-10 pr-4 py-2.5 bg-slate-950/60 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all text-sm" 
+                                placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-slate-800 bg-slate-950 text-cyan-600 focus:ring-cyan-500/30 accent-cyan-500">
+                            <label for="remember-me" class="ml-2 block text-sm text-slate-400">Recordar credenciales</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="flex w-full justify-center items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 hover:from-cyan-400 hover:to-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 transition-all duration-300 active:scale-[0.98]">
+                            <span>Iniciar Sesión Profesional</span>
+                            <i data-lucide="arrow-right" class="h-4 w-4"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-
-    <!-- ================================================================= -->
-    <!-- 2. ESTRUCTURA CENTRAL DE LA PLATAFORMA (SPA)                      -->
-    <!-- ================================================================= -->
-    <div id="main-platform-layout" class="platform-container hidden">
-        
-        <!-- SIDEBAR DE NAVEGACIÓN (Estilo Microsoft Learn / Notion) -->
-        <aside class="platform-sidebar">
-            <div>
-                <div class="sidebar-brand">
-                    <i class="fa-solid fa-mountain-city" style="color: var(--primary); font-size: var(--font-xl);"></i>
-                    <strong style="font-size: var(--font-base); font-weight: var(--weight-bold); color: var(--text-main); letter-spacing: -0.01em;">AOMA Campus</strong>
+    <div id="main-platform-layout" class="hidden min-h-full flex overflow-hidden bg-slate-950">
+        <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out border-r border-slate-900 bg-slate-950/80 backdrop-blur-xl flex flex-col justify-between">
+            <div class="flex flex-col flex-1 overflow-y-auto pt-5 pb-4">
+                <div class="flex items-center flex-shrink-0 px-4 gap-3 mb-6">
+                    <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-cyan-500/10">A</div>
+                    <span class="text-lg font-bold tracking-tight text-white">AOMA San Juan</span>
+                    <span id="sidebar-role-badge" class="ml-auto inline-flex items-center rounded-full bg-cyan-500/10 px-2 py-0.5 text-xs font-medium text-cyan-400 border border-cyan-500/20">--</span>
                 </div>
-                
-                <nav>
-                    <ul class="sidebar-nav-list">
-                        <li class="sidebar-nav-item active" id="nav-dashboard">
-                            <a href="#dashboard"><i class="fa-solid fa-chart-pie"></i> Panel de Inicio</a>
-                        </li>
-                        <li class="sidebar-nav-item" id="nav-capacitaciones">
-                            <a href="#capacitaciones"><i class="fa-solid fa-graduation-cap"></i> Cursos e Inducción</a>
-                        </li>
-                        <li class="sidebar-nav-item" id="nav-videos">
-                            <a href="#videos"><i class="fa-solid fa-photo-film"></i> Videoteca Técnica</a>
-                        </li>
-                        <li class="sidebar-nav-item" id="nav-evaluaciones">
-                            <a href="#evaluaciones"><i class="fa-solid fa-file-signature"></i> Evaluaciones</a>
-                        </li>
-                        <li class="sidebar-nav-item" id="nav-certificados">
-                            <a href="#certificados"><i class="fa-solid fa-award"></i> Mis Certificados</a>
-                        </li>
-                        <li class="sidebar-nav-item" id="nav-chat">
-                            <a href="#chat"><i class="fa-solid fa-robot"></i> Asistente AI Gremial</a>
-                        </li>
-                        <li class="sidebar-nav-item" id="nav-admin">
-                            <a href="#admin"><i class="fa-solid fa-sliders"></i> Consola de Control</a>
-                        </li>
-                    </ul>
+
+                <nav class="flex-1 px-3 space-y-1">
+                    <a href="#dashboard" class="nav-link nav-trigger flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all group gap-3">
+                        <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
+                        <span>Panel Central</span>
+                    </a>
+                    <a href="#capacitaciones" class="nav-link nav-trigger flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all group gap-3">
+                        <i data-lucide="graduation-cap" class="h-5 w-5"></i>
+                        <span>Capacitaciones</span>
+                    </a>
+                    <a href="#videos" class="nav-link nav-trigger flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all group gap-3">
+                        <i data-lucide="clapperboard" class="h-5 w-5"></i>
+                        <span>Videoteca</span>
+                    </a>
+                    <a href="#evaluaciones" class="nav-link nav-trigger flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all group gap-3">
+                        <i data-lucide="file-spreadsheet" class="h-5 w-5"></i>
+                        <span>Evaluaciones</span>
+                    </a>
+                    <a href="#certificados" class="nav-link nav-trigger flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all group gap-3">
+                        <i data-lucide="award" class="h-5 w-5"></i>
+                        <span>Mis Certificados</span>
+                    </a>
+                    <a href="#convenios" class="nav-link nav-trigger flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all group gap-3">
+                        <i data-lucide="gavel" class="h-5 w-5"></i>
+                        <span>Normativas CCT</span>
+                    </a>
+                    <a href="#chat" class="nav-link nav-trigger flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all group gap-3">
+                        <i data-lucide="bot" class="h-5 w-5 text-cyan-400"></i>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 font-semibold">Asistente IA</span>
+                    </a>
+
+                    <div class="pt-4 mt-4 border-t border-slate-900 admin-only hidden">
+                        <p class="px-3 text-xs font-semibold text-slate-500 tracking-wider uppercase mb-2">Administración</p>
+                        <a href="#admin" class="nav-link nav-trigger flex items-center px-3 py-2.5 text-sm font-medium rounded-xl transition-all group gap-3 text-amber-400/80 hover:bg-amber-500/10">
+                            <i data-lucide="sliders" class="h-5 w-5"></i>
+                            <span>Consola de Gestión</span>
+                        </a>
+                    </div>
                 </nav>
             </div>
 
-            <!-- Perfil del Operario / Cierre de Sesión inferior -->
-            <div style="padding: var(--space-4); border-top: 1px solid var(--border-subtle); background: rgba(0,0,0,0.05);">
-                <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3);">
-                    <img id="user-avatar-display" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Avatar" style="width: 36px; height: 36px; border-radius: var(--radius-round); object-fit: cover; border: 1px solid var(--border-subtle);">
-                    <div style="overflow: hidden;">
-                        <span id="user-name-display" style="display: block; font-size: var(--font-sm); font-weight: var(--weight-semibold); color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Operario</span>
-                        <span id="user-role-display" class="badge badge-primary" style="font-size: 9px; padding: 1px 6px;">Afiliado</span>
+            <div class="flex-shrink-0 flex border-t border-slate-900 p-4 bg-slate-950/40">
+                <div id="profile-menu-trigger" class="flex-shrink-0 w-full group block cursor-pointer">
+                    <div class="flex items-center relative">
+                        <div>
+                            <img id="user-avatar-display" class="inline-block h-10 w-10 rounded-xl object-cover border border-slate-800" src="" alt="Avatar">
+                        </div>
+                        <div class="ml-3 overflow-hidden max-w-[140px]">
+                            <p id="user-name-display" class="text-sm font-medium text-white truncate">Cargando...</p>
+                            <p id="user-role-display" class="text-xs text-slate-500 truncate">Ver Perfil</p>
+                        </div>
+                        <i data-lucide="chevron-up" class="h-4 w-4 ml-auto text-slate-500 transition-transform duration-200"></i>
+
+                        <div id="profile-dropdown-menu" class="hidden absolute bottom-12 left-0 w-full bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-2 z-50 animate-fade-in">
+                            <a href="#dashboard" class="nav-trigger flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-lg transition-all">
+                                <i data-lucide="user" class="h-4 w-4"></i><span>Mi Cuenta</span>
+                            </a>
+                            <button id="logout-trigger" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all mt-1">
+                                <i data-lucide="log-out" class="h-4 w-4"></i><span>Cerrar Sesión</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <button id="logout-trigger" class="btn btn-secondary btn-sm" style="width: 100%; border-color: rgba(239,68,68,0.2); color: var(--danger);">
-                    <i class="fa-solid fa-power-off"></i> Cerrar Sesión
-                </button>
             </div>
         </aside>
 
-        <!-- ÁREA CENTRAL ADAPTABLE (Vistas Dinámicas) -->
-        <main class="platform-view-space">
-            
-            <!-- TOPBAR: Buscador Global Inteligente y Preferencias -->
-            <header class="platform-topbar">
-                <!-- Buscador Predictivo Premium (Estilo Cmd+P de Notion) -->
-                <div style="width: 100%; max-width: 400px; position: relative;">
-                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: var(--font-sm);"></i>
-                    <input type="text" id="global-search-input" class="form-input" placeholder="Buscar cursos, convenios, escalas..." style="padding-left: var(--space-8); height: 38px; border-radius: var(--radius-sm);">
-                </div>
+        <div class="flex flex-col w-0 flex-1 md:pl-64 min-h-screen">
+            <header class="sticky top-0 z-30 flex h-16 bg-slate-950/60 backdrop-blur-md border-b border-slate-900 px-4 sm:px-6 lg:px-8 justify-between items-center">
+                <button id="sidebar-toggle" class="text-slate-400 hover:text-white md:hidden p-2 rounded-xl hover:bg-slate-900 transition-all">
+                    <i data-lucide="menu" class="h-6 w-6"></i>
+                </button>
 
-                <!-- Controles del Sistema -->
-                <div style="display: flex; align-items: center; gap: var(--space-4);">
-                    <button id="theme-toggle-trigger" class="btn btn-secondary" style="width: 38px; height: 38px; padding: 0; border-radius: var(--radius-sm);" title="Alternar Interfaz">
-                        <i id="theme-toggle-icon" class="fa-solid fa-moon"></i>
-                    </button>
-                    <div style="height: 20px; width: 1px; background: var(--border-subtle);"></div>
-                    <span style="font-size: var(--font-xs); font-weight: var(--weight-semibold); color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">
-                        Seccional San Juan
-                    </span>
-                </div>
-            </header>
-
-            <!-- CONTENEDOR DE MONTAJE DE VISTAS (Inyección SPA vía Router) -->
-            <div id="view-router-stage" class="dynamic-stage">
-                <!-- El core de la SPA renderiza los componentes dinámicamente aquí -->
-            </div>
-        </main>
-    </div>
-
-    <!-- CONTENEDOR GLOBAL PARA TOASTS NOTIFICADORES -->
-    <div id="toast-container"></div>
-
-
-    <!-- ================================================================= -->
-    <!-- 3. INYECCIÓN DEL ECOSISTEMA JAVASCRIPT                            -->
-    <!-- ================================================================= -->
-    <!-- Inicializadores de Tokens de Diseño e Identidad -->
-    <script src="js/theme.js"></script>
-    <script>if(window.ModuleTheme) window.ModuleTheme.init();</script>
-
-    <!-- Módulos Estructurales de la Aplicación -->
-    <script src="js/login.js"></script>
-    <script src="js/search.js"></script>
-    
-    <!-- Módulos de Vistas de Capacitación y Gestión Gremial -->
-    <script src="js/videos.js"></script>
-    <script src="js/evaluaciones.js"></script>
-    <script src="js/admin.js"></script>
-    <script src="js/certificados.js"></script>
-    <script src="js/chat.js"></script>
-
-    <!-- Orquestador Principal de la Plataforma (Router & Safe Render) -->
-    <script>
-        (function() {
-            // Asegurar Base de datos local para la simulación
-            if (!localStorage.getItem('aoma_usuarios')) {
-                localStorage.setItem('aoma_usuarios', JSON.stringify([
-                    { id: 'u_adm', email: 'admin@aoma.com', password: 'admin', nombre: 'Eduardo', apellido: 'Castro', rol: 'admin', puesto: 'Secretario General', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80' },
-                    { id: 'u_del', email: 'delegado@aoma.com', password: 'miner', nombre: 'Carlos', apellido: 'Gómez', rol: 'user', puesto: 'Delegado - Veladero', avatar: 'https://images.unsplash.com/photo-1541577140430-9a32d009de50?auto=format&fit=crop&w=150&q=80' }
-                ]));
-            }
-
-            window.AppInstance = {
-                init() {
-                    this.loadProfileDOM();
-                    this.bindRouterEvents();
-                    this.handleRouting();
-                },
-
-                loadProfileDOM() {
-                    const sessionRaw = localStorage.getItem('aoma_session');
-                    
-                    if (!sessionRaw) {
-                        const authLayout = document.getElementById('auth-layout-wrapper');
-                        const mainLayout = document.getElementById('main-platform-layout');
-                        if (authLayout && mainLayout) {
-                            authLayout.classList.remove('hidden');
-                            mainLayout.classList.add('hidden');
-                        }
-                        return;
-                    }
-
-                    const session = JSON.parse(sessionRaw);
-                    const nameDisplay = document.getElementById('user-name-display');
-                    const roleDisplay = document.getElementById('user-role-display');
-                    const avatarDisplay = document.getElementById('user-avatar-display');
-
-                    // Fallbacks seguros para evitar errores indefinidos .toUpperCase()
-                    const nombreCompleto = `${session.nombre || 'Operario'} ${session.apellido || ''}`.trim();
-                    if (nameDisplay) nameDisplay.innerText = nombreCompleto;
-                    
-                    if (roleDisplay) {
-                        const rolLimpio = (session.rol || 'user').toLowerCase();
-                        roleDisplay.innerText = rolLimpio === 'admin' ? 'Comisión Directiva' : 'Afiliado Gremial';
-                        roleDisplay.className = rolLimpio === 'admin' ? 'badge badge-danger' : 'badge badge-primary';
-                    }
-                    
-                    if (avatarDisplay) {
-                        avatarDisplay.src = session.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80';
-                    }
-                },
-
-                bindRouterEvents() {
-                    window.removeEventListener('hashchange', this.routeHandlerRef);
-                    this.routeHandlerRef = () => this.handleRouting();
-                    window.addEventListener('hashchange', this.routeHandlerRef);
-                    
-                    const themeBtn = document.getElementById('theme-toggle-trigger');
-                    if (themeBtn && window.ModuleTheme) {
-                        themeBtn.onclick = () => window.ModuleTheme.toggleTheme();
-                    }
-                },
-
-                handleRouting() {
-                    const hash = window.location.hash || '#dashboard';
-                    const stage = document.getElementById('view-router-stage');
-                    if (!stage) return;
-
-                    document.querySelectorAll('.sidebar-nav-item').forEach(item => item.classList.remove('active'));
-                    const currentNavItem = document.getElementById(`nav-${hash.replace('#', '')}`);
-                    if (currentNavItem) currentNavItem.classList.add('active');
-
-                    switch(hash) {
-                        case '#dashboard':
-                            this.renderDashboardMock(stage);
-                            break;
-                        case '#capacitaciones':
-                            stage.innerHTML = `<div class="container-premium animate-fade-in"><h2 class="page-title">Cursos de Capacitación</h2><p class="page-subtitle">Sección en proceso de vinculación de trayectos formativos.</p></div>`;
-                            break;
-                        case '#videos':
-                            if (window.ModuleVideos) window.ModuleVideos.init(stage);
-                            break;
-                        case '#evaluaciones':
-                            if (window.ModuleEvaluaciones) window.ModuleEvaluaciones.init(stage);
-                            break;
-                        case '#certificados':
-                            if (window.ModuleCertificados) window.ModuleCertificados.init(stage);
-                            break;
-                        case '#chat':
-                            if (window.ModuleChat) window.ModuleChat.init(stage);
-                            break;
-                        case '#admin':
-                            if (window.ModuleAdmin) window.ModuleAdmin.init(stage);
-                            break;
-                        default:
-                            stage.innerHTML = `<div style="padding:var(--space-12) 0; text-align:center;"><h3 class="page-title">Error 404</h3><p class="page-subtitle">Trayectoria informativa no localizada.</p></div>`;
-                    }
-                },
-
-                renderDashboardMock(stage) {
-                    const sessionRaw = localStorage.getItem('aoma_session');
-                    const session = sessionRaw ? JSON.parse(sessionRaw) : { nombre: 'Compañero' };
-                    stage.innerHTML = `
-                        <div class="container-premium animate-fade-in">
-                            <div style="margin-bottom: var(--space-8);">
-                                <h2 class="page-title">¡Hola, ${session.nombre || 'Compañero'}!</h2>
-                                <p class="page-subtitle">Bienvenido a tu entorno premium de desarrollo y formación sindical continua.</p>
-                            </div>
-
-                            <div class="grid-dashboard">
-                                <div class="card-premium">
-                                    <h4 style="margin-bottom:var(--space-2); font-weight:var(--weight-semibold);"><i class="fa-solid fa-user-shield" style="color:var(--primary); margin-right:8px;"></i> Mi Perfil Profesional</h4>
-                                    <p style="font-size:var(--font-sm); color:var(--text-muted); margin-bottom:var(--space-4);">Consulte sus datos de encuadre paritario, convenios vigentes y estado de legajo.</p>
-                                    <a href="#certificados" class="btn btn-secondary btn-sm" style="width:100%;">Revisar Legajo</a>
-                                </div>
-                                <div class="card-premium">
-                                    <h4 style="margin-bottom:var(--space-2); font-weight:var(--weight-semibold);"><i class="fa-solid fa-graduation-cap" style="color:var(--success); margin-right:8px;"></i> Aulas de Capacitación</h4>
-                                    <p style="font-size:var(--font-sm); color:var(--text-muted); margin-bottom:var(--space-4);">Acceda a las clases grabadas por los comités de seguridad e higiene minera.</p>
-                                    <a href="#videos" class="btn btn-primary btn-sm" style="width:100%;">Ir a Videoteca</a>
-                                </div>
-                                <div class="card-premium">
-                                    <h4 style="margin-bottom:var(--space-2); font-weight:var(--weight-semibold);"><i class="fa-solid fa-brain" style="color:var(--warning); margin-right:8px;"></i> Consultas Normativas AI</h4>
-                                    <p style="font-size:var(--font-sm); color:var(--text-muted); margin-bottom:var(--space-4);">Despeje dudas sobre el articulado del CCT 599/10 y adicionales de convenio.</p>
-                                    <a href="#chat" class="btn btn-secondary btn-sm" style="width:100%;">Iniciar Asistente</a>
+                <div class="flex items-center gap-4 ml-auto">
+                    <div class="relative">
+                        <button id="notification-btn" class="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-slate-900 transition-all relative">
+                            <i data-lucide="bell" class="h-5 w-5"></i>
+                            <span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-cyan-500 ring-4 ring-slate-950"></span>
+                        </button>
+                        <div id="notification-panel" class="hidden absolute right-0 mt-2 w-80 bg-slate-900 border border-slate-800 shadow-2xl rounded-2xl p-4 z-50 animate-fade-in">
+                            <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Notificaciones Recientes</h4>
+                            <div class="space-y-3">
+                                <div class="p-2 bg-slate-950/50 rounded-lg border border-slate-800/60">
+                                    <p class="text-xs font-medium text-white">Nueva Escala Homologada</p>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Se cargaron los haberes actualizados de Minería Metalífera.</p>
                                 </div>
                             </div>
                         </div>
-                    `;
-                },
+                    </div>
+                </div>
+            </header>
 
-                showToast(message, type = 'info') {
-                    const container = document.getElementById('toast-container');
-                    if (!container) return;
+            <main id="app-content-target" class="flex-1 relative overflow-y-auto p-4 sm:p-6 lg:p-8 focus:outline-none">
+                </main>
+        </div>
+    </div>
 
-                    const toast = document.createElement('div');
-                    toast.className = 'card-premium animate-slide-up';
-                    
-                    let bgBorder = 'var(--primary)';
-                    if (type === 'success') bgBorder = 'var(--success)';
-                    if (type === 'warning') bgBorder = 'var(--warning)';
-                    if (type === 'danger') bgBorder = 'var(--danger)';
-
-                    toast.style = `padding: var(--space-3) var(--space-5); background: var(--bg-surface); border-left: 4px solid ${bgBorder}; display: flex; align-items: center; gap: var(--space-3); box-shadow: var(--shadow-premium); min-width: 280px; font-size: var(--font-sm); color: var(--text-main);`;
-                    toast.innerHTML = `<i class="fa-solid fa-circle-info" style="color:${bgBorder};"></i> <span>${message}</span>`;
-                    
-                    container.appendChild(toast);
-                    setTimeout(() => { toast.remove(); }, 3500);
-                }
-            };
-
-            // Ejecución segura una vez cargado el DOM
-            document.addEventListener('DOMContentLoaded', () => {
-                if (localStorage.getItem('aoma_session')) {
-                    window.AppInstance.init();
-                } else if (window.AuthModule) {
-                    window.AuthModule.evaluateSecurityGuard();
-                }
-            });
-        })();
+    <script src="js/app.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/evaluaciones.js"></script>
+    <script>
+        // Inicializador de Lucide Icons diferido para mutaciones dinámicas del DOM
+        document.addEventListener('DOMContentLoaded', () => { if(window.lucide) lucide.createIcons(); });
     </script>
 </body>
 </html>

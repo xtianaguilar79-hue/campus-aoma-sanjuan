@@ -1,594 +1,172 @@
-/**
- * CAMPUS VIRTUAL PREMIUM - AOMA SECCIONAL SAN JUAN
- * Capa 02: Estilos Estructurales del Layout Core y Componentes Reutilizables
- * Soportado sobre: Flexbox, CSS Grid y especificaciones semánticas CSS3.
- */
+/* VARIABLES CSS - SISTEMA DE DISEÑO PREMIUM INDUSTRIAL DE AOMA */
+:root {
+    --primary: #06b6d4;      /* Cyan 500 */
+    --primary-hover: #0891b2;/* Cyan 600 */
+    --bg-app: #020617;       /* Slate 950 */
+    --bg-surface: #0f172a;   /* Slate 900 */
+    --border-subtle: #1e293b; /* Slate 800 */
+    --text-main: #f8fafc;     /* Slate 50 */
+    --text-muted: #94a3b8;    /* Slate 420 */
+    
+    --radius-xl: 1rem;
+    --radius-2xl: 1.5rem;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-/* ========================================== */
-/* 1. RESET REUTILIZABLE Y REGLAS BASE       */
-/* ========================================== */
+/* RESET COMPORTAMIENTO GENERAL */
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-    font-family: var(--font-body);
-    font-size: var(--font-base);
+    background-color: var(--bg-app);
     color: var(--text-main);
-    background-color: var(--bg-main);
-    line-height: var(--lh-base);
+    font-family: 'Inter', sans-serif;
     overflow-x: hidden;
-    transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-header);
-    color: var(--primary-dark);
-    font-weight: var(--weight-bold);
-    line-height: var(--lh-tight);
+/* ANIMACIONES NATIVAS PREMIUM */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-a {
-    color: var(--primary-light);
-    text-decoration: none;
-    transition: var(--transition-fast);
+/* SKELETON LOADING ELEGANTE */
+@keyframes skeletonPulse {
+    0%, 100% { background-color: #1e293b; }
+    50% { background-color: #334155; }
+}
+.skeleton {
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+    border-radius: 0.5rem;
 }
 
-ul {
-    list-style: none;
+/* COMPONENTES DE ENRUTADO SINDICAL - SATELLITE LAYOUTS */
+#main-platform-layout.sidebar-collapsed #app-sidebar {
+    transform: translateX(-100%);
+}
+@media (min-width: 768px) {
+    #main-platform-layout.sidebar-collapsed .md\:pl-64 {
+        padding-left: 0;
+    }
+}
+#main-platform-layout.mobile-sidebar-active #app-sidebar {
+    transform: translateX(0);
 }
 
-button, input, select, textarea {
-    font-family: inherit;
-    font-size: inherit;
-    background: none;
-    border: none;
-    outline: none;
-}
-
-button {
-    cursor: pointer;
-}
-
-/* Scrollbar Accesible y Sutil */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-::-webkit-scrollbar-thumb {
-    background: var(--text-light);
-    border-radius: var(--radius-sm);
-}
-::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
-}
-
-/* Accesibilidad Estricta: Foco Visible Transversal */
-:focus-visible {
-    outline: 3px solid var(--primary-light);
-    outline-offset: 2px;
-}
-
-/* Clases Utilitarias Globales */
-.hidden { display: none !important; }
-.text-danger { color: var(--danger) !important; }
-.glassmorphism {
-    background: var(--bg-surface);
-    backdrop-filter: var(--blur-effect);
-    -webkit-backdrop-filter: var(--blur-effect);
-    border: 1px solid var(--border-glass);
-}
-
-/* ========================================== */
-/* 2. CAPA DE AUTENTICACIÓN (LOGIN SCREEN)    */
-/* ========================================== */
-.login-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: var(--z-modal);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-4);
-    background: linear-gradient(rgba(0, 45, 89, 0.8), rgba(0, 10, 20, 0.95)), 
-                url('https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80') center center / cover no-repeat;
-}
-
-.login-card {
-    width: 100%;
-    max-width: 480px;
-    border-radius: var(--radius-lg);
-    padding: var(--space-8);
-    box-shadow: var(--shadow-lg);
-    background: rgba(255, 255, 255, 0.85) !important; /* Forzado light en Login base */
-}
-
-.login-header {
-    text-align: center;
-    margin-bottom: var(--space-6);
-}
-
-.logo-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-bottom: var(--space-3);
-}
-
-.institutional-logo {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-family: var(--font-header);
-    font-size: var(--font-2xl);
-    font-weight: var(--weight-black);
-    color: var(--primary);
-}
-
-.logo-icon-fallback {
-    font-size: var(--font-3xl);
-    color: var(--accent);
-}
-
-.login-subtitle {
+/* ESTILOS LINK SIDEBAR */
+.nav-link {
     color: var(--text-muted);
-    font-size: var(--font-sm);
-    margin-top: var(--space-1);
-}
-
-.input-group {
-    margin-bottom: var(--space-4);
-}
-
-.input-group label {
-    display: block;
-    font-size: var(--font-sm);
-    font-weight: var(--weight-semibold);
-    color: var(--primary-dark);
-    margin-bottom: var(--space-2);
-}
-
-.input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.input-wrapper input {
-    width: 100%;
-    padding: var(--space-3) var(--space-4) var(--space-3) var(--space-10);
-    background: var(--bg-surface);
-    border: 1px solid var(--text-light);
-    border-radius: var(--radius-md);
-    color: var(--text-main);
-    transition: var(--transition-fast);
-}
-
-.input-wrapper input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(0, 75, 147, 0.15);
-}
-
-.input-icon {
-    position: absolute;
-    left: var(--space-4);
-    color: var(--text-muted);
-    pointer-events: none;
-}
-
-.btn-toggle-password {
-    position: absolute;
-    right: var(--space-4);
-    color: var(--text-muted);
-    font-size: var(--font-sm);
-}
-
-.login-utilities {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--space-6);
-    font-size: var(--font-sm);
-}
-
-/* Custom Checkbox */
-.checkbox-container {
-    display: flex;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-    user-select: none;
-    gap: var(--space-2);
-}
-
-.forgot-password-link {
-    font-weight: var(--weight-medium);
-}
-.forgot-password-link:hover {
-    text-decoration: underline;
-}
-
-.btn-primary {
-    width: 100%;
-    background: var(--gradient-primary);
-    color: var(--text-white);
-    padding: var(--space-4);
-    border-radius: var(--radius-md);
-    font-weight: var(--weight-semibold);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-    box-shadow: var(--shadow-md);
-    transition: var(--transition-normal);
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-    filter: brightness(1.1);
-}
-
-.login-footer {
-    text-align: center;
-    margin-top: var(--space-6);
-    font-size: var(--font-xs);
-    color: var(--text-muted);
-    border-top: 1px solid var(--border-subtle);
-    padding-top: var(--space-4);
-}
-
-/* ========================================== */
-/* 3. ARQUITECTURA DE CONTENEDORES (SPA WEB SHELL) */
-/* ========================================== */
-.app-layout {
-    display: grid;
-    grid-template-areas: 
-        "header header"
-        "sidebar main"
-        "sidebar footer";
-    grid-template-rows: var(--header-height) 1fr var(--footer-height);
-    grid-template-columns: var(--sidebar-width) 1fr;
-    min-height: 100vh;
-    transition: grid-template-columns var(--transition-smooth);
-}
-
-.app-layout.sidebar-collapsed {
-    grid-template-columns: var(--sidebar-collapsed-width) 1fr;
-}
-
-/* ========================================== */
-/* 4. COMPONENTE HEADER (SINDICAL & MODERNO)  */
-/* ========================================== */
-.app-header {
-    grid-area: header;
-    position: sticky;
-    top: 0;
-    z-index: var(--z-sticky);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 var(--space-6);
-    box-shadow: var(--shadow-sm);
-    background: var(--bg-header) !important;
-}
-
-.header-left, .header-right {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-}
-
-.btn-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-round);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary-dark);
-    font-size: var(--font-lg);
-    transition: var(--transition-fast);
-}
-.btn-icon:hover {
-    background: var(--border-subtle);
-}
-
-.brand-title {
-    font-family: var(--font-header);
-    font-size: var(--font-xl);
-    font-weight: var(--weight-black);
-    color: var(--primary);
-    letter-spacing: -0.5px;
-}
-.brand-accent {
-    color: var(--text-main);
-    font-weight: var(--weight-light);
-}
-
-/* Buscador Estilo Corporativo */
-.header-search-container {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-}
-
-.search-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.search-input-wrapper input {
-    width: 100%;
-    padding: var(--space-2) var(--space-8) var(--space-2) var(--space-10);
-    background: var(--bg-main);
-    border-radius: var(--radius-lg);
-    border: 1px solid transparent;
-    transition: var(--transition-normal);
-}
-
-.search-input-wrapper input:focus {
-    background: var(--bg-surface);
-    border-color: var(--primary-light);
-    box-shadow: var(--shadow-md);
-}
-
-.search-icon {
-    position: absolute;
-    left: var(--space-4);
-    color: var(--text-muted);
-}
-
-.btn-clear-search {
-    position: absolute;
-    right: var(--space-4);
-    color: var(--text-light);
-}
-
-/* Panel de Notificaciones Dropdown */
-.notification-dropdown-wrapper {
-    position: relative;
-}
-.notification-badge {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    background: var(--danger);
-    color: var(--text-white);
-    font-size: 10px;
-    font-weight: var(--weight-bold);
-    min-width: 16px;
-    height: 16px;
-    border-radius: var(--radius-round);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--bg-surface);
-}
-
-/* Perfil Dropdown UI */
-.profile-trigger {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-xl);
-    transition: var(--transition-fast);
-}
-.profile-trigger:hover {
-    background: var(--border-subtle);
-}
-
-.avatar-container {
-    position: relative;
-    width: 36px;
-    height: 36px;
-}
-.avatar-container img {
-    width: 100%;
-    height: 100%;
-    border-radius: var(--radius-round);
-    object-fit: cover;
-}
-.status-indicator {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: var(--radius-round);
-    border: 2px solid var(--bg-surface);
-}
-.status-indicator.online { background: var(--success); }
-
-.user-meta-info {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-.user-name {
-    font-size: var(--font-sm);
-    font-weight: var(--weight-semibold);
-    color: var(--text-main);
-}
-.user-role {
-    font-size: var(--font-xs);
-    color: var(--text-muted);
-}
-
-/* ========================================== */
-/* 5. SIDEBAR COMPONENTE (MENÚ PRINCIPAL)      */
-/* ========================================== */
-.app-sidebar {
-    grid-area: sidebar;
-    background: var(--bg-surface);
-    border-right: 1px solid var(--border-subtle);
-    display: flex;
-    flex-direction: column;
-    z-index: var(--z-sticky);
-    overflow-y: auto;
     transition: var(--transition-smooth);
 }
+.nav-link:hover, .nav-link.active {
+    color: #fff;
+    background-color: rgba(6, 182, 212, 0.08);
+    box-shadow: inset 4px 0 0 var(--primary);
+}
 
-.sidebar-header {
-    height: var(--header-height);
-    display: flex;
+/* COMPONENTES CORE REUTILIZABLES DE ALTA FIDELIDAD */
+.glass-panel {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(2, 6, 23, 0.8) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.card-premium {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+.card-premium:hover {
+    transform: translateY(-2px);
+    border-color: rgba(6, 182, 212, 0.3);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+/* BOTONES INTEGRADOS */
+.btn {
+    display: inline-flex;
     align-items: center;
-    gap: var(--space-3);
-    padding: 0 var(--space-5);
-    border-bottom: 1px solid var(--border-subtle);
-}
-
-.sidebar-brand-icon {
-    font-size: var(--font-2xl);
-    color: var(--primary);
-}
-
-.sidebar-title-wrapper {
-    display: flex;
-    flex-direction: column;
-}
-.title-main {
-    font-family: var(--font-header);
-    font-weight: var(--weight-bold);
-    font-size: var(--font-lg);
-    color: var(--primary-dark);
-}
-.title-sub {
-    font-size: var(--font-xs);
-    color: var(--text-muted);
-    white-space: nowrap;
-}
-
-.sidebar-nav-container {
-    padding: var(--space-4) var(--space-2);
-    flex: 1;
-}
-
-.nav-section-title {
-    font-size: var(--font-xs);
-    font-weight: var(--weight-bold);
-    text-transform: uppercase;
-    color: var(--text-light);
-    letter-spacing: 0.5px;
-    padding: var(--space-4) var(--space-4) var(--space-2) var(--space-4);
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-3) var(--space-4);
-    color: var(--text-muted);
-    border-radius: var(--radius-md);
-    font-weight: var(--weight-medium);
-    margin-bottom: 4px;
-    transition: var(--transition-fast);
-}
-
-.nav-link:hover {
-    background: var(--bg-main);
-    color: var(--primary-light);
-}
-
-.nav-link.active {
-    background: var(--primary-light);
-    color: var(--text-white);
-    box-shadow: var(--shadow-sm);
-}
-
-.nav-icon {
-    font-size: var(--font-lg);
-    width: 24px;
-    text-align: center;
-}
-
-/* Colapso Dinámico por CSS Variables */
-.sidebar-collapsed .link-text,
-.sidebar-collapsed .nav-section-title,
-.sidebar-collapsed .sidebar-title-wrapper,
-.sidebar-collapsed .footer-status-card {
-    display: none !important;
-}
-
-.sidebar-collapsed .nav-link {
     justify-content: center;
-    padding: var(--space-3) 0;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.75rem;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    border: none;
+}
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+    color: white;
+}
+.btn-primary:hover {
+    filter: brightness(1.1);
+}
+.btn-secondary {
+    background-color: var(--border-subtle);
+    color: var(--text-main);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.btn-secondary:hover {
+    background-color: #334155;
 }
 
-/* ========================================== */
-/* 6. CONTENEDOR DE CONTENIDOS DINÁMICOS       */
-/* ========================================== */
-.app-main-content {
-    grid-area: main;
-    padding: var(--space-6);
-    overflow-y: auto;
-}
-
-.content-wrapper {
-    max-width: var(--max-content-width);
-    margin: 0 auto;
+/* ELEMENTOS COMPLEMENTARIOS PARA TABLAS REACTIVAS */
+.table-responsive-container {
     width: 100%;
+    overflow-x: auto;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-subtle);
+    background-color: var(--bg-surface);
 }
 
-/* ========================================== */
-/* 7. FOOTER INSTITUCIONAL                    */
-/* ========================================== */
-.app-footer {
-    grid-area: footer;
-    background: var(--bg-surface);
-    border-top: 1px solid var(--border-subtle);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 var(--space-6);
-    font-size: var(--font-sm);
-    color: var(--text-muted);
-}
-
-.footer-right {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-}
-.footer-divider {
-    color: var(--text-light);
-}
-
-/* ========================================== */
-/* 8. TOAST NOTIFICATIONS CONTAINER           */
-/* ========================================== */
+/* ELEMENTOS DE TOAST GLOBAL */
 .toast-wrapper {
     position: fixed;
-    bottom: var(--space-6);
-    right: var(--space-6);
-    z-index: var(--z-toast);
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 100;
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    max-width: 380px;
-    width: 100%;
+    gap: 0.75rem;
 }
-
 .toast {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    color: var(--text-white);
+    gap: 0.75rem;
 }
-.toast.success { background: var(--success); }
-.toast.danger { background: var(--danger); }
-.toast.warning { background: var(--warning); }
+.toast.success { border-left: 4px solid #10b981; color: #10b981; }
+.toast.danger { border-left: 4px solid #f43f5e; color: #f43f5e; }
+.toast.warning { border-left: 4px solid #f59e0b; color: #f59e0b; }
+
+/* SPINNER CARGA */
+.spinner-premium {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* CLASES DE UTILIDAD DE TAILWIND INYECTADAS */
+.hidden { display: none !important; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.min-h-full { min-height: 100%; }
+.w-full { width: 100%; }

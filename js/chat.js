@@ -1,12 +1,11 @@
 /**
  * CAMPUS VIRTUAL PREMIUM - AOMA SECCIONAL SAN JUAN
- * Módulo 06: Asistente AI Gremial, Procesador Conversacional y UI del Chat Informativo
+ * Módulo: chat.js (UI Premium Edition)
  */
 
 window.ModuleChat = {
     knowledgeBase: {},
 
-    // Inicializador del módulo (Inyectado por el Router en app.js)
     init(container) {
         this.loadChatKnowledgeBase();
         this.renderInterface(container);
@@ -14,7 +13,6 @@ window.ModuleChat = {
         this.sendInitialGreeting();
     },
 
-    // Base de conocimiento semántica para simular respuestas de la IA local
     loadChatKnowledgeBase() {
         this.knowledgeBase = {
             'hola': '¡Hola! Soy tu Asistente Técnico IA de AOMA San Juan. ¿En qué puedo asesorarte hoy con respecto a convenios, seguridad industrial o liquidaciones?',
@@ -28,155 +26,112 @@ window.ModuleChat = {
         };
     },
 
-    // Renderizado completo de la interfaz de chat en la SPA
     renderInterface(container) {
         container.innerHTML = `
-            <div style="margin-bottom: var(--space-4);">
-                <h2 style="font-size: var(--font-3xl); margin-bottom: var(--space-1);">Asistente Técnico AI</h2>
-                <p style="color: var(--text-muted); font-size: var(--font-sm);">Consultas instantáneas de convenios paritarios, normativas operativas y soporte normativo de AOMA.</p>
-            </div>
-
-            <div class="glassmorphism" style="max-width: 800px; height: 500px; border-radius: var(--radius-md); display: flex; flex-direction: column; overflow: hidden;">
-                <div style="padding: var(--space-4); background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: var(--space-3);">
-                    <div style="width: 10px; height: 10px; background: var(--success); border-radius: var(--radius-round); box-shadow: 0 0 8px var(--success);"></div>
-                    <div>
-                        <strong style="font-size: var(--font-sm); color: var(--primary-dark); display: block;"><i class="fa-solid fa-robot"></i> Inteligencia Gremial Activa</strong>
-                        <span style="font-size: 11px; color: var(--text-muted);">Sincronizado con legislación minera 2026</span>
-                    </div>
+            <div class="container-premium animate-fade-in">
+                <div style="margin-bottom: var(--space-4);">
+                    <h2 class="page-title">Asistente Técnico AI</h2>
+                    <p class="page-subtitle">Soporte legal, paritario y operativo instantáneo en lenguaje natural.</p>
                 </div>
 
-                <div id="chat-messages-box" style="flex-grow: 1; padding: var(--space-4); overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-3); background: rgba(0,0,0,0.05);">
+                <div class="card-premium" style="max-width: 800px; height: 500px; padding: 0; display: flex; flex-direction: column; background: var(--bg-surface);">
+                    <div style="padding: var(--space-4); border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: var(--space-3);">
+                        <div style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success);"></div>
+                        <div>
+                            <strong style="font-size: var(--font-sm); color: var(--text-main); display: block;"><i class="fa-solid fa-robot"></i> Núcleo Informativo Gremial</strong>
+                            <span style="font-size: 11px; color: var(--text-muted);">Legislación Minera e Industrial Homologada</span>
+                        </div>
                     </div>
 
-                <form id="chat-input-form" style="padding: var(--space-3); background: var(--bg-surface); border-top: 1px solid var(--border-subtle); display: flex; gap: var(--space-2);">
-                    <input type="text" id="chat-user-message" required placeholder="Escriba su consulta... (Ej: CCT 599/10, Horas Extras, EPP)" autocomplete="off" style="flex-grow: 1; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); border: 1px solid var(--text-light); background: rgba(0,0,0,0.1); color: var(--text-main); font-size: var(--font-sm);" />
-                    <button type="submit" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; width: 42px; height: 36px; padding: 0;">
-                        <i class="fa-solid fa-paper-plane"></i>
-                    </button>
-                </form>
+                    <div id="chat-messages-box" style="flex-grow: 1; padding: var(--space-4); overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-3); background: rgba(0,0,0,0.02);"></div>
+
+                    <form id="chat-input-form" style="padding: var(--space-3); border-top: 1px solid var(--border-subtle); display: flex; gap: var(--space-2); background: var(--bg-surface);">
+                        <input type="text" id="chat-user-message" class="form-input" required placeholder="Consulte sobre: CCT 599/10, Horas Extras, EPP..." autocomplete="off" />
+                        <button type="submit" class="btn btn-primary" style="padding: var(--space-2) var(--space-4);"><i class="fa-solid fa-paper-plane"></i></button>
+                    </form>
+                </div>
             </div>
         `;
     },
 
-    // Vinculación de eventos al formulario de la caja de chat
     bindEvents(container) {
-        const form = container.querySelector('#chat-input-form');
-        if (!form) return;
-
-        form.addEventListener('submit', (e) => {
+        container.querySelector('#chat-input-form')?.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleUserSubmit();
         });
     },
 
-    // Manejador del mensaje del afiliado
     handleUserSubmit() {
         const input = document.getElementById('chat-user-message');
         if (!input) return;
 
-        const rawMessage = input.value.trim();
-        if (!rawMessage) return;
+        const msg = input.value.trim();
+        if (!msg) return;
 
-        // 1. Renderizar burbuja del mensaje del usuario en el DOM
-        this.appendMessageBubble(rawMessage, 'user');
-        input.value = ''; // Limpiar entrada de texto
-        input.focus();
-
-        // 2. Inyectar indicador de escritura simulado
+        this.appendMessageBubble(msg, 'user');
+        input.value = '';
         this.showTypingIndicator();
 
-        // 3. Procesamiento semántico diferido (retraso premium de 800ms)
         setTimeout(() => {
             this.removeTypingIndicator();
-            const reply = this.processNaturalLanguage(rawMessage);
-            this.appendMessageBubble(reply, 'bot');
+            this.appendMessageBubble(this.processNaturalLanguage(msg), 'bot');
         }, 800);
     },
 
-    // Motor de emparejamiento de respuestas (NLP Simplificado en Memoria)
     processNaturalLanguage(text) {
-        const cleanText = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Remover acentos
-        
-        let matchedReply = null;
-
-        // Evaluar coincidencias por palabras clave clave en el diccionario
+        const cleanText = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         for (const [key, value] of Object.entries(this.knowledgeBase)) {
-            if (cleanText.includes(key)) {
-                matchedReply = value;
-                break;
-            }
+            if (cleanText.includes(key)) return value;
         }
-
-        // Respuesta por defecto adaptada al entorno legal
-        if (!matchedReply) {
-            matchedReply = 'Disculpa, no logré asociar los términos exactos en el índice local. Puedes consultar sobre temas específicos como "CCT 599/10", "EPP", "Horas Extras" o bien dirigirte al menú de Preguntas Frecuentes (FAQ) de la seccional.';
-        }
-
-        return matchedReply;
+        return 'No logré identificar la consulta en el índice paritario. Pruebe consultando palabras clave como "CCT 599/10", "Horas Extras" o "EPP".';
     },
 
-    // Inyección atómica de burbujas de diálogo estilizadas
     appendMessageBubble(text, sender) {
-        const messagesBox = document.getElementById('chat-messages-box');
-        if (!messagesBox) return;
+        const box = document.getElementById('chat-messages-box');
+        if (!box) return;
 
         const bubble = document.createElement('div');
-        bubble.style.maxWidth = '75%';
-        bubble.style.padding = 'var(--space-2) var(--space-3)';
-        bubble.style.borderRadius = 'var(--radius-md)';
-        bubble.style.fontSize = 'var(--font-sm)';
-        bubble.style.lineHeight = '1.4';
         bubble.className = 'animate-fade-in';
+        bubble.style = `max-width: 75%; padding: var(--space-2) var(--space-4); border-radius: var(--radius-md); font-size: var(--font-sm); line-height: 1.5; margin-bottom: 2px;`;
 
         if (sender === 'user') {
             bubble.style.alignSelf = 'flex-end';
             bubble.style.background = 'var(--primary-dark)';
-            bubble.style.color = '#fff';
+            bubble.style.color = '#ffffff';
             bubble.style.borderBottomRightRadius = '0';
         } else {
             bubble.style.alignSelf = 'flex-start';
-            bubble.style.background = 'var(--border-subtle)';
+            bubble.style.background = 'var(--bg-app)';
+            bubble.style.border = '1px solid var(--border-subtle)';
             bubble.style.color = 'var(--text-main)';
             bubble.style.borderTopLeftRadius = '0';
-            bubble.style.border = '1px solid var(--border-glass)';
         }
 
         bubble.innerHTML = text;
-        messagesBox.appendChild(bubble);
-        
-        // Auto-scroll del contenedor hacia abajo para mantener visibilidad del hilo
-        messagesBox.scrollTop = messagesBox.scrollHeight;
+        box.appendChild(bubble);
+        box.scrollTop = box.scrollHeight;
     },
 
-    // Generador del saludo automático al cargar el componente
-    sendInitialGreeting() {
-        setTimeout(() => {
-            const initialGreeting = this.knowledgeBase['hola'];
-            this.appendMessageBubble(initialGreeting, 'bot');
-        }, 300);
-    },
-
-    // Inyectores gráficos del estado de carga de la IA (Efecto de tres puntos titilando)
     showTypingIndicator() {
-        const messagesBox = document.getElementById('chat-messages-box');
-        if (!messagesBox || document.getElementById('chat-typing-indicator')) return;
+        const box = document.getElementById('chat-messages-box');
+        if (!box || document.getElementById('chat-typing-indicator')) return;
 
-        const indicator = document.createElement('div');
-        indicator.id = 'chat-typing-indicator';
-        indicator.style.alignSelf = 'flex-start';
-        indicator.style.background = 'var(--border-subtle)';
-        indicator.style.padding = ' var(--space-2) var(--space-4)';
-        indicator.style.borderRadius = 'var(--radius-md)';
-        indicator.style.borderTopLeftRadius = '0';
-        indicator.style.fontSize = '12px';
-        indicator.style.color = 'var(--text-muted)';
-        indicator.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Analizando normativas gremiales...`;
-
-        messagesBox.appendChild(indicator);
-        messagesBox.scrollTop = messagesBox.scrollHeight;
+        const ind = document.createElement('div');
+        ind.id = 'chat-typing-indicator';
+        ind.style = 'align-self: flex-start; background: var(--bg-app); border: 1px solid var(--border-subtle); padding: var(--space-2) var(--space-4); border-radius: var(--radius-md); border-top-left-radius: 0; font-size:12px; color:var(--text-muted);';
+        ind.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando marco regulatorio...`;
+        
+        box.appendChild(ind);
+        box.scrollTop = box.scrollHeight;
     },
 
     removeTypingIndicator() {
         document.getElementById('chat-typing-indicator')?.remove();
+    },
+
+    sendInitialGreeting() {
+        setTimeout(() => {
+            this.appendMessageBubble(this.knowledgeBase['all'] || this.knowledgeBase['hola'], 'bot');
+        }, 300);
     }
 };
