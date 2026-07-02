@@ -1,10 +1,13 @@
 // ============================================
 // APLICACIÓN PRINCIPAL - CAMPUS VIRTUAL AOMA
+// Con búsqueda interna y chat inteligente
 // ============================================
 
 let currentUser = null;
 let currentPage = 'dashboard';
 let isDarkMode = false;
+let searchHighlights = [];
+let currentHighlightIndex = -1;
 
 // ============================================
 // INICIALIZACIÓN
@@ -197,6 +200,156 @@ function getConvenios() {
 }
 
 // ============================================
+// BARRA DE BÚSQUEDA INTERNA
+// ============================================
+function createSearchBar(containerId, contentSelector) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    const searchBar = document.createElement('div');
+    searchBar.className = 'search-bar-container';
+    searchBar.innerHTML = `
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="internalSearchInput" placeholder="Buscar en este documento... (ej: vacaciones, despido, salario)">
+        <span class="search-count" id="searchCount">0 resultados</span>
+        <button class="btn-search-nav" id="btnPrevResult" title="Anterior" disabled>
+            <i class="fas fa-chevron-up"></i>
+        </button>
+        <button class="btn-search-nav" id="btnNextResult" title="Siguiente" disabled>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <button class="btn-search-nav" id="btnClearSearch" title="Limpiar búsqueda">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    container.insertBefore(searchBar, container.firstChild);
+    
+    const input = document.getElementById('internalSearchInput');
+    const countEl = document.getElementById('searchCount');
+    const btnPrev = document.getElementById('btnPrevResult');
+    const btnNext = document.getElementById('btnNextResult');
+    const btnClear = document.getElementById('btnClearSearch');
+    
+    input.addEventListener('input', () => {
+        const query = input.value.trim();
+        if (query.length < 2) {
+            clearHighlights();
+            countEl.textContent = '0 resultados';
+            btnPrev.disabled = true;
+            btnNext.disabled = true;
+            return;
+        }
+        performInternalSearch(query, contentSelector, countEl, btnPrev, btnNext);
+    });
+    
+    btnPrev.addEventListener('click', () => navigateHighlight(-1));
+    btnNext.addEventListener('click', () => navigateHighlight(1));
+    btnClear.addEventListener('click', () => {
+        input.value = '';
+        clearHighlights();
+        countEl.textContent = '0 resultados';
+        btnPrev.disabled = true;
+        btnNext.disabled = true;
+    });
+    
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            navigateHighlight(1);
+        }
+        if (e.key === 'Escape') {
+            input.value = '';
+            clearHighlights();
+            countEl.textContent = '0 resultados';
+            btnPrev.disabled = true;
+            btnNext.disabled = true;
+        }
+    });
+}
+
+function performInternalSearch(query, contentSelector, countEl, btnPrev, btnNext) {
+    clearHighlights();
+    
+    const contentEl = document.querySelector(contentSelector);
+    if (!contentEl) return;
+    
+    const walker = document.createTreeWalker(
+        contentEl,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode: (node) => {
+                if (node.parentElement.tagName === 'SCRIPT' || 
+                    node.parentElement.tagName === 'STYLE' ||
+                    node.parentElement.classList.contains('search-highlight')) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+                if (node.textContent.toLowerCase().includes(query.toLowerCase())) {
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+                return NodeFilter.FILTER_REJECT;
+            }
+        }
+    );
+    
+    const textNodes = [];
+    let currentNode;
+    while (currentNode = walker.nextNode()) {
+        textNodes.push(currentNode);
+    }
+    
+    textNodes.forEach(textNode => {
+        const text = textNode.textContent;
+        const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+        const span = document.createElement('span');
+        span.innerHTML = text.replace(regex, '<mark class="search-highlight">$1</mark>');
+        textNode.parentNode.replaceChild(span, textNode);
+    });
+    
+    searchHighlights = Array.from(document.querySelectorAll('.search-highlight'));
+    currentHighlightIndex = -1;
+    
+    countEl.textContent = `${searchHighlights.length} resultado${searchHighlights.length !== 1 ? 's' : ''}`;
+    btnPrev.disabled = searchHighlights.length === 0;
+    btnNext.disabled = searchHighlights.length === 0;
+    
+    if (searchHighlights.length > 0) {
+        navigateHighlight(1);
+    }
+}
+
+function navigateHighlight(direction) {
+    if (searchHighlights.length === 0) return;
+    
+    // Quitar active del actual
+    if (currentHighlightIndex >= 0 && currentHighlightIndex < searchHighlights.length) {
+        searchHighlights[currentHighlightIndex].classList.remove('active');
+    }
+    
+    currentHighlightIndex += direction;
+    if (currentHighlightIndex >= searchHighlights.length) currentHighlightIndex = 0;
+    if (currentHighlightIndex < 0) currentHighlightIndex = searchHighlights.length - 1;
+    
+    const highlight = searchHighlights[currentHighlightIndex];
+    highlight.classList.add('active');
+    highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function clearHighlights() {
+    document.querySelectorAll('.search-highlight').forEach(mark => {
+        const parent = mark.parentNode;
+        parent.replaceChild(document.createTextNode(mark.textContent), mark);
+        parent.normalize();
+    });
+    searchHighlights = [];
+    currentHighlightIndex = -1;
+}
+
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// ============================================
 // RENDERIZADO DE PÁGINAS
 // ============================================
 
@@ -214,12 +367,12 @@ function renderDashboard(container) {
         
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon"></div>
+                <div class="stat-icon">📋</div>
                 <div class="stat-value">${convCount}</div>
                 <div class="stat-label">Convenios CCT</div>
             </div>
             <div class="stat-card accent">
-                <div class="stat-icon"></div>
+                <div class="stat-icon">🏭</div>
                 <div class="stat-value">${actCount}</div>
                 <div class="stat-label">Actividades</div>
             </div>
@@ -286,7 +439,7 @@ function renderDashboard(container) {
 function renderCursos(container) {
     container.innerHTML = `
         <div class="page-header">
-            <h1>Capacitaciones </h1>
+            <h1>Capacitaciones 🎓</h1>
             <p>Cursos disponibles organizados por actividad minera</p>
         </div>
         <div class="cards-grid">
@@ -336,7 +489,7 @@ function showCursoDetalle(cursoId) {
         </div>
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon">👨‍🏫</div>
+                <div class="stat-icon">‍🏫</div>
                 <div class="stat-label">Instructor</div>
                 <div style="font-weight: 600; margin-top: 0.5rem;">${curso.instructor}</div>
             </div>
@@ -351,7 +504,7 @@ function showCursoDetalle(cursoId) {
                 <div style="font-weight: 600; margin-top: 0.5rem;">${curso.nivel}</div>
             </div>
             <div class="stat-card warning">
-                <div class="stat-icon">📚</div>
+                <div class="stat-icon"></div>
                 <div class="stat-label">Módulos</div>
                 <div style="font-weight: 600; margin-top: 0.5rem;">${curso.modulos}</div>
             </div>
@@ -380,7 +533,7 @@ function renderConvenios(container) {
     
     container.innerHTML = `
         <div class="page-header">
-            <h1>Convenios Colectivos de Trabajo 📋</h1>
+            <h1>Convenios Colectivos de Trabajo </h1>
             <p>Normativas vigentes por actividad</p>
         </div>
         <div class="cards-grid">
@@ -419,18 +572,23 @@ function showConvenioDetalle(numero) {
                 <i class="fas fa-arrow-left"></i> Volver a convenios
             </button>
         </div>
-        <div class="section">
+        <div class="section" id="convenioContentSection">
             <div class="card-category" style="margin-bottom: 0.5rem;">${conv.numero}</div>
             <h2 class="section-title" style="margin-bottom: 1rem;">${conv.titulo}</h2>
             <div class="card-meta" style="margin-bottom: 1.5rem;">
                 <span><i class="fas fa-tag"></i> ${conv.categoria}</span>
                 <span><i class="far fa-calendar"></i> Actualizado: ${DATA.formatDate(conv.actualizado)}</span>
             </div>
-            <div style="line-height: 1.8; color: var(--text-secondary);">
+            <div class="ley-content" id="convenioLeyContent">
                 ${conv.contenido}
             </div>
         </div>
     `;
+    
+    // Agregar barra de búsqueda después de renderizar
+    setTimeout(() => {
+        createSearchBar('convenioContentSection', '#convenioLeyContent');
+    }, 100);
 }
 
 function renderEscalas(container) {
@@ -514,17 +672,22 @@ function showLeyDetalle(numero) {
                 <i class="fas fa-arrow-left"></i> Volver a legislación
             </button>
         </div>
-        <div class="section">
+        <div class="section" id="leyContentSection">
             <div class="card-category" style="margin-bottom: 0.5rem;">${ley.numero}</div>
             <h2 class="section-title" style="margin-bottom: 0.5rem;">${ley.titulo}</h2>
             <div class="card-meta" style="margin-bottom: 1.5rem;">
                 <span><i class="fas fa-tag"></i> ${ley.categoria}</span>
             </div>
-            <div style="line-height: 1.8; color: var(--text-secondary);">
+            <div class="ley-content" id="leyLeyContent">
                 ${ley.contenido}
             </div>
         </div>
     `;
+    
+    // Agregar barra de búsqueda después de renderizar
+    setTimeout(() => {
+        createSearchBar('leyContentSection', '#leyLeyContent');
+    }, 100);
 }
 
 function renderFAQ(container) {
@@ -701,7 +864,7 @@ function renderActividad(container, activityId) {
 }
 
 // ============================================
-// CHAT
+// CHAT INTELIGENTE MEJORADO
 // ============================================
 function openChat() {
     const chatWindow = document.getElementById('chatWindow');
@@ -727,11 +890,11 @@ function initChatMessages() {
     const quickReplies = document.getElementById('chatQuickReplies');
     
     if (messages.children.length === 0) {
-        addChatMessage('bot', `¡Hola ${currentUser.name.split(' ')[0]}! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte?`);
+        addChatMessage('bot', `¡Hola ${currentUser.name.split(' ')[0]}!  Soy el asistente virtual de AOMA San Juan. Puedo ayudarte con:\n\n•  Convenios colectivos (CTT 302/75, 36/89, 238/94)\n• ⚖️ Leyes laborales (LCT 20.744, Ley 19.587, etc.)\n• 💰 Escalas salariales\n• 🎓 Cursos y capacitaciones\n\n¿En qué puedo ayudarte?`);
     }
     
     if (quickReplies.children.length === 0) {
-        const replies = [' Escalas salariales', '📋 Convenios CCT', '⚖️ Leyes laborales', '🎓 Cursos', '🔑 Contraseña'];
+        const replies = ['💰 Escalas salariales', '📋 Convenios CCT', '⚖️ Leyes laborales', '🎓 Cursos', '🔑 Contraseña'];
         replies.forEach(text => {
             const btn = document.createElement('button');
             btn.className = 'quick-reply';
@@ -789,9 +952,21 @@ function addChatMessage(type, text) {
     messages.scrollTop = messages.scrollHeight;
 }
 
+// ============================================
+// CHAT INTELIGENTE - BÚSQUEDA EN CONTENIDO COMPLETO
+// ============================================
 function getBotResponse(userMessage) {
-    const q = userMessage.toLowerCase();
+    const q = userMessage.toLowerCase().trim();
     
+    // Saludos
+    if (/^(hola|buenas|buenos días|buenas tardes)/.test(q)) {
+        return `¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte hoy?`;
+    }
+    if (q.includes('gracias')) {
+        return '¡De nada! 😊 Estoy aquí para lo que necesites.';
+    }
+    
+    // Buscar en respuestas predefinidas del chat
     for (const [patterns, response] of Object.entries(DATA.chatResponses)) {
         if (patterns === 'default') continue;
         const patternList = patterns.split('|');
@@ -800,27 +975,77 @@ function getBotResponse(userMessage) {
         }
     }
     
+    // Buscar en FAQs
     for (const [cat, faqs] of Object.entries(DATA.faqs)) {
         for (const faq of faqs) {
             if (faq.pregunta.toLowerCase().includes(q) || faq.respuesta.toLowerCase().includes(q)) {
-                return `📋 <strong>${faq.pregunta}</strong><br><br>${faq.respuesta}`;
+                return ` <strong>${faq.pregunta}</strong><br><br>${faq.respuesta}`;
             }
         }
     }
     
-    for (const conv of getConvenios()) {
+    // Buscar en contenido COMPLETO de convenios (no solo título/resumen)
+    const convenios = getConvenios();
+    for (const conv of convenios) {
+        const contenidoLimpio = conv.contenido.replace(/<[^>]*>/g, ' ').toLowerCase();
+        if (contenidoLimpio.includes(q)) {
+            // Encontrar el artículo/sección donde aparece
+            const match = findRelevantSection(conv.contenido, q);
+            return ` <strong>${conv.numero} - ${conv.titulo}</strong><br><br>${match}<br><br>Podés consultar el convenio completo en "Convenios CCT" y usar la barra de búsqueda para encontrar más detalles.`;
+        }
         if (conv.titulo.toLowerCase().includes(q) || conv.resumen.toLowerCase().includes(q)) {
             return `📋 Encontré: <strong>${conv.titulo}</strong><br><br>${conv.resumen}<br><br>Podés consultarlo completo en "Convenios CCT".`;
         }
     }
     
-    for (const ley of getLeyes()) {
+    // Buscar en contenido COMPLETO de leyes
+    const leyes = getLeyes();
+    for (const ley of leyes) {
+        const contenidoLimpio = ley.contenido.replace(/<[^>]*>/g, ' ').toLowerCase();
+        if (contenidoLimpio.includes(q)) {
+            const match = findRelevantSection(ley.contenido, q);
+            return `⚖️ <strong>${ley.numero} - ${ley.titulo}</strong><br><br>${match}<br><br>Podés consultar la ley completa en "Legislación" y usar la barra de búsqueda para encontrar más detalles.`;
+        }
         if (ley.titulo.toLowerCase().includes(q) || ley.resumen.toLowerCase().includes(q)) {
             return `⚖️ <strong>${ley.numero} - ${ley.titulo}</strong><br><br>${ley.resumen}`;
         }
     }
     
-    return DATA.chatResponses.default;
+    // Buscar en cursos
+    for (const curso of DATA.cursos) {
+        if (curso.titulo.toLowerCase().includes(q) || curso.descripcion.toLowerCase().includes(q)) {
+            return `🎓 Encontré el curso: <strong>${curso.titulo}</strong><br><br>${curso.descripcion}<br><br>Duración: ${curso.duracion} | Nivel: ${curso.nivel}`;
+        }
+    }
+    
+    // Respuesta por defecto
+    return `No encontré información específica sobre "${userMessage}". Te recomiendo:<br><br>1️⃣ Revisar las secciones del menú lateral<br>2️⃣ Usar la barra de búsqueda dentro de cada ley o convenio<br>3️⃣ Contactar a la Seccional al (0264) 422-XXXX<br><br>¿Hay algo más en lo que pueda ayudarte?`;
+}
+
+// Función auxiliar para encontrar la sección relevante del contenido
+function findRelevantSection(contenidoHTML, query) {
+    // Buscar el artículo o sección que contiene la palabra clave
+    const regex = new RegExp(`(<h[34][^>]*>.*?${escapeRegExp(query)}.*?</h[34]>)(.*?)(?=<h[34]|$)`, 'is');
+    const match = contenidoHTML.match(regex);
+    
+    if (match) {
+        // Devolver el título y un fragmento del contenido
+        const titulo = match[1].replace(/<[^>]*>/g, '');
+        const contenido = match[2].replace(/<[^>]*>/g, '').trim().substring(0, 300);
+        return `<strong>${titulo}</strong><br><br>${contenido}${contenido.length >= 300 ? '...' : ''}`;
+    }
+    
+    // Si no encuentra sección específica, devolver un fragmento genérico
+    const textoLimpio = contenidoHTML.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    const idx = textoLimpio.toLowerCase().indexOf(query);
+    if (idx !== -1) {
+        const inicio = Math.max(0, idx - 100);
+        const fin = Math.min(textoLimpio.length, idx + query.length + 200);
+        const fragmento = textoLimpio.substring(inicio, fin);
+        return `...${fragmento}...`;
+    }
+    
+    return 'Información disponible en el documento.';
 }
 
 function renderChatPage(container) {
