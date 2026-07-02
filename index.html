@@ -192,7 +192,7 @@
         </header>
 
         <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
+        <aside class="sidebar hidden" id="sidebar">
             <nav class="sidebar-nav">
                 <div class="nav-section">
                     <span class="nav-section-title">Principal</span>
@@ -356,7 +356,6 @@
 
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
-            <!-- Dynamic Content -->
             <div id="pageContent"></div>
         </main>
 
@@ -440,9 +439,10 @@
     <!-- Notification Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Scripts -->
+    <!-- Scripts - ORDEN IMPORTANTE -->
     <script src="js/variables.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/data.js"></script>          <!-- NUEVO: Base de datos central -->
     <script src="js/login.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/search.js"></script>
