@@ -1,294 +1,431 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Virtual | AOMA Seccional San Juan</title>
+    <title>Campus Virtual Premium | AOMA Seccional San Juan</title>
     
-    <meta name="description" content="Plataforma Educativa e Institucional Premium para Delegados y Dirigentes Gremiales de AOMA Seccional San Juan.">
-    <meta name="robots" content="index, follow">
+    <!-- Tipografía Profesional (Coursera / Notion) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Iconografía Técnica Industrial -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/animations.css">
+    <!-- Vinculación corregida a tu archivo: style.css -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dark.css">
-    <link rel="stylesheet" href="css/responsive.css">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        /* Estilos estructurales del Layout Base (No modifican funcionalidad) */
+        :root {
+            --sidebar-width: 260px;
+            --topbar-height: 70px;
+        }
 
-    <script src="js/theme.js"></script>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-app);
+        }
+
+        .hidden { display: none !important; }
+
+        /* --- Pantalla de Autenticación Premium --- */
+        .auth-screen-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at top right, rgba(59, 146, 255, 0.08), transparent), var(--bg-app);
+            padding: var(--space-4);
+        }
+
+        /* --- Contenedor de la Plataforma Core --- */
+        .platform-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navegación Lateral (Estilo Notion) */
+        .platform-sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .sidebar-brand {
+            padding: var(--space-5) var(--space-6);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .sidebar-nav-list {
+            list-style: none;
+            padding: var(--space-4) var(--space-3);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-nav-item a {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: var(--font-sm);
+            font-weight: var(--weight-medium);
+            border-radius: var(--radius-sm);
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-nav-item a:hover, .sidebar-nav-item.active a {
+            background: rgba(59, 146, 255, 0.08);
+            color: var(--primary-light);
+        }
+
+        /* Área de Contenido Principal con Topbar */
+        .platform-view-space {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .platform-topbar {
+            height: var(--topbar-height);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-6);
+        }
+
+        .dynamic-stage {
+            flex-grow: 1;
+            overflow-y: auto;
+            background: var(--bg-app);
+        }
+
+        /* --- Sistema de Notificaciones Flotantes (Toast) --- */
+        #toast-container {
+            position: fixed;
+            bottom: var(--space-6);
+            right: var(--space-6);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+    </style>
 </head>
 <body>
 
-    <div id="login-container" class="login-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="login-title">
-        <div class="login-card glassmorphism animate-fade-in">
-            <div class="login-header">
-                <div class="logo-wrapper">
-                    <div class="institutional-logo">
-                        <i class="fa-solid fa-helmet-safety logo-icon-fallback"></i>
-                        <span>AOMA</span>
-                    </div>
+    <!-- ================================================================= -->
+    <!-- 1. MÓDULO DE AUTENTICACIÓN (LOGIN)                                -->
+    <!-- ================================================================= -->
+    <div id="auth-layout-wrapper" class="auth-screen-wrapper">
+        <div class="card-premium animate-slide-up" style="width: 100%; max-width: 420px; padding: var(--space-8);">
+            <div style="text-align: center; margin-bottom: var(--space-6);">
+                <div style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: rgba(59,146,255,0.1); border-radius: var(--radius-md); margin-bottom: var(--space-3); border: 1px solid rgba(59,146,255,0.2);">
+                    <i class="fa-solid fa-helmet-safety" style="color: var(--primary); font-size: var(--font-2xl);"></i>
                 </div>
-                <h1 id="login-title">Campus Virtual Premium</h1>
-                <p class="login-subtitle">Seccional San Juan — Gestión Gremiar & Capacitación</p>
+                <h1 style="font-size: var(--font-xl); font-weight: var(--weight-bold); color: var(--text-main); letter-spacing: -0.025em;">AOMA San Juan</h1>
+                <p style="color: var(--text-muted); font-size: var(--font-sm);">Campus Virtual de Capacitación Sindical</p>
             </div>
 
-            <form id="login-form" novalidate>
-                <div class="input-group">
-                    <label for="login-username">Usuario o Correo Electrónico</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-user input-icon"></i>
-                        <input type="text" id="login-username" name="username" placeholder="Ej: JuanMinero" required autocomplete="username">
-                    </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="login-email">Legajo Digital / Email</label>
+                    <input type="email" id="login-email" class="form-input" required placeholder="nombre@afiliado.com" autocomplete="username">
                 </div>
-
-                <div class="input-group">
-                    <label for="login-password">Contraseña de Acceso</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-lock input-icon"></i>
-                        <input type="password" id="login-password" name="password" placeholder="••••••••" required autocomplete="current-password">
-                        <button type="button" id="toggle-password" class="btn-toggle-password" aria-label="Mostrar u ocultar contraseña">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-                    </div>
+                <div class="form-group" style="margin-bottom: var(--space-5);">
+                    <label class="form-label" for="login-password">Contraseña de Acceso</label>
+                    <input type="password" id="login-password" class="form-input" required placeholder="••••••••" autocomplete="current-password">
                 </div>
-
-                <div class="login-utilities">
-                    <label class="checkbox-container">
-                        <input type="checkbox" id="remember-me">
-                        <span class="checkmark"></span>
-                        <span class="label-text">Recordar mi sesión</span>
-                    </label>
-                    <a href="#" class="forgot-password-link" id="forgot-password">¿Olvidó su contraseña?</a>
-                </div>
-
-                <button type="submit" id="login-submit-btn" class="btn-primary ripple">
-                    <span class="btn-text">Ingresar de Forma Segura</span>
-                    <span class="spinner hidden" id="login-spinner" aria-hidden="true"></span>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <span>Ingresar a la Plataforma</span> <i class="fa-solid fa-arrow-right-to-bracket"></i>
                 </button>
             </form>
-
-            <div class="login-footer">
-                <p>© 2026 Asociación Obrera Minera Argentina. Todos los derechos reservados.</p>
-                <p class="legals">San Juan, Argentina — Fuerza, Trabajo y Compromiso Sindical.</p>
-            </div>
         </div>
     </div>
 
-    <div id="main-platform-layout" class="app-layout hidden">
+
+    <!-- ================================================================= -->
+    <!-- 2. ESTRUCTURA CENTRAL DE LA PLATAFORMA (SPA)                      -->
+    <!-- ================================================================= -->
+    <div id="main-platform-layout" class="platform-container hidden">
         
-        <header class="app-header glassmorphism" role="banner">
-            <div class="header-left">
-                <button id="sidebar-toggle" class="btn-icon ripple" aria-label="Colapsar o expandir menú de navegación">
-                    <i class="fa-solid fa-bars-staggered"></i>
+        <!-- SIDEBAR DE NAVEGACIÓN (Estilo Microsoft Learn / Notion) -->
+        <aside class="platform-sidebar">
+            <div>
+                <div class="sidebar-brand">
+                    <i class="fa-solid fa-mountain-city" style="color: var(--primary); font-size: var(--font-xl);"></i>
+                    <strong style="font-size: var(--font-base); font-weight: var(--weight-bold); color: var(--text-main); letter-spacing: -0.01em;">AOMA Campus</strong>
+                </div>
+                
+                <nav>
+                    <ul class="sidebar-nav-list">
+                        <li class="sidebar-nav-item active" id="nav-dashboard">
+                            <a href="#dashboard"><i class="fa-solid fa-chart-pie"></i> Panel de Inicio</a>
+                        </li>
+                        <li class="sidebar-nav-item" id="nav-capacitaciones">
+                            <a href="#capacitaciones"><i class="fa-solid fa-graduation-cap"></i> Cursos e Inducción</a>
+                        </li>
+                        <li class="sidebar-nav-item" id="nav-videos">
+                            <a href="#videos"><i class="fa-solid fa-photo-film"></i> Videoteca Técnica</a>
+                        </li>
+                        <li class="sidebar-nav-item" id="nav-evaluaciones">
+                            <a href="#evaluaciones"><i class="fa-solid fa-file-signature"></i> Evaluaciones</a>
+                        </li>
+                        <li class="sidebar-nav-item" id="nav-certificados">
+                            <a href="#certificados"><i class="fa-solid fa-award"></i> Mis Certificados</a>
+                        </li>
+                        <li class="sidebar-nav-item" id="nav-chat">
+                            <a href="#chat"><i class="fa-solid fa-robot"></i> Asistente AI Gremial</a>
+                        </li>
+                        <li class="sidebar-nav-item" id="nav-admin">
+                            <a href="#admin"><i class="fa-solid fa-sliders"></i> Consola de Control</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Perfil del Operario / Cierre de Sesión inferior -->
+            <div style="padding: var(--space-4); border-top: 1px solid var(--border-subtle); background: rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3);">
+                    <img id="user-avatar-display" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Avatar" style="width: 36px; height: 36px; border-radius: var(--radius-round); object-fit: cover; border: 1px solid var(--border-subtle);">
+                    <div style="overflow: hidden;">
+                        <span id="user-name-display" style="display: block; font-size: var(--font-sm); font-weight: var(--weight-semibold); color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Operario</span>
+                        <span id="user-role-display" class="badge badge-primary" style="font-size: 9px; padding: 1px 6px;">Afiliado</span>
+                    </div>
+                </div>
+                <button id="logout-trigger" class="btn btn-secondary btn-sm" style="width: 100%; border-color: rgba(239,68,68,0.2); color: var(--danger);">
+                    <i class="fa-solid fa-power-off"></i> Cerrar Sesión
                 </button>
-                <div class="header-branding">
-                    <span class="brand-title">AOMA <span class="brand-accent">San Juan</span></span>
-                </div>
-            </div>
-
-            <div class="header-search-container" role="search">
-                <div class="search-input-wrapper">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" id="global-search-input" placeholder="Buscar capacitaciones, leyes, escalas salariales, actas..." aria-label="Buscador global de contenidos">
-                    <button id="clear-search-btn" class="btn-clear-search hidden" aria-label="Limpiar búsqueda">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-                <div id="search-results-dropdown" class="search-dropdown hidden glassmorphism animate-slide-down">
-                    </div>
-            </div>
-
-            <div class="header-right">
-                <button id="theme-toggle-btn" class="btn-icon ripple" aria-label="Alternar entre modo claro y oscuro">
-                    <i class="fa-solid fa-moon"></i>
-                </button>
-
-                <div class="notification-dropdown-wrapper">
-                    <button id="notification-btn" class="btn-icon ripple" aria-label="Ver notificaciones institucionales" aria-haspopup="true">
-                        <i class="fa-solid fa-bell"></i>
-                        <span class="notification-badge animate-pulse" id="notification-counter">3</span>
-                    </button>
-                    <div id="notification-panel" class="notification-panel glassmorphism hidden animate-slide-down">
-                        <div class="panel-header">
-                            <h3>Notificaciones Gremiales</h3>
-                            <button id="mark-all-read-btn" class="btn-text-link">Marcar todas como leídas</button>
-                        </div>
-                        <div class="panel-content" id="notification-list-container">
-                            </div>
-                    </div>
-                </div>
-
-                <div class="user-profile-menu">
-                    <button id="profile-menu-trigger" class="profile-trigger ripple" aria-label="Menú del usuario" aria-haspopup="true">
-                        <div class="avatar-container">
-                            <img id="user-avatar-display" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Avatar de Usuario">
-                            <span class="status-indicator online"></span>
-                        </div>
-                        <div class="user-meta-info">
-                            <span id="user-name-display" class="user-name">Cargando...</span>
-                            <span id="user-role-display" class="user-role">Delegado</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                    </button>
-                    
-                    <div id="profile-dropdown-menu" class="profile-dropdown glassmorphism hidden animate-slide-down">
-                        <a href="#perfil" class="dropdown-item nav-trigger"><i class="fa-solid fa-id-card"></i> Mi Perfil</a>
-                        <a href="#configuracion" class="dropdown-item nav-trigger"><i class="fa-solid fa-sliders"></i> Ajustes</a>
-                        <hr class="dropdown-divider">
-                        <button id="logout-btn" class="dropdown-item text-danger"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</button>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <aside class="app-sidebar" id="app-sidebar" role="navigation" aria-label="Menú principal de la sección">
-            <div class="sidebar-header">
-                <i class="fa-solid fa-hard-hat sidebar-brand-icon"></i>
-                <div class="sidebar-title-wrapper">
-                    <span class="title-main">AOMA</span>
-                    <span class="title-sub">Seccional San Juan</span>
-                </div>
-            </div>
-
-            <nav class="sidebar-nav-container">
-                <ul class="nav-list">
-                    <li>
-                        <a href="#dashboard" class="nav-link active nav-trigger" id="nav-dashboard">
-                            <i class="fa-solid fa-chart-pie-alt nav-icon"></i>
-                            <span class="link-text">Dashboard General</span>
-                        </a>
-                    </li>
-                    
-                    <li class="nav-section-title">Capacitación LMS</li>
-                    <li>
-                        <a href="#capacitaciones" class="nav-link nav-trigger" id="nav-capacitaciones">
-                            <i class="fa-solid fa-graduation-cap nav-icon"></i>
-                            <span class="link-text">Cursos Académicos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#videos" class="nav-link nav-trigger" id="nav-videos">
-                            <i class="fa-solid fa-clapperboard nav-icon"></i>
-                            <span class="link-text">Videoteca Gremial</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#evaluaciones" class="nav-link nav-trigger" id="nav-evaluaciones">
-                            <i class="fa-solid fa-file-signature nav-icon"></i>
-                            <span class="link-text">Mis Evaluaciones</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#certificados" class="nav-link nav-trigger" id="nav-certificados">
-                            <i class="fa-solid fa-award nav-icon"></i>
-                            <span class="link-text">Certificaciones Oficiales</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-section-title">Herramientas Gremiales</li>
-                    <li>
-                        <a href="#escalas" class="nav-link nav-trigger" id="nav-escalas">
-                            <i class="fa-solid fa-file-invoice-dollar nav-icon"></i>
-                            <span class="link-text">Escalas Salariales</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#convenios" class="nav-link nav-trigger" id="nav-convenios">
-                            <i class="fa-solid fa-scale-balanced nav-icon"></i>
-                            <span class="link-text">Convenios y Leyes</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#actividades" class="nav-link nav-trigger" id="nav-actividades">
-                            <i class="fa-solid fa-industry nav-icon"></i>
-                            <span class="link-text">Ramas de Actividad</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-section-title">Comunicación e Información</li>
-                    <li>
-                        <a href="#noticias" class="nav-link nav-trigger" id="nav-noticias">
-                            <i class="fa-solid fa-newspaper nav-icon"></i>
-                            <span class="link-text">Noticias y Paritarias</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#faq" class="nav-link nav-trigger" id="nav-faq">
-                            <i class="fa-solid fa-circle-question nav-icon"></i>
-                            <span class="link-text">Consultas Frecuentes</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#chat" class="nav-link nav-trigger" id="nav-chat">
-                            <i class="fa-solid fa-comments-text nav-icon"></i>
-                            <span class="link-text">Asistente Sindical AI</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-section-title admin-only hidden">Administración</li>
-                    <li class="admin-only hidden">
-                        <a href="#admin" class="nav-link nav-trigger" id="nav-admin">
-                            <i class="fa-solid fa-user-gear nav-icon"></i>
-                            <span class="link-text">Panel del Administrador</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="footer-status-card">
-                    <div class="status-top">
-                        <span class="badge-role" id="sidebar-role-badge">Delegado</span>
-                        <span class="version-label">v2.1.0</span>
-                    </div>
-                    <p class="connection-label"><span class="dot-online"></span> Sincronizado localmente</p>
-                </div>
             </div>
         </aside>
 
-        <main class="app-main-content" id="app-main-content">
-            <div id="app-content-target" class="content-wrapper animate-fade-in">
+        <!-- ÁREA CENTRAL ADAPTABLE (Vistas Dinámicas) -->
+        <main class="platform-view-space">
+            
+            <!-- TOPBAR: Buscador Global Inteligente y Preferencias -->
+            <header class="platform-topbar">
+                <!-- Buscador Predictivo Premium (Estilo Cmd+P de Notion) -->
+                <div style="width: 100%; max-width: 400px; position: relative;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: var(--font-sm);"></i>
+                    <input type="text" id="global-search-input" class="form-input" placeholder="Buscar cursos, convenios, escalas..." style="padding-left: var(--space-8); height: 38px; border-radius: var(--radius-sm);">
                 </div>
-        </main>
 
-        <footer class="app-footer" role="contentinfo">
-            <div class="footer-left">
-                <p><strong>AOMA Seccional San Juan</strong> — Conducción Gremial y Tecnológica.</p>
+                <!-- Controles del Sistema -->
+                <div style="display: flex; align-items: center; gap: var(--space-4);">
+                    <button id="theme-toggle-trigger" class="btn btn-secondary" style="width: 38px; height: 38px; padding: 0; border-radius: var(--radius-sm);" title="Alternar Interfaz">
+                        <i id="theme-toggle-icon" class="fa-solid fa-moon"></i>
+                    </button>
+                    <div style="height: 20px; width: 1px; background: var(--border-subtle);"></div>
+                    <span style="font-size: var(--font-xs); font-weight: var(--weight-semibold); color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase;">
+                        Seccional San Juan
+                    </span>
+                </div>
+            </header>
+
+            <!-- CONTENEDOR DE MONTAJE DE VISTAS (Inyección SPA vía Router) -->
+            <div id="view-router-stage" class="dynamic-stage">
+                <!-- El core de la SPA renderiza los componentes dinámicamente aquí -->
             </div>
-            <div class="footer-right">
-                <a href="#faq" class="footer-link nav-trigger">Soporte Técnico</a>
-                <span class="footer-divider">•</span>
-                <a href="#convenios" class="footer-link nav-trigger">Marco Legal</a>
-                <span class="footer-divider">•</span>
-                <p class="footer-date-info">Gestión Digital 2026</p>
-            </div>
-        </footer>
+        </main>
     </div>
 
-    <div id="toast-container" class="toast-wrapper" role="live" aria-live="polite"></div>
+    <!-- CONTENEDOR GLOBAL PARA TOASTS NOTIFICADORES -->
+    <div id="toast-container"></div>
 
-    <script src="js/usuarios.js"></script>
+
+    <!-- ================================================================= -->
+    <!-- 3. INYECCIÓN DEL ECOSISTEMA JAVASCRIPT                            -->
+    <!-- ================================================================= -->
+    <!-- Inicializadores de Tokens de Diseño e Identidad -->
+    <script src="js/theme.js"></script>
+    <script>if(window.ModuleTheme) window.ModuleTheme.init();</script>
+
+    <!-- Módulos Estructurales de la Aplicación -->
     <script src="js/login.js"></script>
-    
     <script src="js/search.js"></script>
     
-    <script src="js/app.js"></script>
-    <script src="js/chat.js"></script>
-    <script src="js/noticias.js"></script>
-    
+    <!-- Módulos de Vistas de Capacitación y Gestión Gremial -->
     <script src="js/videos.js"></script>
     <script src="js/evaluaciones.js"></script>
-    <script src="js/certificados.js"></script>
-    
     <script src="js/admin.js"></script>
+    <script src="js/certificados.js"></script>
+    <script src="js/chat.js"></script>
 
+    <!-- Orquestador Principal de la Plataforma (Router & Safe Render) -->
+    <script>
+        (function() {
+            // Asegurar Base de datos local para la simulación
+            if (!localStorage.getItem('aoma_usuarios')) {
+                localStorage.setItem('aoma_usuarios', JSON.stringify([
+                    { id: 'u_adm', email: 'admin@aoma.com', password: 'admin', nombre: 'Eduardo', apellido: 'Castro', rol: 'admin', puesto: 'Secretario General', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80' },
+                    { id: 'u_del', email: 'delegado@aoma.com', password: 'miner', nombre: 'Carlos', apellido: 'Gómez', rol: 'user', puesto: 'Delegado - Veladero', avatar: 'https://images.unsplash.com/photo-1541577140430-9a32d009de50?auto=format&fit=crop&w=150&q=80' }
+                ]));
+            }
+
+            window.AppInstance = {
+                init() {
+                    this.loadProfileDOM();
+                    this.bindRouterEvents();
+                    this.handleRouting();
+                },
+
+                loadProfileDOM() {
+                    const sessionRaw = localStorage.getItem('aoma_session');
+                    
+                    if (!sessionRaw) {
+                        const authLayout = document.getElementById('auth-layout-wrapper');
+                        const mainLayout = document.getElementById('main-platform-layout');
+                        if (authLayout && mainLayout) {
+                            authLayout.classList.remove('hidden');
+                            mainLayout.classList.add('hidden');
+                        }
+                        return;
+                    }
+
+                    const session = JSON.parse(sessionRaw);
+                    const nameDisplay = document.getElementById('user-name-display');
+                    const roleDisplay = document.getElementById('user-role-display');
+                    const avatarDisplay = document.getElementById('user-avatar-display');
+
+                    // Fallbacks seguros para evitar errores indefinidos .toUpperCase()
+                    const nombreCompleto = `${session.nombre || 'Operario'} ${session.apellido || ''}`.trim();
+                    if (nameDisplay) nameDisplay.innerText = nombreCompleto;
+                    
+                    if (roleDisplay) {
+                        const rolLimpio = (session.rol || 'user').toLowerCase();
+                        roleDisplay.innerText = rolLimpio === 'admin' ? 'Comisión Directiva' : 'Afiliado Gremial';
+                        roleDisplay.className = rolLimpio === 'admin' ? 'badge badge-danger' : 'badge badge-primary';
+                    }
+                    
+                    if (avatarDisplay) {
+                        avatarDisplay.src = session.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80';
+                    }
+                },
+
+                bindRouterEvents() {
+                    window.removeEventListener('hashchange', this.routeHandlerRef);
+                    this.routeHandlerRef = () => this.handleRouting();
+                    window.addEventListener('hashchange', this.routeHandlerRef);
+                    
+                    const themeBtn = document.getElementById('theme-toggle-trigger');
+                    if (themeBtn && window.ModuleTheme) {
+                        themeBtn.onclick = () => window.ModuleTheme.toggleTheme();
+                    }
+                },
+
+                handleRouting() {
+                    const hash = window.location.hash || '#dashboard';
+                    const stage = document.getElementById('view-router-stage');
+                    if (!stage) return;
+
+                    document.querySelectorAll('.sidebar-nav-item').forEach(item => item.classList.remove('active'));
+                    const currentNavItem = document.getElementById(`nav-${hash.replace('#', '')}`);
+                    if (currentNavItem) currentNavItem.classList.add('active');
+
+                    switch(hash) {
+                        case '#dashboard':
+                            this.renderDashboardMock(stage);
+                            break;
+                        case '#capacitaciones':
+                            stage.innerHTML = `<div class="container-premium animate-fade-in"><h2 class="page-title">Cursos de Capacitación</h2><p class="page-subtitle">Sección en proceso de vinculación de trayectos formativos.</p></div>`;
+                            break;
+                        case '#videos':
+                            if (window.ModuleVideos) window.ModuleVideos.init(stage);
+                            break;
+                        case '#evaluaciones':
+                            if (window.ModuleEvaluaciones) window.ModuleEvaluaciones.init(stage);
+                            break;
+                        case '#certificados':
+                            if (window.ModuleCertificados) window.ModuleCertificados.init(stage);
+                            break;
+                        case '#chat':
+                            if (window.ModuleChat) window.ModuleChat.init(stage);
+                            break;
+                        case '#admin':
+                            if (window.ModuleAdmin) window.ModuleAdmin.init(stage);
+                            break;
+                        default:
+                            stage.innerHTML = `<div style="padding:var(--space-12) 0; text-align:center;"><h3 class="page-title">Error 404</h3><p class="page-subtitle">Trayectoria informativa no localizada.</p></div>`;
+                    }
+                },
+
+                renderDashboardMock(stage) {
+                    const sessionRaw = localStorage.getItem('aoma_session');
+                    const session = sessionRaw ? JSON.parse(sessionRaw) : { nombre: 'Compañero' };
+                    stage.innerHTML = `
+                        <div class="container-premium animate-fade-in">
+                            <div style="margin-bottom: var(--space-8);">
+                                <h2 class="page-title">¡Hola, ${session.nombre || 'Compañero'}!</h2>
+                                <p class="page-subtitle">Bienvenido a tu entorno premium de desarrollo y formación sindical continua.</p>
+                            </div>
+
+                            <div class="grid-dashboard">
+                                <div class="card-premium">
+                                    <h4 style="margin-bottom:var(--space-2); font-weight:var(--weight-semibold);"><i class="fa-solid fa-user-shield" style="color:var(--primary); margin-right:8px;"></i> Mi Perfil Profesional</h4>
+                                    <p style="font-size:var(--font-sm); color:var(--text-muted); margin-bottom:var(--space-4);">Consulte sus datos de encuadre paritario, convenios vigentes y estado de legajo.</p>
+                                    <a href="#certificados" class="btn btn-secondary btn-sm" style="width:100%;">Revisar Legajo</a>
+                                </div>
+                                <div class="card-premium">
+                                    <h4 style="margin-bottom:var(--space-2); font-weight:var(--weight-semibold);"><i class="fa-solid fa-graduation-cap" style="color:var(--success); margin-right:8px;"></i> Aulas de Capacitación</h4>
+                                    <p style="font-size:var(--font-sm); color:var(--text-muted); margin-bottom:var(--space-4);">Acceda a las clases grabadas por los comités de seguridad e higiene minera.</p>
+                                    <a href="#videos" class="btn btn-primary btn-sm" style="width:100%;">Ir a Videoteca</a>
+                                </div>
+                                <div class="card-premium">
+                                    <h4 style="margin-bottom:var(--space-2); font-weight:var(--weight-semibold);"><i class="fa-solid fa-brain" style="color:var(--warning); margin-right:8px;"></i> Consultas Normativas AI</h4>
+                                    <p style="font-size:var(--font-sm); color:var(--text-muted); margin-bottom:var(--space-4);">Despeje dudas sobre el articulado del CCT 599/10 y adicionales de convenio.</p>
+                                    <a href="#chat" class="btn btn-secondary btn-sm" style="width:100%;">Iniciar Asistente</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                },
+
+                showToast(message, type = 'info') {
+                    const container = document.getElementById('toast-container');
+                    if (!container) return;
+
+                    const toast = document.createElement('div');
+                    toast.className = 'card-premium animate-slide-up';
+                    
+                    let bgBorder = 'var(--primary)';
+                    if (type === 'success') bgBorder = 'var(--success)';
+                    if (type === 'warning') bgBorder = 'var(--warning)';
+                    if (type === 'danger') bgBorder = 'var(--danger)';
+
+                    toast.style = `padding: var(--space-3) var(--space-5); background: var(--bg-surface); border-left: 4px solid ${bgBorder}; display: flex; align-items: center; gap: var(--space-3); box-shadow: var(--shadow-premium); min-width: 280px; font-size: var(--font-sm); color: var(--text-main);`;
+                    toast.innerHTML = `<i class="fa-solid fa-circle-info" style="color:${bgBorder};"></i> <span>${message}</span>`;
+                    
+                    container.appendChild(toast);
+                    setTimeout(() => { toast.remove(); }, 3500);
+                }
+            };
+
+            // Ejecución segura una vez cargado el DOM
+            document.addEventListener('DOMContentLoaded', () => {
+                if (localStorage.getItem('aoma_session')) {
+                    window.AppInstance.init();
+                } else if (window.AuthModule) {
+                    window.AuthModule.evaluateSecurityGuard();
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
