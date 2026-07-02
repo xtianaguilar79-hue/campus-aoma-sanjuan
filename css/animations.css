@@ -1,173 +1,37 @@
-/**
- * CAMPUS VIRTUAL PREMIUM - AOMA SECCIONAL SAN JUAN
- * Capa 05: Microinteracciones, Skeletons, Transiciones Cinéticas y Efectos de Carga
- * Soportado sobre: Hardware Accelerated CSS Properties (Transform, Opacity).
- */
-
-/* ========================================== */
-/* 1. TRANSICIONES DE TRANSICIÓN DE VISTAS (SPA) */
-/* ========================================== */
-.animate-fade-in {
-    animation: fadeIn var(--transition-normal) forwards;
-}
-
-.animate-slide-down {
-    animation: slideDown var(--transition-bounce) forwards;
-}
-
-.animate-slide-right {
-    animation: slideRight var(--transition-normal) forwards;
-}
-
-/* ========================================== */
-/* 2. DEFINICIÓN DE KEYFRAMES (CORE LOGIC)    */
-/* ========================================== */
-
-/* Aparición suave por opacidad */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Despliegue de paneles superiores (Dropdowns, Buscador) */
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-12px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Despliegue lateral del menú Hamburguesa móvil */
-@keyframes slideRight {
-    from {
-        transform: translateX(-100%);
-    }
-    to {
-        transform: translateX(0);
-    }
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
-/* Pulsación sutil para el indicador de notificaciones activas */
-@keyframes pulseBadge {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
-    }
-    70% {
-        transform: scale(1.1);
-        box-shadow: 0 0 0 6px rgba(220, 53, 69, 0);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
-    }
-}
-.animate-pulse {
-    animation: pulseBadge 2s infinite;
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
 }
 
-/* ========================================== */
-/* 3. SKELETON LOADING UI (EFECTO ASÍNCRONO)  */
-/* ========================================== */
-.skeleton {
-    background: linear-gradient(90deg, 
-        rgba(0, 0, 0, 0.06) 25%, 
-        rgba(0, 0, 0, 0.12) 37%, 
-        rgba(0, 0, 0, 0.06) 63%
-    );
-    background-size: 400% 100%;
-    animation: skeletonLoading 1.4s ease infinite;
-    border-radius: var(--radius-sm);
-    display: inline-block;
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
 }
 
-[data-theme="dark"] .skeleton {
-    background: linear-gradient(90deg, 
-        rgba(255, 255, 255, 0.05) 25%, 
-        rgba(255, 255, 255, 0.12) 37%, 
-        rgba(255, 255, 255, 0.05) 63%
-    );
-    background-size: 400% 100%;
+.animate-slide-in-right {
+    animation: slideInRight 0.5s ease-out;
 }
 
-@keyframes skeletonLoading {
-    0% {
-        background-position: 100% 0;
-    }
-    100% {
-        background-position: 0% 0;
-    }
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-/* ========================================== */
-/* 4. INDICADORES DE CARGA (SPINNERS CORE)    */
-/* ========================================== */
-.spinner {
-    width: 20px;
-    height: 20px;
-    border: 2.5px solid rgba(255, 255, 255, 0.3);
-    border-top-color: var(--text-white);
-    border-radius: var(--radius-round);
-    animation: spin 0.75s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* ========================================== */
-/* 5. INTERACCIONES DEL MOUSE (HOVERS Y RIPPLE)*/
-/* ========================================== */
-
-/* Efecto Ripple (Ondas expansivas) por JS mediante clase */
-.ripple-effect {
-    position: absolute;
-    border-radius: var(--radius-round);
-    transform: scale(0);
-    animation: rippleAnimation 0.5s linear;
-    background-color: rgba(255, 255, 255, 0.35);
-    pointer-events: none;
-}
-
-@keyframes rippleAnimation {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
-}
-
-/* Zoom controlado para las tarjetas de cursos/noticias */
-.card-hover-effect {
-    transition: var(--transition-bounce);
-}
-.card-hover-effect:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-}
-
-/* ========================================== */
-/* 6. RESPETAR PREFERENCIAS DEL USUARIO       */
-/* ========================================== */
-@media (prefers-reduced-motion: reduce) {
-    *, ::before, ::after {
-        animation-delay: -1ms !important;
-        animation-duration: 1ms !important;
-        animation-iteration-count: 1 !important;
-        background-attachment: scroll !important;
-        scroll-behavior: auto !important;
-        transition-duration: 0s !important;
-        transition-delay: 0s !important;
-    }
+.scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
