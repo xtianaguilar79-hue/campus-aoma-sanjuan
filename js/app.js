@@ -4,7 +4,7 @@
 // ============================================
 
 let currentUser = null;
-let currentPage = 'dashboard';
+let currentPage = 'inicio';
 let isDarkMode = false;
 let searchHighlights = [];
 let currentHighlightIndex = -1;
@@ -16,7 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 AOMA Campus: Iniciando...');
     
     setTimeout(() => {
-        document.getElementById('loadingScreen').classList.add('hidden');
+        const loading = document.getElementById('loadingScreen');
+        if (loading) loading.classList.add('hidden');
     }, 800);
     
     const savedSession = localStorage.getItem('aoma_session');
@@ -44,19 +45,31 @@ document.addEventListener('DOMContentLoaded', () => {
 // LOGIN / LOGOUT
 // ============================================
 function showLogin() {
-    document.getElementById('loginScreen').classList.remove('hidden');
-    document.getElementById('app').classList.add('hidden');
+    const loginScreen = document.getElementById('loginScreen');
+    const app = document.getElementById('app');
+    if (loginScreen) loginScreen.classList.remove('hidden');
+    if (app) app.classList.add('hidden');
 }
 
 function showApp() {
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
+    const loginScreen = document.getElementById('loginScreen');
+    const app = document.getElementById('app');
+    if (loginScreen) loginScreen.classList.add('hidden');
+    if (app) app.classList.remove('hidden');
     
-    document.getElementById('userName').textContent = currentUser.name;
-    const roleText = currentUser.role === 'admin' ? 'Administrador' : 
-                     currentUser.role === 'dirigente' ? 'Dirigente' : 'Delegado';
-    document.getElementById('userRole').textContent = roleText;
-    document.getElementById('userAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+    const userName = document.getElementById('userName');
+    const userRole = document.getElementById('userRole');
+    const userAvatar = document.getElementById('userAvatar');
+    
+    if (userName) userName.textContent = currentUser.name;
+    if (userRole) {
+        const roleText = currentUser.role === 'admin' ? 'Administrador' : 
+                         currentUser.role === 'dirigente' ? 'Dirigente' : 'Delegado';
+        userRole.textContent = roleText;
+    }
+    if (userAvatar) {
+        userAvatar.textContent = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+    }
     
     navigateTo('inicio');
 }
@@ -64,38 +77,41 @@ function showApp() {
 function handleLogin(e) {
     e.preventDefault();
     
-    const username = document.getElementById('username').value.trim().toLowerCase();
-    const password = document.getElementById('password').value;
-    const errorDiv = document.getElementById('loginError');
-    const errorText = document.getElementById('loginErrorText');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const errorDiv = document.getElementById('loginAlert');
+    const errorText = document.getElementById('loginAlertText');
     const btnText = document.querySelector('.btn-text');
     const btnLoader = document.querySelector('.btn-loader');
     
-    btnText.classList.add('hidden');
-    btnLoader.classList.remove('hidden');
+    if (btnText) btnText.classList.add('hidden');
+    if (btnLoader) btnLoader.classList.remove('hidden');
     
     setTimeout(() => {
+        const username = usernameInput.value.trim().toLowerCase();
+        const password = passwordInput.value;
+        
         const user = DATA.usuarios.find(u => u.username === username && u.password === password);
         
         if (!user) {
-            errorText.textContent = 'Usuario o contraseña incorrectos';
-            errorDiv.classList.remove('hidden');
-            btnText.classList.remove('hidden');
-            btnLoader.classList.add('hidden');
+            if (errorText) errorText.textContent = 'Usuario o contraseña incorrectos';
+            if (errorDiv) errorDiv.classList.remove('hidden');
+            if (btnText) btnText.classList.remove('hidden');
+            if (btnLoader) btnLoader.classList.add('hidden');
             return;
         }
         
         if (!user.active) {
-            errorText.textContent = 'Tu cuenta está bloqueada. Contactá al administrador.';
-            errorDiv.classList.remove('hidden');
-            btnText.classList.remove('hidden');
-            btnLoader.classList.add('hidden');
+            if (errorText) errorText.textContent = 'Tu cuenta está bloqueada. Contactá al administrador.';
+            if (errorDiv) errorDiv.classList.remove('hidden');
+            if (btnText) btnText.classList.remove('hidden');
+            if (btnLoader) btnLoader.classList.add('hidden');
             return;
         }
         
         currentUser = user;
         localStorage.setItem('aoma_session', JSON.stringify(user));
-        errorDiv.classList.add('hidden');
+        if (errorDiv) errorDiv.classList.add('hidden');
         showApp();
         
         showToast('Bienvenido, ' + currentUser.name.split(' ')[0] + '!', 'success');
@@ -114,10 +130,10 @@ function togglePassword() {
     const icon = document.querySelector('.toggle-password i');
     if (input.type === 'password') {
         input.type = 'text';
-        icon.className = 'fas fa-eye-slash';
+        if (icon) icon.className = 'fas fa-eye-slash';
     } else {
         input.type = 'password';
-        icon.className = 'fas fa-eye';
+        if (icon) icon.className = 'fas fa-eye';
     }
 }
 
@@ -132,11 +148,14 @@ function navigateTo(page) {
     });
     
     if (window.innerWidth < 1024) {
-        document.getElementById('sidebar').classList.add('hidden');
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) sidebar.classList.add('hidden');
     }
     
     const content = document.getElementById('pageContent');
-    content.innerHTML = '<div class="empty-state"><div class="loading-spinner"></div><p>Cargando...</p></div>';
+    if (content) {
+        content.innerHTML = '<div class="empty-state"><div class="loading-spinner"></div><p>Cargando...</p></div>';
+    }
     
     setTimeout(() => {
         renderPage(page, content);
@@ -146,6 +165,8 @@ function navigateTo(page) {
 }
 
 function renderPage(page, container) {
+    if (!container) return;
+    
     switch (page) {
         case 'inicio':
             renderDashboard(container);
@@ -190,8 +211,7 @@ function getLeyes() {
     if (typeof LEY_24013 !== 'undefined') leyes.push(LEY_24013);
     if (typeof LEY_23551 !== 'undefined') leyes.push(LEY_23551);
     
-    // Fallback a DATA si no hay archivos separados
-    if (leyes.length === 0 && DATA.leyes && DATA.leyes.length > 0) {
+    if (leyes.length === 0 && typeof DATA !== 'undefined' && DATA.leyes && DATA.leyes.length > 0) {
         return DATA.leyes;
     }
     
@@ -204,8 +224,7 @@ function getConvenios() {
     if (typeof CTT_36_89 !== 'undefined') convenios.push(CTT_36_89);
     if (typeof CTT_238_94 !== 'undefined') convenios.push(CTT_238_94);
     
-    // Fallback a DATA si no hay archivos separados
-    if (convenios.length === 0 && DATA.convenios && DATA.convenios.length > 0) {
+    if (convenios.length === 0 && typeof DATA !== 'undefined' && DATA.convenios && DATA.convenios.length > 0) {
         return DATA.convenios;
     }
     
@@ -248,22 +267,22 @@ function createSearchBar(containerId, contentSelector) {
         const query = input.value.trim();
         if (query.length < 2) {
             clearHighlights();
-            countEl.textContent = '0 resultados';
-            btnPrev.disabled = true;
-            btnNext.disabled = true;
+            if (countEl) countEl.textContent = '0 resultados';
+            if (btnPrev) btnPrev.disabled = true;
+            if (btnNext) btnNext.disabled = true;
             return;
         }
         performInternalSearch(query, contentSelector, countEl, btnPrev, btnNext);
     });
     
-    btnPrev.addEventListener('click', () => navigateHighlight(-1));
-    btnNext.addEventListener('click', () => navigateHighlight(1));
-    btnClear.addEventListener('click', () => {
+    if (btnPrev) btnPrev.addEventListener('click', () => navigateHighlight(-1));
+    if (btnNext) btnNext.addEventListener('click', () => navigateHighlight(1));
+    if (btnClear) btnClear.addEventListener('click', () => {
         input.value = '';
         clearHighlights();
-        countEl.textContent = '0 resultados';
-        btnPrev.disabled = true;
-        btnNext.disabled = true;
+        if (countEl) countEl.textContent = '0 resultados';
+        if (btnPrev) btnPrev.disabled = true;
+        if (btnNext) btnNext.disabled = true;
     });
     
     input.addEventListener('keydown', (e) => {
@@ -274,9 +293,9 @@ function createSearchBar(containerId, contentSelector) {
         if (e.key === 'Escape') {
             input.value = '';
             clearHighlights();
-            countEl.textContent = '0 resultados';
-            btnPrev.disabled = true;
-            btnNext.disabled = true;
+            if (countEl) countEl.textContent = '0 resultados';
+            if (btnPrev) btnPrev.disabled = true;
+            if (btnNext) btnNext.disabled = true;
         }
     });
 }
@@ -322,9 +341,9 @@ function performInternalSearch(query, contentSelector, countEl, btnPrev, btnNext
     searchHighlights = Array.from(document.querySelectorAll('.search-highlight'));
     currentHighlightIndex = -1;
     
-    countEl.textContent = `${searchHighlights.length} resultado${searchHighlights.length !== 1 ? 's' : ''}`;
-    btnPrev.disabled = searchHighlights.length === 0;
-    btnNext.disabled = searchHighlights.length === 0;
+    if (countEl) countEl.textContent = `${searchHighlights.length} resultado${searchHighlights.length !== 1 ? 's' : ''}`;
+    if (btnPrev) btnPrev.disabled = searchHighlights.length === 0;
+    if (btnNext) btnNext.disabled = searchHighlights.length === 0;
     
     if (searchHighlights.length > 0) {
         navigateHighlight(1);
@@ -658,7 +677,7 @@ function renderLegislacion(container) {
         <div class="cards-grid">
             ${leyes.map(l => `
                 <div class="card" onclick="showLeyDetalle('${l.numero}')">
-                    <div class="card-header" style="background: linear-gradient(135deg, #0b3d91, #1e5fd1);">
+                    <div class="card-header" style="background: linear-gradient(135deg, #475569, #334155);">
                         <i class="fas fa-balance-scale"></i>
                         <span class="card-badge">${l.numero}</span>
                     </div>
@@ -880,16 +899,19 @@ function renderActividad(container, activityId) {
 // ============================================
 function openChat() {
     const chatWindow = document.getElementById('chatWindow');
-    chatWindow.classList.remove('hidden');
+    if (chatWindow) chatWindow.classList.remove('hidden');
     initChatMessages();
 }
 
 function closeChat() {
-    document.getElementById('chatWindow').classList.add('hidden');
+    const chatWindow = document.getElementById('chatWindow');
+    if (chatWindow) chatWindow.classList.add('hidden');
 }
 
 function toggleChat() {
     const chatWindow = document.getElementById('chatWindow');
+    if (!chatWindow) return;
+    
     if (chatWindow.classList.contains('hidden')) {
         openChat();
     } else {
@@ -901,11 +923,11 @@ function initChatMessages() {
     const messages = document.getElementById('chatMessages');
     const quickReplies = document.getElementById('chatQuickReplies');
     
-    if (messages.children.length === 0) {
+    if (messages && messages.children.length === 0) {
         addChatMessage('bot', `¡Hola ${currentUser.name.split(' ')[0]}! 👋 Soy el asistente virtual de AOMA San Juan. Puedo ayudarte con:\n\n• 📋 Convenios colectivos (CTT 302/75, 36/89, 238/94)\n• ⚖️ Leyes laborales (LCT 20.744, Ley 23.551, etc.)\n• 💰 Escalas salariales\n• 🎓 Cursos y capacitaciones\n\n¿En qué puedo ayudarte?`);
     }
     
-    if (quickReplies.children.length === 0) {
+    if (quickReplies && quickReplies.children.length === 0) {
         const replies = ['💰 Escalas salariales', '📋 Convenios CCT', '⚖️ Leyes laborales', '🎓 Cursos', '🔑 Contraseña'];
         replies.forEach(text => {
             const btn = document.createElement('button');
@@ -932,11 +954,12 @@ function sendChatMessage(text) {
             <span style="width: 8px; height: 8px; background: var(--text-muted); border-radius: 50%; animation: bounce 1s infinite 0.4s;"></span>
         </div>
     `;
-    messages.appendChild(typing);
-    messages.scrollTop = messages.scrollHeight;
+    if (messages) messages.appendChild(typing);
+    if (messages) messages.scrollTop = messages.scrollHeight;
     
     setTimeout(() => {
-        document.getElementById('typingIndicator')?.remove();
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
         const response = getBotResponse(text);
         addChatMessage('bot', response);
     }, 800 + Math.random() * 500);
@@ -944,6 +967,8 @@ function sendChatMessage(text) {
 
 function addChatMessage(type, text) {
     const messages = document.getElementById('chatMessages');
+    if (!messages) return;
+    
     const div = document.createElement('div');
     div.className = 'chat-message ' + type;
     
@@ -964,13 +989,9 @@ function addChatMessage(type, text) {
     messages.scrollTop = messages.scrollHeight;
 }
 
-// ============================================
-// CHAT INTELIGENTE - BÚSQUEDA EN CONTENIDO COMPLETO
-// ============================================
 function getBotResponse(userMessage) {
     const q = userMessage.toLowerCase().trim();
     
-    // Saludos
     if (/^(hola|buenas|buenos días|buenas tardes)/.test(q)) {
         return `¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte hoy?`;
     }
@@ -978,7 +999,6 @@ function getBotResponse(userMessage) {
         return '¡De nada! 😊 Estoy aquí para lo que necesites.';
     }
     
-    // Buscar en respuestas predefinidas del chat
     for (const [patterns, response] of Object.entries(DATA.chatResponses)) {
         if (patterns === 'default') continue;
         const patternList = patterns.split('|');
@@ -987,7 +1007,6 @@ function getBotResponse(userMessage) {
         }
     }
     
-    // Buscar en FAQs
     for (const [cat, faqs] of Object.entries(DATA.faqs)) {
         for (const faq of faqs) {
             if (faq.pregunta.toLowerCase().includes(q) || faq.respuesta.toLowerCase().includes(q)) {
@@ -996,7 +1015,6 @@ function getBotResponse(userMessage) {
         }
     }
     
-    // Buscar en contenido COMPLETO de convenios
     const convenios = getConvenios();
     for (const conv of convenios) {
         const contenidoLimpio = conv.contenido.replace(/<[^>]*>/g, ' ').toLowerCase();
@@ -1009,7 +1027,6 @@ function getBotResponse(userMessage) {
         }
     }
     
-    // Buscar en contenido COMPLETO de leyes
     const leyes = getLeyes();
     for (const ley of leyes) {
         const contenidoLimpio = ley.contenido.replace(/<[^>]*>/g, ' ').toLowerCase();
@@ -1022,14 +1039,12 @@ function getBotResponse(userMessage) {
         }
     }
     
-    // Buscar en cursos
     for (const curso of DATA.cursos) {
         if (curso.titulo.toLowerCase().includes(q) || curso.descripcion.toLowerCase().includes(q)) {
             return `🎓 Encontré el curso: <strong>${curso.titulo}</strong><br><br>${curso.descripcion}<br><br>Duración: ${curso.duracion} | Nivel: ${curso.nivel}`;
         }
     }
     
-    // Respuesta por defecto
     return `No encontré información específica sobre "${userMessage}". Te recomiendo:<br><br>1️⃣ Revisar las secciones del menú lateral<br>2️⃣ Usar la barra de búsqueda dentro de cada ley o convenio<br>3️⃣ Contactar a la Seccional al (0264) 422-XXXX<br><br>¿Hay algo más en lo que pueda ayudarte?`;
 }
 
@@ -1104,6 +1119,8 @@ function handleChatPageSubmit(e) {
 
 function addChatPageMessage(type, text) {
     const container = document.getElementById('chatPageMessages');
+    if (!container) return;
+    
     const div = document.createElement('div');
     div.className = 'chat-message ' + type;
     div.style.marginBottom = '1rem';
@@ -1133,7 +1150,7 @@ function toggleTheme() {
     document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : '');
     localStorage.setItem('aoma_theme', isDarkMode ? 'dark' : 'light');
     
-    const icon = document.querySelector('#themeBtn i');
+    const icon = document.querySelector('#themeToggle i');
     if (icon) {
         icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
     }
@@ -1144,6 +1161,8 @@ function toggleTheme() {
 // ============================================
 function showToast(message, type = 'info') {
     const container = document.getElementById('toastContainer');
+    if (!container) return;
+    
     const toast = document.createElement('div');
     toast.className = 'toast ' + type;
     
@@ -1182,7 +1201,7 @@ function showToast(message, type = 'info') {
 }
 
 // ============================================
-// EVENTOS
+// EVENTOS - CORREGIDO CON LOS IDs DEL HTML
 // ============================================
 function setupEvents() {
     const loginForm = document.getElementById('loginForm');
@@ -1190,21 +1209,22 @@ function setupEvents() {
         loginForm.addEventListener('submit', handleLogin);
     }
     
-    const menuBtn = document.getElementById('menuBtn');
-    if (menuBtn) {
-        menuBtn.addEventListener('click', (e) => {
+    // ✅ CORREGIDO: Ahora usa sidebarToggle (como está en el HTML)
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', (e) => {
             e.stopPropagation();
             const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('hidden');
+            if (sidebar) sidebar.classList.toggle('hidden');
         });
     }
     
     document.addEventListener('click', (e) => {
         const sidebar = document.getElementById('sidebar');
-        const menuBtn = document.getElementById('menuBtn');
+        const sidebarToggle = document.getElementById('sidebarToggle');
         
-        if (window.innerWidth < 1024 && sidebar && menuBtn) {
-            if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+        if (window.innerWidth < 1024 && sidebar && sidebarToggle) {
+            if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
                 sidebar.classList.add('hidden');
             }
         }
@@ -1221,16 +1241,18 @@ function setupEvents() {
         });
     });
     
-    const themeBtn = document.getElementById('themeBtn');
-    if (themeBtn) {
-        themeBtn.addEventListener('click', toggleTheme);
+    // ✅ CORREGIDO: Ahora usa themeToggle (como está en el HTML)
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
     }
     
-    const chatBtn = document.getElementById('chatBtn');
+    // ✅ CORREGIDO: Ahora usa chatToggle (como está en el HTML)
+    const chatToggle = document.getElementById('chatToggle');
     const chatClose = document.getElementById('chatClose');
-    const chatForm = document.getElementById('chatForm');
+    const chatForm = document.getElementById('chatInputForm');
     
-    if (chatBtn) chatBtn.addEventListener('click', toggleChat);
+    if (chatToggle) chatToggle.addEventListener('click', toggleChat);
     if (chatClose) chatClose.addEventListener('click', closeChat);
     if (chatForm) {
         chatForm.addEventListener('submit', (e) => {
@@ -1252,7 +1274,8 @@ function setupEvents() {
     
     window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) {
-            document.getElementById('sidebar').classList.remove('hidden');
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.remove('hidden');
         }
     });
 }
