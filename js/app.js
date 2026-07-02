@@ -75,10 +75,13 @@ class AOMACampus {
 
     setupEventListeners() {
         // Sidebar toggle (hamburguesa)
-        document.getElementById('sidebarToggle')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.toggleSidebar();
-        });
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleSidebar();
+            });
+        }
 
         // Click fuera del sidebar en móvil
         document.addEventListener('click', (e) => {
@@ -86,57 +89,82 @@ class AOMACampus {
             const toggle = document.getElementById('sidebarToggle');
             
             if (window.innerWidth < 1024 && sidebar && !sidebar.classList.contains('hidden')) {
-                if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                if (!sidebar.contains(e.target) && (!toggle || !toggle.contains(e.target))) {
                     sidebar.classList.add('hidden');
                 }
             }
 
             if (!e.target.closest('.user-menu')) {
-                document.getElementById('userDropdown')?.classList.remove('active');
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown) dropdown.classList.remove('active');
             }
         });
 
         // User dropdown
-        document.getElementById('userAvatar')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.toggleUserDropdown();
-        });
+        const userAvatar = document.getElementById('userAvatar');
+        if (userAvatar) {
+            userAvatar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleUserDropdown();
+            });
+        }
 
         // Theme toggle
-        document.getElementById('themeToggle')?.addEventListener('click', () => {
-            if (typeof theme !== 'undefined' && theme.toggle) theme.toggle();
-        });
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                if (typeof theme !== 'undefined' && theme.toggle) {
+                    theme.toggle();
+                }
+            });
+        }
 
-        // Chat
-        document.getElementById('chatToggle')?.addEventListener('click', () => {
-            if (typeof chat !== 'undefined') chat.toggle();
-        });
-        document.getElementById('chatClose')?.addEventListener('click', () => {
-            if (typeof chat !== 'undefined') chat.close();
-        });
+        // Chat toggle
+        const chatToggle = document.getElementById('chatToggle');
+        if (chatToggle) {
+            chatToggle.addEventListener('click', () => {
+                if (typeof chat !== 'undefined' && chat.toggle) {
+                    chat.toggle();
+                }
+            });
+        }
+
+        const chatClose = document.getElementById('chatClose');
+        if (chatClose) {
+            chatClose.addEventListener('click', () => {
+                if (typeof chat !== 'undefined' && chat.close) {
+                    chat.close();
+                }
+            });
+        }
 
         // Navegación del sidebar
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const page = item.dataset.page;
-                if (page) {
-                    this.navigateTo(page);
-                    if (window.innerWidth < 1024) {
-                        setTimeout(() => {
-                            document.getElementById('sidebar')?.classList.add('hidden');
-                        }, 200);
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.addEventListener('click', (e) => {
+                const navItem = e.target.closest('.nav-item');
+                if (navItem) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const page = navItem.dataset.page;
+                    if (page) {
+                        this.navigateTo(page);
+                        if (window.innerWidth < 1024) {
+                            setTimeout(() => {
+                                sidebar.classList.add('hidden');
+                            }, 200);
+                        }
                     }
                 }
             });
-        });
+        }
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.key === 'k') {
                 e.preventDefault();
-                document.getElementById('searchInput')?.focus();
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) searchInput.focus();
             }
             if (e.key === 'Escape') {
                 this.closeAllModals();
@@ -145,6 +173,7 @@ class AOMACampus {
 
         // Resize
         window.addEventListener('resize', Utils.debounce(() => this.handleResize(), 250));
+        this.handleResize();
     }
 
     showLoading() {
@@ -164,7 +193,6 @@ class AOMACampus {
             document.getElementById('loginScreen')?.classList.add('hidden');
             document.getElementById('app')?.classList.remove('hidden');
             
-            // Mostrar sidebar en desktop
             if (window.innerWidth >= 1024) {
                 document.getElementById('sidebar')?.classList.remove('hidden');
             }
@@ -216,15 +244,17 @@ class AOMACampus {
         const sidebar = document.getElementById('sidebar');
         const mainContent = document.getElementById('mainContent');
         
+        if (!sidebar) return;
+        
         if (window.innerWidth < 1024) {
-            // Móvil: mostrar/ocultar
-            sidebar?.classList.toggle('hidden');
-            sidebar?.classList.remove('collapsed');
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.remove('collapsed');
         } else {
-            // Desktop: colapsar/expandir
             this.sidebarCollapsed = !this.sidebarCollapsed;
-            sidebar?.classList.toggle('collapsed', this.sidebarCollapsed);
-            mainContent?.classList.toggle('expanded', this.sidebarCollapsed);
+            sidebar.classList.toggle('collapsed', this.sidebarCollapsed);
+            if (mainContent) {
+                mainContent.classList.toggle('expanded', this.sidebarCollapsed);
+            }
         }
     }
 
@@ -273,7 +303,7 @@ class AOMACampus {
                 case 'legislacion': await this.renderLegislacion(content); break;
                 case 'noticias': await this.renderNoticias(content); break;
                 case 'faq': await this.renderFAQ(content); break;
-                case 'chat': if (typeof chat !== 'undefined') chat.open(); break;
+                case 'chat': await this.renderChatPage(content); break;
                 case 'admin-dashboard':
                 case 'admin-usuarios':
                 case 'admin-cursos':
@@ -421,7 +451,7 @@ class AOMACampus {
     }
 
     // ============================================
-    // DETALLE DE CURSO (al hacer click)
+    // DETALLE DE CURSO
     // ============================================
     async showCursoDetalle(cursoId) {
         const curso = DATA.cursos.find(c => c.id === cursoId);
@@ -503,18 +533,119 @@ class AOMACampus {
     }
 
     // ============================================
-    // CURSOS (listado)
+    // CURSOS CON FILTROS
     // ============================================
     async renderCursos(container) {
         container.innerHTML = `
-            <div class="page-header animate-fade-in">
-                <h1>Capacitaciones 🎓</h1>
-                <p>Cursos disponibles organizados por actividad minera</p>
-            </div>
-            <div class="cards-grid">
-                ${DATA.cursos.map(c => this.renderCourseCard(c)).join('')}
+            <div class="animate-fade-in">
+                <div class="page-header">
+                    <h1>Capacitaciones 🎓</h1>
+                    <p>Cursos disponibles organizados por actividad minera</p>
+                </div>
+
+                <div class="section" style="margin-bottom: 2rem;">
+                    <div class="filters-bar">
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <i class="fas fa-filter"></i> Filtrar por:
+                            </label>
+                            <select class="app-select" id="filterCategoria" onchange="app.filtrarCursos()">
+                                <option value="">Todas las categorías</option>
+                                ${[...new Set(DATA.cursos.map(c => c.categoria))].map(cat => `
+                                    <option value="${cat}">${cat}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <select class="app-select" id="filterActividad" onchange="app.filtrarCursos()">
+                                <option value="">Todas las actividades</option>
+                                ${Object.entries(DATA.actividades).map(([k, v]) => `
+                                    <option value="${k}">${v.nombre}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <select class="app-select" id="filterNivel" onchange="app.filtrarCursos()">
+                                <option value="">Todos los niveles</option>
+                                <option value="Básico">Básico</option>
+                                <option value="Intermedio">Intermedio</option>
+                                <option value="Avanzado">Avanzado</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <input type="text" class="app-input" id="filterBuscar" placeholder="🔍 Buscar curso..." oninput="app.filtrarCursos()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card primary scroll-reveal">
+                        <div class="stat-icon primary"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="stat-value">${DATA.cursos.length}</div>
+                        <div class="stat-label">Total de cursos</div>
+                    </div>
+                    <div class="stat-card accent scroll-reveal">
+                        <div class="stat-icon accent"><i class="fas fa-clock"></i></div>
+                        <div class="stat-value">${DATA.cursos.reduce((acc, c) => acc + parseInt(c.duracion), 0)}h</div>
+                        <div class="stat-label">Horas de capacitación</div>
+                    </div>
+                    <div class="stat-card success scroll-reveal">
+                        <div class="stat-icon success"><i class="fas fa-users"></i></div>
+                        <div class="stat-value">${DATA.cursos.reduce((acc, c) => acc + (c.inscritos || 0), 0)}</div>
+                        <div class="stat-label">Inscriptos totales</div>
+                    </div>
+                </div>
+
+                <div class="cards-grid" id="cursosGrid">
+                    ${DATA.cursos.map(c => this.renderCourseCard(c)).join('')}
+                </div>
+
+                <div class="empty-state hidden" id="cursosEmpty">
+                    <i class="fas fa-search"></i>
+                    <h3>No se encontraron cursos</h3>
+                    <p>Probá cambiando los filtros de búsqueda</p>
+                    <button class="btn btn-primary" onclick="app.limpiarFiltrosCursos()">
+                        <i class="fas fa-times"></i> Limpiar filtros
+                    </button>
+                </div>
             </div>
         `;
+    }
+
+    filtrarCursos() {
+        const categoria = document.getElementById('filterCategoria')?.value || '';
+        const actividad = document.getElementById('filterActividad')?.value || '';
+        const nivel = document.getElementById('filterNivel')?.value || '';
+        const buscar = (document.getElementById('filterBuscar')?.value || '').toLowerCase();
+
+        let cursosFiltrados = DATA.cursos.filter(c => {
+            if (categoria && c.categoria !== categoria) return false;
+            if (actividad && c.actividad !== actividad) return false;
+            if (nivel && c.nivel !== nivel) return false;
+            if (buscar && !c.titulo.toLowerCase().includes(buscar) && 
+                !c.descripcion.toLowerCase().includes(buscar)) return false;
+            return true;
+        });
+
+        const grid = document.getElementById('cursosGrid');
+        const empty = document.getElementById('cursosEmpty');
+
+        if (cursosFiltrados.length === 0) {
+            grid.classList.add('hidden');
+            empty.classList.remove('hidden');
+        } else {
+            grid.classList.remove('hidden');
+            empty.classList.add('hidden');
+            grid.innerHTML = cursosFiltrados.map(c => this.renderCourseCard(c)).join('');
+        }
+    }
+
+    limpiarFiltrosCursos() {
+        document.getElementById('filterCategoria').value = '';
+        document.getElementById('filterActividad').value = '';
+        document.getElementById('filterNivel').value = '';
+        document.getElementById('filterBuscar').value = '';
+        this.filtrarCursos();
     }
 
     // ============================================
@@ -717,7 +848,254 @@ class AOMACampus {
     }
 
     // ============================================
-    // ACTIVIDAD (portada)
+    // CHAT PAGE - PÁGINA COMPLETA
+    // ============================================
+    async renderChatPage(container) {
+        container.innerHTML = `
+            <div class="animate-fade-in">
+                <div class="page-header">
+                    <h1>Consultas Virtuales 💬</h1>
+                    <p>Hacé tus consultas al asistente virtual de AOMA</p>
+                </div>
+                
+                <div class="chat-page-container">
+                    <div class="chat-page-main">
+                        <div class="chat-page-header">
+                            <div class="chat-page-info">
+                                <div class="chat-page-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div>
+                                    <h3>Asistente Virtual AOMA</h3>
+                                    <span class="chat-status">
+                                        <span class="status-dot online"></span>
+                                        En línea - Responde al instante
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="chat-page-actions">
+                                <button class="btn-icon" onclick="app.clearChat()" title="Limpiar chat">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="chat-page-messages" id="chatPageMessages">
+                            <div class="chat-welcome">
+                                <div class="chat-welcome-icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <h2>¡Hola ${app.currentUser?.name?.split(' ')[0] || 'Usuario'}! 👋</h2>
+                                <p>Soy el asistente virtual de AOMA San Juan. Puedo ayudarte con:</p>
+                                <div class="chat-capabilities">
+                                    <div class="capability-item">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <span>Escalas salariales</span>
+                                    </div>
+                                    <div class="capability-item">
+                                        <i class="fas fa-file-contract"></i>
+                                        <span>Convenios colectivos</span>
+                                    </div>
+                                    <div class="capability-item">
+                                        <i class="fas fa-balance-scale"></i>
+                                        <span>Legislación laboral</span>
+                                    </div>
+                                    <div class="capability-item">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        <span>Cursos y capacitaciones</span>
+                                    </div>
+                                    <div class="capability-item">
+                                        <i class="fas fa-play-circle"></i>
+                                        <span>Videos de capacitación</span>
+                                    </div>
+                                    <div class="capability-item">
+                                        <i class="fas fa-question-circle"></i>
+                                        <span>Preguntas frecuentes</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chat-page-quick-replies">
+                            <button class="quick-reply-btn" onclick="app.sendQuickMessage('escalas salariales')">
+                                💰 Escalas salariales
+                            </button>
+                            <button class="quick-reply-btn" onclick="app.sendQuickMessage('convenios colectivos')">
+                                📋 Convenios
+                            </button>
+                            <button class="quick-reply-btn" onclick="app.sendQuickMessage('leyes laborales')">
+                                ⚖️ Leyes laborales
+                            </button>
+                            <button class="quick-reply-btn" onclick="app.sendQuickMessage('capacitaciones')">
+                                🎓 Cursos
+                            </button>
+                            <button class="quick-reply-btn" onclick="app.sendQuickMessage('recuperar contraseña')">
+                                🔑 Contraseña
+                            </button>
+                        </div>
+
+                        <form class="chat-page-input-form" id="chatPageForm" onsubmit="app.sendPageMessage(event)">
+                            <input type="text" class="chat-page-input" id="chatPageInput" placeholder="Escribí tu consulta..." autocomplete="off">
+                            <button type="submit" class="chat-page-send">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="chat-page-sidebar">
+                        <div class="chat-sidebar-section">
+                            <h4><i class="fas fa-lightbulb"></i> Sugerencias</h4>
+                            <div class="suggestion-list">
+                                <div class="suggestion-item" onclick="app.sendQuickMessage('¿Cómo me inscribo a un curso?')">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span>Inscripción a cursos</span>
+                                </div>
+                                <div class="suggestion-item" onclick="app.sendQuickMessage('¿Cuáles son mis beneficios como delegado?')">
+                                    <i class="fas fa-user-shield"></i>
+                                    <span>Beneficios de delegado</span>
+                                </div>
+                                <div class="suggestion-item" onclick="app.sendQuickMessage('¿Dónde veo las escalas salariales?')">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Escalas salariales</span>
+                                </div>
+                                <div class="suggestion-item" onclick="app.sendQuickMessage('¿Qué horarios tiene la seccional?')">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Horarios de atención</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chat-sidebar-section">
+                            <h4><i class="fas fa-info-circle"></i> Información</h4>
+                            <div class="info-box">
+                                <p><strong>Contacto directo:</strong></p>
+                                <p><i class="fas fa-envelope"></i> campus@aomasanjuan.org.ar</p>
+                                <p><i class="fas fa-phone"></i> (0264) 422-XXXX</p>
+                                <p><i class="fas fa-map-marker-alt"></i> Rivadavia 345 Oeste, San Juan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        setTimeout(() => {
+            const input = document.getElementById('chatPageInput');
+            if (input) input.focus();
+        }, 300);
+    }
+
+    sendPageMessage(event) {
+        event.preventDefault();
+        const input = document.getElementById('chatPageInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        this.addPageChatMessage(text, 'user');
+        input.value = '';
+
+        this.showPageTyping();
+
+        setTimeout(() => {
+            this.removePageTyping();
+            const response = chat.getBotResponse(text);
+            this.addPageChatMessage(response, 'bot');
+        }, 800 + Math.random() * 700);
+    }
+
+    sendQuickMessage(text) {
+        this.addPageChatMessage(text, 'user');
+        this.showPageTyping();
+
+        setTimeout(() => {
+            this.removePageTyping();
+            const response = chat.getBotResponse(text);
+            this.addPageChatMessage(response, 'bot');
+        }, 600);
+    }
+
+    addPageChatMessage(text, type) {
+        const container = document.getElementById('chatPageMessages');
+        if (!container) return;
+
+        const welcome = container.querySelector('.chat-welcome');
+        if (welcome) welcome.remove();
+
+        const div = document.createElement('div');
+        div.className = `chat-page-message ${type}`;
+        
+        const time = new Date().toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'});
+        
+        if (type === 'user') {
+            const initials = app.currentUser?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
+            div.innerHTML = `
+                <div class="message-avatar user-avatar">${initials}</div>
+                <div class="message-content">
+                    <div class="message-bubble">${Utils.escapeHtml(text)}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+        } else {
+            div.innerHTML = `
+                <div class="message-avatar bot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-bubble">${text}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+        }
+
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    showPageTyping() {
+        const container = document.getElementById('chatPageMessages');
+        if (!container) return;
+
+        const div = document.createElement('div');
+        div.className = 'chat-page-message bot typing';
+        div.id = 'pageTypingIndicator';
+        div.innerHTML = `
+            <div class="message-avatar bot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-content">
+                <div class="message-bubble typing-bubble">
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    removePageTyping() {
+        document.getElementById('pageTypingIndicator')?.remove();
+    }
+
+    clearChat() {
+        const container = document.getElementById('chatPageMessages');
+        if (container) {
+            container.innerHTML = `
+                <div class="chat-welcome">
+                    <div class="chat-welcome-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h2>Chat limpiado</h2>
+                    <p>Empezá una nueva conversación</p>
+                </div>
+            `;
+            this.showToast('Chat limpiado', 'success');
+        }
+    }
+
+    // ============================================
+    // ACTIVIDAD
     // ============================================
     async renderActividad(container, activityId) {
         const act = DATA.actividades[activityId];
@@ -870,10 +1248,17 @@ class AOMACampus {
 
     handleResize() {
         const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        
+        if (!sidebar) return;
+        
         if (window.innerWidth < 1024) {
-            sidebar?.classList.add('hidden');
+            sidebar.classList.add('hidden');
+            sidebar.classList.remove('collapsed');
+            if (mainContent) mainContent.classList.remove('expanded');
         } else {
-            sidebar?.classList.remove('hidden');
+            sidebar.classList.remove('hidden');
+            if (mainContent) mainContent.classList.remove('expanded');
         }
     }
 }
