@@ -12,8 +12,15 @@ window.AppInstance = {
     },
 
     verifySessionState() {
-        // Objeto seguro por defecto si localStorage está vacío o corrupto
-        const sessionDefault = { loggedIn: false, nombre: "Invitado", rama: "No Asignada", empresa: "No Asignada", rol: "afiliado" };
+        // Objeto de contingencia ultra-seguro por si localStorage está vacío, roto o corrupto
+        const sessionDefault = { 
+            loggedIn: false, 
+            nombre: "Afiliado Gremial", 
+            rama: "General", 
+            empresa: "No Asignada", 
+            cct: "No Asignado",
+            rol: "afiliado" 
+        };
         
         try {
             let session = localStorage.getItem('aoma_session');
@@ -35,30 +42,30 @@ window.AppInstance = {
             session = {};
         }
 
-        // CONTROL DE NULOS ULTRA SEGURO: Evita el Uncaught TypeError detectado en la consola
+        // CONTROL DE NULOS ABSOLUTO: Si la propiedad no existe, usa el fallback string de la derecha
         const nombreUser = session.nombre || 'Afiliado';
-        const ramaUser = (session.rama || 'General').toUpperCase();
-        const empresaUser = (session.empresa || 'No Asignada');
+        const ramaUser = String(session.rama || 'General').toUpperCase();
+        const empresaUser = session.empresa || 'No Asignada';
         const cctUser = session.cct || 'No Asignado';
 
-        // Renderizado defensivo del bloque de perfil (Sidebar / Header Dropdown)
+        // Inyección defensiva en el contenedor de perfil lateral (Evita textos encimados y undefined)
         const profileTarget = document.getElementById('user-profile-target');
         if (profileTarget) {
             profileTarget.innerHTML = `
-                <div class="p-4 bg-slate-950/40 rounded-xl border border-slate-800 space-y-3">
-                    <div class="flex items-center gap-3">
-                        <div class="h-10 w-10 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold">
+                <div style="padding: 1rem; background: rgba(7, 10, 19, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; margin-top: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 0.75rem;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(6, 182, 212, 0.2); border: 1px solid rgba(6, 182, 212, 0.3); display: flex; align-items: center; justify-content: center; color: #06b6d4; font-weight: bold; font-size: 14px;">
                             ${nombreUser.charAt(0)}
                         </div>
                         <div>
-                            <h4 class="text-sm font-bold text-white">Buenas tardes, ${nombreUser}</h4>
-                            <p class="text-[11px] text-slate-400">Legajo activo en San Juan</p>
+                            <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: #ffffff;">Buenas tardes, ${nombreUser}</h4>
+                            <p style="margin: 0; font-size: 11px; color: #94a3b8;">Legajo activo - San Juan</p>
                         </div>
                     </div>
-                    <div class="pt-2 border-t border-slate-800/60 grid grid-cols-2 gap-2 text-[11px]">
-                        <div><span class="text-slate-500 block">Empresa:</span> <span class="text-slate-300 font-medium">${empresaUser}</span></div>
-                        <div><span class="text-slate-500 block">Rama:</span> <span class="text-slate-300 font-medium">${ramaUser}</span></div>
-                        <div class="col-span-full"><span class="text-slate-500 block">Convenio:</span> <span class="text-slate-300 font-medium">CCT ${cctUser}</span></div>
+                    <div style="padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05); display: grid; grid-template-cols: 1fr 1fr; gap: 8px; font-size: 11px;">
+                        <div><span style="color: #64748b; display: block;">Empresa:</span> <span style="color: #cbd5e1; font-weight: 500;">${empresaUser}</span></div>
+                        <div><span style="color: #64748b; display: block;">Rama:</span> <span style="color: #cbd5e1; font-weight: 500;">${ramaUser}</span></div>
+                        <div style="grid-column: span 2;"><span style="color: #64748b; display: block;">Convenio Laboral:</span> <span style="color: #cbd5e1; font-weight: 500;">CCT ${cctUser}</span></div>
                     </div>
                 </div>
             `;
@@ -66,41 +73,36 @@ window.AppInstance = {
     },
 
     bindGlobalEvents() {
-        window.addEventListener('hashchange', () => {
-            this.route(window.location.hash);
-        });
-
-        // Toggle del Sidebar móvil si aplica
-        document.getElementById('mobile-menu-trigger')?.addEventListener('click', () => {
-            document.getElementById('sidebar-main')?.classList.toggle('-translate-x-full');
-        });
+        window.removeEventListener('hashchange', this.handleHashChange);
+        this.handleHashChange = () => this.route(window.location.hash);
+        window.addEventListener('hashchange', this.handleHashChange);
     },
 
     route(hash) {
         const container = document.getElementById('main-content-viewport');
         if (!container) return;
 
-        // Limpieza de Modales huérfanos de vistas anteriores
+        // Reset de modales e hilos colgados
         document.getElementById('video-player-modal')?.remove();
         document.body.style.overflow = '';
 
-        // Enrutador seguro: Si el módulo no se cargó (Error 404), muestra un aviso limpio sin romper la app
+        // Manejador Interno SPA: Si un archivo secundario da 404, el Router no se muere
         switch (hash) {
             case '#panel':
                 container.innerHTML = `
-                    <div class="container-premium animate-fade-in space-y-6">
-                        <div>
-                            <h2 class="text-2xl font-bold text-white">Panel Central</h2>
-                            <p class="text-slate-400 text-sm mt-1">Acceso rápido a sus herramientas y trayectos formativos gremiales.</p>
+                    <div style="padding: 1.5rem; color: #fff;" class="animate-fade-in">
+                        <div style="margin-bottom: 2rem;">
+                            <h2 style="font-size: 1.5rem; font-weight: 700; margin: 0;">Panel Central de Afiliados</h2>
+                            <p style="color: #94a3b8; font-size: 0.875rem; margin: 4px 0 0 0;">Acceso unificado a sus herramientas y trayectos formativos homologados.</p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <a href="#capacitaciones" class="card-premium hover:border-cyan-500/40 transition-all p-6 space-y-2 block">
-                                <h3 class="text-white font-semibold text-base flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-cyan-400"></i> Cursos Activos</h3>
-                                <p class="text-slate-400 text-xs leading-relaxed">Acceda a las aulas virtuales y trayectos formativos homologados vigentes.</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                            <a href="#capacitaciones" style="display: block; padding: 1.5rem; background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; text-decoration: none; transition: all 0.3s;">
+                                <h3 style="color: #fff; font-size: 1rem; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">📚 Cursos Activos</h3>
+                                <p style="color: #94a3b8; font-size: 0.75rem; margin: 0; line-height: 1.5;">Aulas virtuales asignadas y seguimiento de calificaciones por trayecto.</p>
                             </a>
-                            <a href="#videoteca" class="card-premium hover:border-cyan-500/40 transition-all p-6 space-y-2 block">
-                                <h3 class="text-white font-semibold text-base flex items-center gap-2"><i class="fa-solid fa-video text-cyan-400"></i> Videoteca</h3>
-                                <p class="text-slate-400 text-xs leading-relaxed">Clases técnicas y de seguridad en planta segmentadas por su rama laboral.</p>
+                            <a href="#videoteca" style="display: block; padding: 1.5rem; background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; text-decoration: none; transition: all 0.3s;">
+                                <h3 style="color: #fff; font-size: 1rem; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">🎬 Videoteca Instructiva</h3>
+                                <p style="color: #94a3b8; font-size: 0.75rem; margin: 0; line-height: 1.5;">Capacitaciones audiovisuales técnicas y de seguridad en planta por rama minera.</p>
                             </a>
                         </div>
                     </div>
@@ -111,46 +113,58 @@ window.AppInstance = {
                 if (window.ModuleVideos) {
                     window.ModuleVideos.init(container);
                 } else {
-                    this.renderModuleLoadError(container, "Videoteca (videos.js)");
+                    this.renderFallbackModule(container, "Videoteca", "Asegúrese de cargar correctamente el archivo 'videos.js' en la cabecera.");
                 }
                 break;
 
             case '#capacitaciones':
                 container.innerHTML = `
-                    <div class="container-premium animate-fade-in space-y-4">
-                        <h2 class="text-xl font-bold text-white">Capacitaciones Gremiales</h2>
-                        <p class="text-slate-400 text-sm">Aulas y exámenes de certificación técnica en desarrollo.</p>
+                    <div style="padding: 1.5rem; color: #fff;">
+                        <h2 style="font-size: 1.25rem; font-weight: 700;">Capacitaciones de Higiene y Seguridad</h2>
+                        <p style="color: #94a3b8; font-size: 0.875rem;">Módulos evaluativos y certificaciones con validez sindical en preparación.</p>
+                    </div>`;
+                break;
+
+            case '#chat':
+                container.innerHTML = `
+                    <div style="padding: 1.5rem; color: #fff;">
+                        <h2 style="font-size: 1.25rem; font-weight: 700;">Asistente de Inteligencia Artificial IA</h2>
+                        <p style="color: #94a3b8; font-size: 0.875rem;">Consultas interactivas sobre convenios colectivos CCT 36/89 y CCT 53/89 próximamente disponibles.</p>
                     </div>`;
                 break;
 
             default:
-                container.innerHTML = `<div class="p-8 text-center text-slate-400">Vista no encontrada.</div>`;
+                // Fallback elegante para hashes no registrados o en desarrollo
+                container.innerHTML = `
+                    <div style="padding: 3rem; text-align: center; color: #94a3b8;">
+                        <p style="font-size: 0.875rem; margin: 0;">Sección en mantenimiento técnico o desarrollo.</p>
+                        <a href="#panel" style="color: #06b6d4; font-size: 12px; display: inline-block; margin-top: 12px; text-decoration: none;">Volver al Panel Principal</a>
+                    </div>`;
                 break;
         }
 
         if (window.lucide) lucide.createIcons();
     },
 
-    renderModuleLoadError(container, moduleName) {
+    renderFallbackModule(container, moduleName, description) {
         container.innerHTML = `
-            <div class="card-premium text-center py-12 flex flex-col items-center justify-center gap-3 max-w-xl mx-auto mt-8">
-                <i class="fa-solid fa-triangle-exclamation text-amber-500 text-2xl"></i>
-                <h3 class="text-white font-semibold">Error al cargar el módulo</h3>
-                <p class="text-slate-400 text-xs">No se pudo compilar el archivo de la <strong>${moduleName}</strong>. Asegúrese de que el script esté subido correctamente en su entorno de Vercel.</p>
+            <div style="max-w: 500px; margin: 2rem auto; padding: 2rem; background: rgba(15,23,42,0.6); border: 1px solid rgba(245,158,11,0.2); border-radius: 16px; text-align: center;">
+                <h3 style="color: #fff; font-size: 15px; margin: 0 0 8px 0;">Módulo ${moduleName} Temporalmente No Disponible</h3>
+                <p style="color: #94a3b8; font-size: 12px; margin: 0; line-height: 1.6;">${description}</p>
             </div>
         `;
     },
 
     showToast(message, type = 'success') {
         const toast = document.createElement('div');
-        toast.className = `fixed bottom-4 right-4 z-50 px-4 py-3 rounded-xl border text-xs shadow-xl animate-slide-up flex items-center gap-2 ${
+        toast.style = `position: fixed; bottom: 16px; right: 16px; z-index: 9999; padding: 12px 16px; border-radius: 12px; font-size: 12px; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); border: 1px solid; ${
             type === 'success' 
-                ? 'bg-emerald-950/90 text-emerald-400 border-emerald-500/30' 
-                : 'bg-rose-950/90 text-rose-400 border-rose-500/30'
+                ? 'background: rgba(6,78,59,0.95); color: #34d399; border-color: rgba(52,211,153,0.2);' 
+                : 'background: rgba(153,27,27,0.95); color: #f87171; border-color: rgba(248,113,113,0.2);'
         }`;
-        toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> <span>${message}</span>`;
+        toast.innerHTML = `<span>${message}</span>`;
         document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
+        setTimeout(() => toast.remove(), 4500);
     }
 };
 
