@@ -1,0 +1,144 @@
+/**
+ * CAMPUS VIRTUAL PREMIUM - AOMA SECCIONAL SAN JUAN
+ * Capa 01: Fichero Core de Variables y Tokens de Diseño (Clean Architecture CSS)
+ * Soportado sobre: Microsoft Fluent Design, Apple Human Interface & Notion.
+ */
+
+:root {
+    /* ========================================== */
+    /* 1. PALETA CRUMÁTICA INSTITUCIONAL (LIGHT) */
+    /* ========================================== */
+    --primary: #004B93;          /* Azul Institucional AOMA */
+    --primary-light: #1A73E8;    /* Azul de Interacción / Enlaces */
+    --primary-dark: #002D59;     /* Azul Profundo / Textos de Encabezado */
+    
+    --accent: #FFC107;           /* Amarillo / Oro Minero Institucional */
+    --accent-hover: #E0A800;     /* Amarillo de Interacción */
+    --accent-light: #FFF3CD;     /* Fondo de Alertas o Destacados */
+
+    /* Tonos Neutros Premium */
+    --bg-main: #F4F6F9;          /* Fondo base de la plataforma */
+    --bg-surface: #FFFFFF;       /* Fondo de Tarjetas, Sidebar y Elementos Flotantes */
+    --bg-header: rgba(255, 255, 255, 0.75); /* Header con soporte Glassmorphism */
+    
+    /* Escala de Grises y Legibilidad */
+    --text-main: #212529;        /* Texto de Cuerpo Principal (Alta Legibilidad) */
+    --text-muted: #6C757D;       /* Subtítulos, Metadatos e Información Secundaria */
+    --text-light: #A0AEC0;       /* Placeholders y Bordes Sutiles */
+    --text-white: #FFFFFF;       /* Contraste sobre fondos oscuros o primarios */
+    
+    /* Estados del Sistema (Contraste AA / WCAG) */
+    --success: #28A745;          /* Aprobado / Completado */
+    --success-bg: #D4EDDA;
+    --warning: #FD7E14;          /* En Curso / Advertencia */
+    --warning-bg: #FFE5D0;
+    --danger: #DC3545;           /* Reprobado / Bloqueado / Alerta */
+    --danger-bg: #F8D7DA;
+    --info: #0DCAF0;             /* Comunicados / Información */
+    --info-bg: #CFF4FC;
+
+    /* ========================================== */
+    /* 2. GRADIENTES PREMIUM COMERCIALES         */
+    /* ========================================== */
+    --gradient-primary: linear-gradient(135deg, #004B93 0%, #002D59 100%);
+    --gradient-accent: linear-gradient(135deg, #FFC107 0%, #FF9800 100%);
+    --gradient-tech: linear-gradient(135deg, #004B93 0%, #1A73E8 50%, #00D2FF 100%);
+    --gradient-surface: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%);
+    --gradient-dark-card: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+
+    /* ========================================== */
+    /* 3. RAMAS DE ACTIVIDAD (IDENTIDADES MINERAS) */
+    /* ========================================== */
+    --branch-metalifera: #007791; /* Sabor Azul Océano Industrial */
+    --branch-cemento: #6B7280;    /* Gris Cemento Técnico */
+    --branch-cal: #4FD1C5;        /* Turquesa Mineral */
+    --branch-piedra: #8B5CF6;     /* Violeta Cantera */
+    --branch-molienda: #F59E0B;   /* Ámbar de Fricción */
+
+    /* ========================================== */
+    /* 4. EFECTOS MODERNOS & GLASSMORPHISM       */
+    /* ========================================== */
+    --blur-effect: blur(16px) saturate(180%);
+    --border-glass: rgba(255, 255, 255, 0.4);
+    --border-subtle: rgba(0, 0, 0, 0.08);
+
+    /* Sombras de Profundidad (Elevaciones) */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.02);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.08);
+    --shadow-premium: 0 20px 40px rgba(0, 75, 147, 0.06);
+    --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+
+    /* ========================================== */
+    /* 5. FUENTES Y SISTEMA TIPOGRÁFICO         */
+    /* ========================================== */
+    --font-header: 'Poppins', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Tamaños de Fuente Escala Perfect Fourth */
+    --font-xs: 0.75rem;          /* 12px */
+    --font-sm: 0.875rem;         /* 14px */
+    --font-base: 1rem;           /* 16px */
+    --font-lg: 1.125rem;         /* 18px */
+    --font-xl: 1.25rem;          /* 20px */
+    --font-2xl: 1.5rem;          /* 24px */
+    --font-3xl: 1.875rem;        /* 30px */
+    --font-4xl: 2.25rem;         /* 36px */
+
+    /* Espesores Tipográficos */
+    --weight-light: 300;
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+    --weight-black: 800;
+
+    /* Alturas de Línea */
+    --lh-tight: 1.25;
+    --lh-base: 1.5;
+    --lh-loose: 1.75;
+
+    /* ========================================== */
+    /* 6. DIMENSIONES DEL DISEÑO (LAYOUT TOKENS)  */
+    /* ========================================== */
+    --header-height: 70px;
+    --sidebar-width: 280px;
+    --sidebar-collapsed-width: 80px;
+    --footer-height: 60px;
+    --max-content-width: 1440px;
+
+    /* Radios de Bordes */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+    --radius-round: 50%;
+
+    /* Sistema de Espaciados (Padding/Margin) */
+    --space-1: 0.25rem;          /* 4px */
+    --space-2: 0.5rem;           /* 8px */
+    --space-3: 0.75rem;          /* 12px */
+    --space-4: 1rem;             /* 16px */
+    --space-5: 1.25rem;          /* 20px */
+    --space-6: 1.5rem;           /* 24px */
+    --space-8: 2rem;             /* 32px */
+    --space-10: 2.5rem;          /* 40px */
+    --space-12: 3rem;            /* 48px */
+
+    /* ========================================== */
+    /* 7. TRANSICIONES Y MICROINTERACCIONES     */
+    /* ========================================== */
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* Indexación de Capas (Z-Index) */
+    --z-negative: -1;
+    --z-base: 1;
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal: 1040;
+    --z-toast: 1050;
+}

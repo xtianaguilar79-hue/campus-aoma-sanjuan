@@ -1,457 +1,294 @@
 <!DOCTYPE html>
-<html lang="es-AR">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Campus Virtual AOMA San Juan - Plataforma de Capacitación Gremial">
-    <meta name="theme-color" content="#0b3d91">
-    <title>Campus Virtual AOMA | Asociación Obrera Minera Argentina</title>
+    <title>Campus Virtual | AOMA Seccional San Juan</title>
     
-    <!-- Preconnect -->
+    <meta name="description" content="Plataforma Educativa e Institucional Premium para Delegados y Dirigentes Gremiales de AOMA Seccional San Juan.">
+    <meta name="robots" content="index, follow">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <!-- CSS -->
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dark.css">
     <link rel="stylesheet" href="css/responsive.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script src="js/theme.js"></script>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loadingScreen" class="loading-screen">
-        <div class="loading-content">
-            <div class="loading-logo">
-                <i class="fas fa-mountain"></i>
+
+    <div id="login-container" class="login-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="login-title">
+        <div class="login-card glassmorphism animate-fade-in">
+            <div class="login-header">
+                <div class="logo-wrapper">
+                    <div class="institutional-logo">
+                        <i class="fa-solid fa-helmet-safety logo-icon-fallback"></i>
+                        <span>AOMA</span>
+                    </div>
+                </div>
+                <h1 id="login-title">Campus Virtual Premium</h1>
+                <p class="login-subtitle">Seccional San Juan — Gestión Gremiar & Capacitación</p>
             </div>
-            <div class="loading-spinner"></div>
-            <p class="loading-text">Cargando Campus Virtual AOMA...</p>
+
+            <form id="login-form" novalidate>
+                <div class="input-group">
+                    <label for="login-username">Usuario o Correo Electrónico</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user input-icon"></i>
+                        <input type="text" id="login-username" name="username" placeholder="Ej: JuanMinero" required autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="login-password">Contraseña de Acceso</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="login-password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                        <button type="button" id="toggle-password" class="btn-toggle-password" aria-label="Mostrar u ocultar contraseña">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="login-utilities">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="remember-me">
+                        <span class="checkmark"></span>
+                        <span class="label-text">Recordar mi sesión</span>
+                    </label>
+                    <a href="#" class="forgot-password-link" id="forgot-password">¿Olvidó su contraseña?</a>
+                </div>
+
+                <button type="submit" id="login-submit-btn" class="btn-primary ripple">
+                    <span class="btn-text">Ingresar de Forma Segura</span>
+                    <span class="spinner hidden" id="login-spinner" aria-hidden="true"></span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>© 2026 Asociación Obrera Minera Argentina. Todos los derechos reservados.</p>
+                <p class="legals">San Juan, Argentina — Fuerza, Trabajo y Compromiso Sindical.</p>
+            </div>
         </div>
     </div>
 
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen hidden">
-        <div class="login-background">
-            <div class="login-overlay"></div>
-            <div class="login-pattern"></div>
-        </div>
+    <div id="main-platform-layout" class="app-layout hidden">
         
-        <div class="login-container">
-            <div class="login-card glass">
-                <div class="login-header">
-                    <div class="login-logo-wrapper">
-                        <div class="login-logo">
-                            <i class="fas fa-mountain"></i>
-                        </div>
-                        <div class="login-badge">
-                            <span class="badge-dot"></span>
-                            <span class="badge-text">Plataforma Oficial</span>
-                        </div>
-                    </div>
-                    <h1 class="login-title">Campus Virtual AOMA</h1>
-                    <p class="login-subtitle">Asociación Obrera Minera Argentina<br>Seccional San Juan</p>
-                </div>
-
-                <form id="loginForm" class="login-form" novalidate>
-                    <div class="form-group">
-                        <label for="username" class="form-label">
-                            <i class="fas fa-user"></i>
-                            <span>Usuario (DNI o Legajo)</span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="text" id="username" class="form-input" placeholder="Ingrese su usuario" autocomplete="username" required>
-                            <div class="input-icon">
-                                <i class="fas fa-user-circle"></i>
-                            </div>
-                        </div>
-                        <span class="form-error" id="usernameError"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password" class="form-label">
-                            <i class="fas fa-lock"></i>
-                            <span>Contraseña</span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="password" id="password" class="form-input" placeholder="••••••••" autocomplete="current-password" required>
-                            <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <span class="form-error" id="passwordError"></span>
-                    </div>
-
-                    <div class="form-options">
-                        <label class="checkbox-wrapper">
-                            <input type="checkbox" id="rememberMe">
-                            <span class="checkmark"></span>
-                            <span>Recordar usuario</span>
-                        </label>
-                        <a href="#" class="forgot-link" onclick="app.showForgotPassword()">¿Olvidó su contraseña?</a>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-login" id="loginBtn">
-                        <span class="btn-text">Ingresar al Campus</span>
-                        <span class="btn-loader hidden">
-                            <i class="fas fa-circle-notch fa-spin"></i>
-                        </span>
-                    </button>
-
-                    <div class="login-alert hidden" id="loginAlert">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span id="loginAlertText"></span>
-                    </div>
-                </form>
-
-                <div class="login-footer">
-                    <div class="login-demo">
-                        <p><strong>Demo:</strong> usuario: <code>delegado</code> | pass: <code>1234</code></p>
-                        <p><strong>Admin:</strong> usuario: <code>admin</code> | pass: <code>admin</code></p>
-                    </div>
+        <header class="app-header glassmorphism" role="banner">
+            <div class="header-left">
+                <button id="sidebar-toggle" class="btn-icon ripple" aria-label="Colapsar o expandir menú de navegación">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+                <div class="header-branding">
+                    <span class="brand-title">AOMA <span class="brand-accent">San Juan</span></span>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Main Application -->
-    <div id="app" class="app hidden">
-        <!-- Header -->
-        <header class="header" id="header">
-            <div class="header-container">
-                <div class="header-left">
-                    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-                        <i class="fas fa-bars"></i>
+            <div class="header-search-container" role="search">
+                <div class="search-input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="global-search-input" placeholder="Buscar capacitaciones, leyes, escalas salariales, actas..." aria-label="Buscador global de contenidos">
+                    <button id="clear-search-btn" class="btn-clear-search hidden" aria-label="Limpiar búsqueda">
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
-                    <div class="brand">
-                        <div class="brand-logo">
-                            <i class="fas fa-mountain"></i>
+                </div>
+                <div id="search-results-dropdown" class="search-dropdown hidden glassmorphism animate-slide-down">
+                    </div>
+            </div>
+
+            <div class="header-right">
+                <button id="theme-toggle-btn" class="btn-icon ripple" aria-label="Alternar entre modo claro y oscuro">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+
+                <div class="notification-dropdown-wrapper">
+                    <button id="notification-btn" class="btn-icon ripple" aria-label="Ver notificaciones institucionales" aria-haspopup="true">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-badge animate-pulse" id="notification-counter">3</span>
+                    </button>
+                    <div id="notification-panel" class="notification-panel glassmorphism hidden animate-slide-down">
+                        <div class="panel-header">
+                            <h3>Notificaciones Gremiales</h3>
+                            <button id="mark-all-read-btn" class="btn-text-link">Marcar todas como leídas</button>
                         </div>
-                        <div class="brand-info">
-                            <h1 class="brand-title">AOMA San Juan</h1>
-                            <span class="brand-subtitle">Campus Virtual</span>
-                        </div>
+                        <div class="panel-content" id="notification-list-container">
+                            </div>
                     </div>
                 </div>
 
-                <div class="header-center">
-                    <div class="global-search" id="globalSearch">
-                        <div class="search-wrapper">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" class="search-input" placeholder="Buscar cursos, videos, escalas, noticias..." id="searchInput">
-                            <kbd class="search-shortcut">Ctrl+K</kbd>
+                <div class="user-profile-menu">
+                    <button id="profile-menu-trigger" class="profile-trigger ripple" aria-label="Menú del usuario" aria-haspopup="true">
+                        <div class="avatar-container">
+                            <img id="user-avatar-display" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Avatar de Usuario">
+                            <span class="status-indicator online"></span>
                         </div>
-                        <div class="search-results" id="searchResults"></div>
-                    </div>
-                </div>
-
-                <div class="header-right">
-                    <button class="header-btn" id="themeToggle" aria-label="Cambiar tema">
-                        <i class="fas fa-moon"></i>
+                        <div class="user-meta-info">
+                            <span id="user-name-display" class="user-name">Cargando...</span>
+                            <span id="user-role-display" class="user-role">Delegado</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down chevron-icon"></i>
                     </button>
                     
-                    <button class="header-btn notification-btn" id="notificationBtn" aria-label="Notificaciones">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge" id="notificationBadge">3</span>
-                    </button>
-
-                    <div class="user-menu">
-                        <div class="user-info">
-                            <span class="user-name" id="userName">Usuario</span>
-                            <span class="user-role" id="userRole">Delegado</span>
-                        </div>
-                        <div class="user-avatar" id="userAvatar">
-                            <span class="avatar-initials">U</span>
-                            <img src="" alt="" class="avatar-img hidden" id="userAvatarImg">
-                        </div>
-                        <div class="user-dropdown" id="userDropdown">
-                            <a href="#" class="dropdown-item" onclick="app.showProfile()">
-                                <i class="fas fa-user"></i>
-                                <span>Mi Perfil</span>
-                            </a>
-                            <a href="#" class="dropdown-item" onclick="app.showSettings()">
-                                <i class="fas fa-cog"></i>
-                                <span>Configuración</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item danger" onclick="app.logout()">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>Cerrar Sesión</span>
-                            </a>
-                        </div>
+                    <div id="profile-dropdown-menu" class="profile-dropdown glassmorphism hidden animate-slide-down">
+                        <a href="#perfil" class="dropdown-item nav-trigger"><i class="fa-solid fa-id-card"></i> Mi Perfil</a>
+                        <a href="#configuracion" class="dropdown-item nav-trigger"><i class="fa-solid fa-sliders"></i> Ajustes</a>
+                        <hr class="dropdown-divider">
+                        <button id="logout-btn" class="dropdown-item text-danger"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</button>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Sidebar -->
-        <aside class="sidebar hidden" id="sidebar">
-            <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <span class="nav-section-title">Principal</span>
-                    <ul class="nav-list">
-                        <li class="nav-item active" data-page="dashboard">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-home nav-icon"></i>
-                                <span class="nav-text">Dashboard</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="cursos">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-graduation-cap nav-icon"></i>
-                                <span class="nav-text">Capacitaciones</span>
-                                <span class="nav-badge">12</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="videos">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-play-circle nav-icon"></i>
-                                <span class="nav-text">Biblioteca de Videos</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="evaluaciones">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-clipboard-check nav-icon"></i>
-                                <span class="nav-text">Evaluaciones</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="certificados">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-certificate nav-icon"></i>
-                                <span class="nav-text">Mis Certificados</span>
-                            </a>
-                        </li>
-                    </ul>
+        <aside class="app-sidebar" id="app-sidebar" role="navigation" aria-label="Menú principal de la sección">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-hard-hat sidebar-brand-icon"></i>
+                <div class="sidebar-title-wrapper">
+                    <span class="title-main">AOMA</span>
+                    <span class="title-sub">Seccional San Juan</span>
                 </div>
+            </div>
 
-                <div class="nav-section">
-                    <span class="nav-section-title">Por Actividad</span>
-                    <ul class="nav-list">
-                        <li class="nav-item" data-page="actividad-metalifera">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-gem nav-icon" style="color: #f59e0b;"></i>
-                                <span class="nav-text">Minería Metalífera</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="actividad-cemento">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-industry nav-icon" style="color: #64748b;"></i>
-                                <span class="nav-text">Cemento</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="actividad-cal">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-circle nav-icon" style="color: #e5e7eb;"></i>
-                                <span class="nav-text">Cal</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="actividad-piedra">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-cube nav-icon" style="color: #78716c;"></i>
-                                <span class="nav-text">Piedra</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="actividad-molienda">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-cogs nav-icon" style="color: #475569;"></i>
-                                <span class="nav-text">Molienda</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+            <nav class="sidebar-nav-container">
+                <ul class="nav-list">
+                    <li>
+                        <a href="#dashboard" class="nav-link active nav-trigger" id="nav-dashboard">
+                            <i class="fa-solid fa-chart-pie-alt nav-icon"></i>
+                            <span class="link-text">Dashboard General</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-section-title">Capacitación LMS</li>
+                    <li>
+                        <a href="#capacitaciones" class="nav-link nav-trigger" id="nav-capacitaciones">
+                            <i class="fa-solid fa-graduation-cap nav-icon"></i>
+                            <span class="link-text">Cursos Académicos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#videos" class="nav-link nav-trigger" id="nav-videos">
+                            <i class="fa-solid fa-clapperboard nav-icon"></i>
+                            <span class="link-text">Videoteca Gremial</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#evaluaciones" class="nav-link nav-trigger" id="nav-evaluaciones">
+                            <i class="fa-solid fa-file-signature nav-icon"></i>
+                            <span class="link-text">Mis Evaluaciones</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#certificados" class="nav-link nav-trigger" id="nav-certificados">
+                            <i class="fa-solid fa-award nav-icon"></i>
+                            <span class="link-text">Certificaciones Oficiales</span>
+                        </a>
+                    </li>
 
-                <div class="nav-section">
-                    <span class="nav-section-title">Información</span>
-                    <ul class="nav-list">
-                        <li class="nav-item" data-page="escalas">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-money-bill-wave nav-icon"></i>
-                                <span class="nav-text">Escalas Salariales</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="convenios">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-file-contract nav-icon"></i>
-                                <span class="nav-text">Convenios Colectivos</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="legislacion">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-balance-scale nav-icon"></i>
-                                <span class="nav-text">Legislación Laboral</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="noticias">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-newspaper nav-icon"></i>
-                                <span class="nav-text">Noticias Sindicales</span>
-                                <span class="nav-badge new">5</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="faq">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-question-circle nav-icon"></i>
-                                <span class="nav-text">Preguntas Frecuentes</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="chat">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-comments nav-icon"></i>
-                                <span class="nav-text">Consultas Virtuales</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                    <li class="nav-section-title">Herramientas Gremiales</li>
+                    <li>
+                        <a href="#escalas" class="nav-link nav-trigger" id="nav-escalas">
+                            <i class="fa-solid fa-file-invoice-dollar nav-icon"></i>
+                            <span class="link-text">Escalas Salariales</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#convenios" class="nav-link nav-trigger" id="nav-convenios">
+                            <i class="fa-solid fa-scale-balanced nav-icon"></i>
+                            <span class="link-text">Convenios y Leyes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#actividades" class="nav-link nav-trigger" id="nav-actividades">
+                            <i class="fa-solid fa-industry nav-icon"></i>
+                            <span class="link-text">Ramas de Actividad</span>
+                        </a>
+                    </li>
 
-                <div class="nav-section admin-only hidden">
-                    <span class="nav-section-title">Administración</span>
-                    <ul class="nav-list">
-                        <li class="nav-item" data-page="admin-dashboard">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-tachometer-alt nav-icon"></i>
-                                <span class="nav-text">Panel Admin</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="admin-usuarios">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-users nav-icon"></i>
-                                <span class="nav-text">Usuarios</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="admin-cursos">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-book nav-icon"></i>
-                                <span class="nav-text">Gestión de Cursos</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="admin-estadisticas">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-chart-bar nav-icon"></i>
-                                <span class="nav-text">Estadísticas</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                    <li class="nav-section-title">Comunicación e Información</li>
+                    <li>
+                        <a href="#noticias" class="nav-link nav-trigger" id="nav-noticias">
+                            <i class="fa-solid fa-newspaper nav-icon"></i>
+                            <span class="link-text">Noticias y Paritarias</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#faq" class="nav-link nav-trigger" id="nav-faq">
+                            <i class="fa-solid fa-circle-question nav-icon"></i>
+                            <span class="link-text">Consultas Frecuentes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#chat" class="nav-link nav-trigger" id="nav-chat">
+                            <i class="fa-solid fa-comments-text nav-icon"></i>
+                            <span class="link-text">Asistente Sindical AI</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-section-title admin-only hidden">Administración</li>
+                    <li class="admin-only hidden">
+                        <a href="#admin" class="nav-link nav-trigger" id="nav-admin">
+                            <i class="fa-solid fa-user-gear nav-icon"></i>
+                            <span class="link-text">Panel del Administrador</span>
+                        </a>
+                    </li>
+                </ul>
             </nav>
 
             <div class="sidebar-footer">
-                <div class="user-progress">
-                    <div class="progress-info">
-                        <span>Progreso General</span>
-                        <span class="progress-value" id="sidebarProgress">0%</span>
+                <div class="footer-status-card">
+                    <div class="status-top">
+                        <span class="badge-role" id="sidebar-role-badge">Delegado</span>
+                        <span class="version-label">v2.1.0</span>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="sidebarProgressFill"></div>
-                    </div>
+                    <p class="connection-label"><span class="dot-online"></span> Sincronizado localmente</p>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <div id="pageContent"></div>
+        <main class="app-main-content" id="app-main-content">
+            <div id="app-content-target" class="content-wrapper animate-fade-in">
+                </div>
         </main>
 
-        <!-- Chat Widget -->
-        <div class="chat-widget" id="chatWidget">
-            <button class="chat-toggle" id="chatToggle" aria-label="Abrir chat">
-                <i class="fas fa-comments"></i>
-                <span class="chat-badge">1</span>
-            </button>
-            <div class="chat-window hidden" id="chatWindow">
-                <div class="chat-header">
-                    <div class="chat-header-info">
-                        <div class="chat-avatar">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div>
-                            <h3>Asistente AOMA</h3>
-                            <span class="chat-status"><span class="status-dot online"></span>En línea</span>
-                        </div>
-                    </div>
-                    <button class="chat-close" id="chatClose">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="chat-messages" id="chatMessages"></div>
-                <div class="chat-quick-replies" id="chatQuickReplies"></div>
-                <form class="chat-input-form" id="chatInputForm">
-                    <input type="text" class="chat-input" id="chatInput" placeholder="Escribe tu consulta..." autocomplete="off">
-                    <button type="submit" class="chat-send">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
+        <footer class="app-footer" role="contentinfo">
+            <div class="footer-left">
+                <p><strong>AOMA Seccional San Juan</strong> — Conducción Gremial y Tecnológica.</p>
             </div>
-        </div>
+            <div class="footer-right">
+                <a href="#faq" class="footer-link nav-trigger">Soporte Técnico</a>
+                <span class="footer-divider">•</span>
+                <a href="#convenios" class="footer-link nav-trigger">Marco Legal</a>
+                <span class="footer-divider">•</span>
+                <p class="footer-date-info">Gestión Digital 2026</p>
+            </div>
+        </footer>
     </div>
 
-    <!-- Modals -->
-    <div class="modal-overlay hidden" id="modalOverlay"></div>
-    
-    <!-- Video Modal -->
-    <div class="modal video-modal hidden" id="videoModal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h3 id="videoModalTitle">Video</h3>
-                <button class="modal-close" onclick="videos.closeModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="video-container">
-                    <iframe id="videoFrame" class="video-iframe" src="" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div class="video-info" id="videoModalInfo"></div>
-            </div>
-        </div>
-    </div>
+    <div id="toast-container" class="toast-wrapper" role="live" aria-live="polite"></div>
 
-    <!-- Certificate Modal -->
-    <div class="modal certificate-modal hidden" id="certificateModal">
-        <div class="modal-content modal-medium">
-            <div class="modal-header">
-                <h3>Certificado de Finalización</h3>
-                <button class="modal-close" onclick="certificados.closeModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <canvas id="certificateCanvas" class="certificate-canvas"></canvas>
-                <div class="certificate-actions">
-                    <button class="btn btn-primary" onclick="certificados.downloadPDF()">
-                        <i class="fas fa-download"></i> Descargar PDF
-                    </button>
-                    <button class="btn btn-secondary" onclick="certificados.closeModal()">
-                        Cerrar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Notification Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Scripts - ORDEN IMPORTANTE -->
-    <script src="js/variables.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/data.js"></script>          <!-- NUEVO: Base de datos central -->
+    <script src="js/usuarios.js"></script>
     <script src="js/login.js"></script>
-    <script src="js/theme.js"></script>
+    
     <script src="js/search.js"></script>
+    
+    <script src="js/app.js"></script>
     <script src="js/chat.js"></script>
+    <script src="js/noticias.js"></script>
+    
     <script src="js/videos.js"></script>
     <script src="js/evaluaciones.js"></script>
     <script src="js/certificados.js"></script>
-    <script src="js/usuarios.js"></script>
+    
     <script src="js/admin.js"></script>
-    <script src="js/app.js"></script>
+
 </body>
 </html>

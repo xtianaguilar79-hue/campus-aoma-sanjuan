@@ -1,0 +1,113 @@
+/**
+ * CAMPUS VIRTUAL PREMIUM - AOMA SECCIONAL SAN JUAN
+ * Capa 03: Sobreescritura Semántica para Modo Oscuro de Alta Fidelidad
+ * Diseñado bajo directrices WCAG (Contraste Mínimo AA > 4.5:1)
+ */
+
+[data-theme="dark"] {
+    /* ========================================== */
+    /* 1. RE-ESTABLECIMIENTO DE TOKENS CRUMÁTICOS */
+    /* ========================================== */
+    --primary: #3B92FF;          /* Azul primario suavizado para evitar fatiga */
+    --primary-light: #64A9FF;    /* Azul de enlaces/interacción táctil */
+    --primary-dark: #E2E8F0;     /* Encabezados claros sobre fondos oscuros */
+    
+    --accent: #FFD54F;           /* Oro Minero con balance de luminancia */
+    --accent-hover: #FFE082;
+    --accent-light: #2D250E;     /* Fondo de destacados sutil */
+
+    /* Fondos de Interfaz de Alta Fidelidad */
+    --bg-main: #0B0F19;          /* Fondo base profundo (Slate Blue oscuro) */
+    --bg-surface: #151D30;       /* Tarjetas, Paneles Flotantes, Sidebar */
+    --bg-header: rgba(21, 29, 48, 0.8); /* Header con soporte Glassmorphism opaco */
+    
+    /* Textos y Contraste Semántico */
+    --text-main: #F1F5F9;        /* Texto de lectura principal de alta pureza */
+    --text-muted: #94A3B8;       /* Subtítulos y metadatos legibles */
+    --text-light: #475569;       /* Bordes de inputs y separadores sutiles */
+    
+    /* Estados del Sistema Adaptados a Fondos Oscuros */
+    --success: #34D399;
+    --success-bg: #064E3B;
+    --warning: #FB923C;
+    --warning-bg: #7C2D12;
+    --danger: #F87171;
+    --danger-bg: #7F1D1D;
+    --info: #38BDF8;
+    --info-bg: #0C4A6E;
+
+    /* ========================================== */
+    /* 2. GRADIENTES Y ELEMENTOS DE DISEÑO (DARK)*/
+    /* ========================================== */
+    --gradient-primary: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    --gradient-tech: linear-gradient(135deg, #3B92FF 0%, #1A73E8 100%);
+    --gradient-surface: linear-gradient(180deg, rgba(21, 29, 48, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+    --gradient-dark-card: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.00) 100%);
+
+    /* Transparencias y Capas Traslúcidas */
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --border-subtle: rgba(255, 255, 255, 0.07);
+
+    /* Sombras Adaptadas (Mayor dispersión por falta de contraste de fondo) */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.6);
+    --shadow-premium: 0 24px 50px rgba(0, 0, 0, 0.7);
+    --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* ========================================== */
+/* 3. OPTIMIZACIONES VISUALES COMPLEMENTARIAS */
+/* ========================================== */
+[data-theme="dark"] body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+/* Inversión sutil para el Scrollbar en Modo Oscuro */
+[data-theme="dark"] ::webkit-scrollbar-thumb {
+    background: #334155;
+}
+[data-theme="dark"] ::webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+/* Ajustes en Inputs y Campos de Selección */
+[data-theme="dark"] .input-wrapper input {
+    background: #0F172A;
+    border-color: #334155;
+    color: var(--text-main);
+}
+[data-theme="dark"] .input-wrapper input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 146, 255, 0.25);
+}
+
+/* Tratamiento visual del Contenedor de Autenticación (Card Login en Dark) */
+[data-theme="dark"] .login-card {
+    background: rgba(15, 23, 42, 0.85) !important;
+    border: 1px solid var(--border-glass);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Mitigación de brillo para imágenes cargadas */
+[data-theme="dark"] img {
+    filter: brightness(0.85) contrast(1.05);
+}
+
+/* Ajustes de Bordes para Listas y Tablas Corporativas */
+[data-theme="dark"] .dropdown-divider,
+[data-theme="dark"] hr {
+    border-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .btn-icon:hover {
+    background: #1E293B;
+    color: var(--primary-light);
+}
+
+/* Estado Activo Alternativo para Elementos del Sidebar */
+[data-theme="dark"] .nav-link:hover {
+    background: #1E293B;
+    color: var(--primary);
+}

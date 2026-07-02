@@ -1,0 +1,188 @@
+/**
+ * CAMPUS VIRTUAL PREMIUM - AOMA SECCIONAL SAN JUAN
+ * Capa 04: Reglas de Adaptabilidad Quirúrgica y UX Móvil (Media Queries)
+ * Soportado sobre: Breakpoints estándar de dispositivos modernos (Táctil y Escritorio).
+ */
+
+/* ========================================== */
+/* 1. DISPOSITIVOS GRANDES / ULTRA-WIDE       */
+/* ========================================== */
+@media (min-width: 1441px) {
+    .content-wrapper {
+        padding: var(--space-4) 0;
+    }
+}
+
+/* ========================================== */
+/* 2. TABLETS EN MODO LANDSCAPE Y NOTEBOOKS  */
+/* ========================================== */
+@media (max-width: 1024px) {
+    :root {
+        --sidebar-width: 240px;
+    }
+
+    .app-layout {
+        grid-template-columns: var(--sidebar-width) 1fr;
+    }
+
+    /* Optimización de espaciados globales */
+    .app-main-content {
+        padding: var(--space-4);
+    }
+
+    .header-search-container {
+        max-width: 350px;
+    }
+}
+
+/* ========================================== */
+/* 3. TABLETS EN MODO PORTRAIT (MEDIANOS)     */
+/* ========================================== */
+@media (max-width: 768px) {
+    .app-layout {
+        grid-template-areas: 
+            "header"
+            "main"
+            "footer";
+        grid-template-columns: 1fr;
+    }
+
+    /* Ocultar sidebar por defecto en tablets/móviles */
+    .app-sidebar {
+        position: fixed;
+        top: var(--header-height);
+        left: calc(-1 * var(--sidebar-width));
+        width: var(--sidebar-width);
+        height: calc(100vh - var(--header-height));
+        z-index: var(--z-fixed);
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Estado activo cuando se presiona el menú hamburguesa */
+    .app-layout.mobile-sidebar-active .app-sidebar {
+        left: 0;
+    }
+
+    /* El layout colapsado en escritorio no aplica a móvil */
+    .app-layout.sidebar-collapsed .app-sidebar {
+        left: calc(-1 * var(--sidebar-width));
+    }
+
+    /* Ajuste del buscador en cabecera */
+    .header-search-container {
+        display: none; /* Se oculta de la barra superior para priorizar espacio */
+    }
+    
+    .header-search-container.mobile-visible {
+        display: block;
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        width: 100%;
+        padding: var(--space-3) var(--space-4);
+        background: var(--bg-surface);
+        box-shadow: var(--shadow-md);
+        z-index: var(--z-dropdown);
+    }
+
+    /* Ocultar metadatos del perfil de usuario para ahorrar espacio */
+    .user-meta-info {
+        display: none;
+    }
+
+    .profile-trigger {
+        padding: var(--space-1);
+    }
+}
+
+/* ========================================== */
+/* 4. TELÉFONOS INTELIGENTES (IPHONE / ANDROID)*/
+/* ========================================== */
+@media (max-width: 480px) {
+    :root {
+        --header-height: 60px;
+        --footer-height: auto;
+    }
+
+    .app-header {
+        padding: 0 var(--space-3);
+    }
+
+    .brand-title {
+        font-size: var(--font-lg);
+    }
+
+    .app-main-content {
+        padding: var(--space-3);
+    }
+
+    /* Rediseño de la pantalla de login para pantallas táctiles */
+    .login-card {
+        padding: var(--space-5) var(--space-4);
+        box-shadow: none;
+    }
+
+    .login-utilities {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+    }
+
+    /* Tablas Salariales y Convenios Convertidas en Desplazables Horizontales */
+    .table-responsive-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Scroll suave inercial en iOS */
+        margin-bottom: var(--space-4);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+    }
+
+    table {
+        min-width: 600px; /* Fuerza la activación del scroll horizontal sin romper el layout */
+    }
+
+    /* Rediseño de layouts tipo Grid a una sola columna */
+    .grid-dashboard, 
+    .grid-courses, 
+    .grid-videos {
+        grid-template-columns: 1fr !important;
+        gap: var(--space-4) !important;
+    }
+
+    /* Footer adaptado a bloque vertical */
+    .app-footer {
+        flex-direction: column;
+        justify-content: center;
+        gap: var(--space-2);
+        padding: var(--space-4) var(--space-3);
+        text-align: center;
+    }
+
+    .footer-right {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-2);
+    }
+
+    /* Ajuste de Notificaciones Flotantes (Toasts) en Móvil */
+    .toast-wrapper {
+        left: var(--space-3);
+        right: var(--space-3);
+        bottom: var(--space-3);
+        max-width: calc(100% - 24px);
+    }
+}
+
+/* ========================================== */
+/* 5. ADAPTACIÓN DE ACCESIBILIDAD PARA TEXTO  */
+/* ========================================== */
+@media (max-width: 360px) {
+    html {
+        font-size: 14px; /* Reducción de escala base para pantallas extremadamente compactas */
+    }
+    
+    .brand-accent {
+        display: none; /* Deja solo la palabra AOMA */
+    }
+}

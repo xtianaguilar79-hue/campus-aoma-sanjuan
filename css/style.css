@@ -1,0 +1,594 @@
+/**
+ * CAMPUS VIRTUAL PREMIUM - AOMA SECCIONAL SAN JUAN
+ * Capa 02: Estilos Estructurales del Layout Core y Componentes Reutilizables
+ * Soportado sobre: Flexbox, CSS Grid y especificaciones semánticas CSS3.
+ */
+
+/* ========================================== */
+/* 1. RESET REUTILIZABLE Y REGLAS BASE       */
+/* ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--font-base);
+    color: var(--text-main);
+    background-color: var(--bg-main);
+    line-height: var(--lh-base);
+    overflow-x: hidden;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-header);
+    color: var(--primary-dark);
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight);
+}
+
+a {
+    color: var(--primary-light);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+ul {
+    list-style: none;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* Scrollbar Accesible y Sutil */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--text-light);
+    border-radius: var(--radius-sm);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Accesibilidad Estricta: Foco Visible Transversal */
+:focus-visible {
+    outline: 3px solid var(--primary-light);
+    outline-offset: 2px;
+}
+
+/* Clases Utilitarias Globales */
+.hidden { display: none !important; }
+.text-danger { color: var(--danger) !important; }
+.glassmorphism {
+    background: var(--bg-surface);
+    backdrop-filter: var(--blur-effect);
+    -webkit-backdrop-filter: var(--blur-effect);
+    border: 1px solid var(--border-glass);
+}
+
+/* ========================================== */
+/* 2. CAPA DE AUTENTICACIÓN (LOGIN SCREEN)    */
+/* ========================================== */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: var(--z-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    background: linear-gradient(rgba(0, 45, 89, 0.8), rgba(0, 10, 20, 0.95)), 
+                url('https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80') center center / cover no-repeat;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 480px;
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-lg);
+    background: rgba(255, 255, 255, 0.85) !important; /* Forzado light en Login base */
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: var(--space-6);
+}
+
+.logo-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-3);
+}
+
+.institutional-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-header);
+    font-size: var(--font-2xl);
+    font-weight: var(--weight-black);
+    color: var(--primary);
+}
+
+.logo-icon-fallback {
+    font-size: var(--font-3xl);
+    color: var(--accent);
+}
+
+.login-subtitle {
+    color: var(--text-muted);
+    font-size: var(--font-sm);
+    margin-top: var(--space-1);
+}
+
+.input-group {
+    margin-bottom: var(--space-4);
+}
+
+.input-group label {
+    display: block;
+    font-size: var(--font-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--primary-dark);
+    margin-bottom: var(--space-2);
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: var(--space-3) var(--space-4) var(--space-3) var(--space-10);
+    background: var(--bg-surface);
+    border: 1px solid var(--text-light);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    transition: var(--transition-fast);
+}
+
+.input-wrapper input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 75, 147, 0.15);
+}
+
+.input-icon {
+    position: absolute;
+    left: var(--space-4);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.btn-toggle-password {
+    position: absolute;
+    right: var(--space-4);
+    color: var(--text-muted);
+    font-size: var(--font-sm);
+}
+
+.login-utilities {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+    font-size: var(--font-sm);
+}
+
+/* Custom Checkbox */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    gap: var(--space-2);
+}
+
+.forgot-password-link {
+    font-weight: var(--weight-medium);
+}
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+.btn-primary {
+    width: 100%;
+    background: var(--gradient-primary);
+    color: var(--text-white);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    font-weight: var(--weight-semibold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    filter: brightness(1.1);
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: var(--space-6);
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-subtle);
+    padding-top: var(--space-4);
+}
+
+/* ========================================== */
+/* 3. ARQUITECTURA DE CONTENEDORES (SPA WEB SHELL) */
+/* ========================================== */
+.app-layout {
+    display: grid;
+    grid-template-areas: 
+        "header header"
+        "sidebar main"
+        "sidebar footer";
+    grid-template-rows: var(--header-height) 1fr var(--footer-height);
+    grid-template-columns: var(--sidebar-width) 1fr;
+    min-height: 100vh;
+    transition: grid-template-columns var(--transition-smooth);
+}
+
+.app-layout.sidebar-collapsed {
+    grid-template-columns: var(--sidebar-collapsed-width) 1fr;
+}
+
+/* ========================================== */
+/* 4. COMPONENTE HEADER (SINDICAL & MODERNO)  */
+/* ========================================== */
+.app-header {
+    grid-area: header;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-6);
+    box-shadow: var(--shadow-sm);
+    background: var(--bg-header) !important;
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-round);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-dark);
+    font-size: var(--font-lg);
+    transition: var(--transition-fast);
+}
+.btn-icon:hover {
+    background: var(--border-subtle);
+}
+
+.brand-title {
+    font-family: var(--font-header);
+    font-size: var(--font-xl);
+    font-weight: var(--weight-black);
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+.brand-accent {
+    color: var(--text-main);
+    font-weight: var(--weight-light);
+}
+
+/* Buscador Estilo Corporativo */
+.header-search-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input-wrapper input {
+    width: 100%;
+    padding: var(--space-2) var(--space-8) var(--space-2) var(--space-10);
+    background: var(--bg-main);
+    border-radius: var(--radius-lg);
+    border: 1px solid transparent;
+    transition: var(--transition-normal);
+}
+
+.search-input-wrapper input:focus {
+    background: var(--bg-surface);
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow-md);
+}
+
+.search-icon {
+    position: absolute;
+    left: var(--space-4);
+    color: var(--text-muted);
+}
+
+.btn-clear-search {
+    position: absolute;
+    right: var(--space-4);
+    color: var(--text-light);
+}
+
+/* Panel de Notificaciones Dropdown */
+.notification-dropdown-wrapper {
+    position: relative;
+}
+.notification-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: var(--danger);
+    color: var(--text-white);
+    font-size: 10px;
+    font-weight: var(--weight-bold);
+    min-width: 16px;
+    height: 16px;
+    border-radius: var(--radius-round);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--bg-surface);
+}
+
+/* Perfil Dropdown UI */
+.profile-trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-xl);
+    transition: var(--transition-fast);
+}
+.profile-trigger:hover {
+    background: var(--border-subtle);
+}
+
+.avatar-container {
+    position: relative;
+    width: 36px;
+    height: 36px;
+}
+.avatar-container img {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-round);
+    object-fit: cover;
+}
+.status-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-round);
+    border: 2px solid var(--bg-surface);
+}
+.status-indicator.online { background: var(--success); }
+
+.user-meta-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.user-name {
+    font-size: var(--font-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-main);
+}
+.user-role {
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+}
+
+/* ========================================== */
+/* 5. SIDEBAR COMPONENTE (MENÚ PRINCIPAL)      */
+/* ========================================== */
+.app-sidebar {
+    grid-area: sidebar;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    z-index: var(--z-sticky);
+    overflow-y: auto;
+    transition: var(--transition-smooth);
+}
+
+.sidebar-header {
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 0 var(--space-5);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.sidebar-brand-icon {
+    font-size: var(--font-2xl);
+    color: var(--primary);
+}
+
+.sidebar-title-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.title-main {
+    font-family: var(--font-header);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-lg);
+    color: var(--primary-dark);
+}
+.title-sub {
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.sidebar-nav-container {
+    padding: var(--space-4) var(--space-2);
+    flex: 1;
+}
+
+.nav-section-title {
+    font-size: var(--font-xs);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+    padding: var(--space-4) var(--space-4) var(--space-2) var(--space-4);
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    color: var(--text-muted);
+    border-radius: var(--radius-md);
+    font-weight: var(--weight-medium);
+    margin-bottom: 4px;
+    transition: var(--transition-fast);
+}
+
+.nav-link:hover {
+    background: var(--bg-main);
+    color: var(--primary-light);
+}
+
+.nav-link.active {
+    background: var(--primary-light);
+    color: var(--text-white);
+    box-shadow: var(--shadow-sm);
+}
+
+.nav-icon {
+    font-size: var(--font-lg);
+    width: 24px;
+    text-align: center;
+}
+
+/* Colapso Dinámico por CSS Variables */
+.sidebar-collapsed .link-text,
+.sidebar-collapsed .nav-section-title,
+.sidebar-collapsed .sidebar-title-wrapper,
+.sidebar-collapsed .footer-status-card {
+    display: none !important;
+}
+
+.sidebar-collapsed .nav-link {
+    justify-content: center;
+    padding: var(--space-3) 0;
+}
+
+/* ========================================== */
+/* 6. CONTENEDOR DE CONTENIDOS DINÁMICOS       */
+/* ========================================== */
+.app-main-content {
+    grid-area: main;
+    padding: var(--space-6);
+    overflow-y: auto;
+}
+
+.content-wrapper {
+    max-width: var(--max-content-width);
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ========================================== */
+/* 7. FOOTER INSTITUCIONAL                    */
+/* ========================================== */
+.app-footer {
+    grid-area: footer;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-6);
+    font-size: var(--font-sm);
+    color: var(--text-muted);
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+.footer-divider {
+    color: var(--text-light);
+}
+
+/* ========================================== */
+/* 8. TOAST NOTIFICATIONS CONTAINER           */
+/* ========================================== */
+.toast-wrapper {
+    position: fixed;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    z-index: var(--z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 380px;
+    width: 100%;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    color: var(--text-white);
+}
+.toast.success { background: var(--success); }
+.toast.danger { background: var(--danger); }
+.toast.warning { background: var(--warning); }
