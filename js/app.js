@@ -1,359 +1,156 @@
 /**
  * CAMPUS VIRTUAL PREMIUM - AOMA SECCIONAL SAN JUAN
- * Core 01: Enrutador SPA, Guardia de Seguridad Estricto y Renderizado Premium Mapeado
+ * Módulo Central: app.js (SPA Core Router & Safe Session Engine)
  */
 
 window.AppInstance = {
-    currentRoute: '#dashboard',
-    
-    // Inicializador del Shell Integral
     init() {
-        this.bindShellEvents();
-        this.checkInitialRoute();
+        console.log("AOMA Campus Virtual: Inicializando sistema...");
+        this.verifySessionState();
+        this.bindGlobalEvents();
+        this.route(window.location.hash || '#panel');
+    },
+
+    verifySessionState() {
+        // Objeto seguro por defecto si localStorage está vacío o corrupto
+        const sessionDefault = { loggedIn: false, nombre: "Invitado", rama: "No Asignada", empresa: "No Asignada", rol: "afiliado" };
+        
+        try {
+            let session = localStorage.getItem('aoma_session');
+            if (!session) {
+                localStorage.setItem('aoma_session', JSON.stringify(sessionDefault));
+            }
+        } catch (e) {
+            console.error("Error accediendo al localStorage:", e);
+        }
+        
         this.updateUserSessionUI();
-        this.renderGlobalToasts();
     },
 
-    // Vinculación Estricta de Eventos de Interfaz
-    bindShellEvents() {
-        const sidebarToggle = document.getElementById('sidebar-toggle');
-        const layoutContainer = document.getElementById('main-platform-layout');
-        
-        if (sidebarToggle && layoutContainer) {
-            sidebarToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                layoutContainer.classList.toggle('sidebar-collapsed');
-            });
-        }
-
-        // Trigger Menú Perfil Flotante
-        const profileTrigger = document.getElementById('profile-menu-trigger');
-        const profileDropdown = document.getElementById('profile-dropdown-menu');
-        if (profileTrigger && profileDropdown) {
-            profileTrigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                profileDropdown.classList.toggle('hidden');
-            });
-            document.addEventListener('click', () => profileDropdown.classList.add('hidden'));
-        }
-
-        // Intercepción del Enrutador Dinámico por Clics
-        document.addEventListener('click', (e) => {
-            const trigger = e.target.closest('.nav-trigger');
-            if (trigger) {
-                e.preventDefault();
-                const route = trigger.getAttribute('href');
-                if (route) this.navigateTo(route);
-            }
-        });
-
-        // Soporte Historial del Navegador (Botones Atrás/Adelante)
-        window.addEventListener('popstate', () => {
-            this.checkInitialRoute();
-        });
-    },
-
-    // Control de Guardia Imperativo del Sistema
-    checkInitialRoute() {
-        const sessionActive = localStorage.getItem('aoma_session');
-        
-        if (!sessionActive) {
-            // Forzar visualización de Login si no hay sesión
-            const authLayout = document.getElementById('auth-layout-wrapper');
-            const mainLayout = document.getElementById('main-platform-layout');
-            if (authLayout && mainLayout) {
-                authLayout.classList.remove('hidden');
-                mainLayout.classList.add('hidden');
-            }
-            window.location.hash = '';
-            return;
-        }
-
-        const hash = window.location.hash || '#dashboard';
-        this.navigateTo(hash, false);
-    },
-
-    // Enrutador Centralizado SPA
-    navigateTo(route, updateHistory = true) {
-        // Validación de Seguridad en cada Salto de Ruta
-        if (!localStorage.getItem('aoma_session')) {
-            this.checkInitialRoute();
-            return;
-        }
-
-        this.currentRoute = route;
-        if (updateHistory) {
-            window.history.pushState(null, '', route);
-        }
-
-        // Marcar enlace activo visualmente
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === route) {
-                link.classList.add('active');
-            }
-        });
-
-        this.renderView(route);
-    },
-
-    // Sincronización y Validación Robusta de Datos del Afiliado
     updateUserSessionUI() {
-        const session = JSON.parse(localStorage.getItem('aoma_session'));
-        if (!session) return;
+        let session = {};
+        try {
+            session = JSON.parse(localStorage.getItem('aoma_session')) || {};
+        } catch(e) {
+            session = {};
+        }
 
-        const nameDisplay = document.getElementById('user-name-display');
-        const roleDisplay = document.getElementById('user-role-display');
-        const badgeDisplay = document.getElementById('sidebar-role-badge');
-        const avatarDisplay = document.getElementById('user-avatar-display');
+        // CONTROL DE NULOS ULTRA SEGURO: Evita el Uncaught TypeError detectado en la consola
+        const nombreUser = session.nombre || 'Afiliado';
+        const ramaUser = (session.rama || 'General').toUpperCase();
+        const empresaUser = (session.empresa || 'No Asignada');
+        const cctUser = session.cct || 'No Asignado';
 
-        if (nameDisplay) nameDisplay.textContent = `${session.nombre} ${session.apellido}`;
-        if (roleDisplay) roleDisplay.textContent = session.empresa || session.puesto || 'Afiliado Gremial';
-        if (badgeDisplay) badgeDisplay.textContent = (session.rol || 'USER').toUpperCase();
-        if (avatarDisplay && session.avatar) avatarDisplay.src = session.avatar;
+        // Renderizado defensivo del bloque de perfil (Sidebar / Header Dropdown)
+        const profileTarget = document.getElementById('user-profile-target');
+        if (profileTarget) {
+            profileTarget.innerHTML = `
+                <div class="p-4 bg-slate-950/40 rounded-xl border border-slate-800 space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold">
+                            ${nombreUser.charAt(0)}
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Buenas tardes, ${nombreUser}</h4>
+                            <p class="text-[11px] text-slate-400">Legajo activo en San Juan</p>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800/60 grid grid-cols-2 gap-2 text-[11px]">
+                        <div><span class="text-slate-500 block">Empresa:</span> <span class="text-slate-300 font-medium">${empresaUser}</span></div>
+                        <div><span class="text-slate-500 block">Rama:</span> <span class="text-slate-300 font-medium">${ramaUser}</span></div>
+                        <div class="col-span-full"><span class="text-slate-500 block">Convenio:</span> <span class="text-slate-300 font-medium">CCT ${cctUser}</span></div>
+                    </div>
+                </div>
+            `;
+        }
+    },
 
-        // Gestión de Elementos Administrativos VIP
-        const adminElements = document.querySelectorAll('.admin-only');
-        adminElements.forEach(el => {
-            if (session.rol === 'admin') {
-                el.classList.remove('hidden');
-            } else {
-                el.classList.add('hidden');
-            }
+    bindGlobalEvents() {
+        window.addEventListener('hashchange', () => {
+            this.route(window.location.hash);
         });
+
+        // Toggle del Sidebar móvil si aplica
+        document.getElementById('mobile-menu-trigger')?.addEventListener('click', () => {
+            document.getElementById('sidebar-main')?.classList.toggle('-translate-x-full');
+        });
+    },
+
+    route(hash) {
+        const container = document.getElementById('main-content-viewport');
+        if (!container) return;
+
+        // Limpieza de Modales huérfanos de vistas anteriores
+        document.getElementById('video-player-modal')?.remove();
+        document.body.style.overflow = '';
+
+        // Enrutador seguro: Si el módulo no se cargó (Error 404), muestra un aviso limpio sin romper la app
+        switch (hash) {
+            case '#panel':
+                container.innerHTML = `
+                    <div class="container-premium animate-fade-in space-y-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">Panel Central</h2>
+                            <p class="text-slate-400 text-sm mt-1">Acceso rápido a sus herramientas y trayectos formativos gremiales.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <a href="#capacitaciones" class="card-premium hover:border-cyan-500/40 transition-all p-6 space-y-2 block">
+                                <h3 class="text-white font-semibold text-base flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-cyan-400"></i> Cursos Activos</h3>
+                                <p class="text-slate-400 text-xs leading-relaxed">Acceda a las aulas virtuales y trayectos formativos homologados vigentes.</p>
+                            </a>
+                            <a href="#videoteca" class="card-premium hover:border-cyan-500/40 transition-all p-6 space-y-2 block">
+                                <h3 class="text-white font-semibold text-base flex items-center gap-2"><i class="fa-solid fa-video text-cyan-400"></i> Videoteca</h3>
+                                <p class="text-slate-400 text-xs leading-relaxed">Clases técnicas y de seguridad en planta segmentadas por su rama laboral.</p>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                break;
+
+            case '#videoteca':
+                if (window.ModuleVideos) {
+                    window.ModuleVideos.init(container);
+                } else {
+                    this.renderModuleLoadError(container, "Videoteca (videos.js)");
+                }
+                break;
+
+            case '#capacitaciones':
+                container.innerHTML = `
+                    <div class="container-premium animate-fade-in space-y-4">
+                        <h2 class="text-xl font-bold text-white">Capacitaciones Gremiales</h2>
+                        <p class="text-slate-400 text-sm">Aulas y exámenes de certificación técnica en desarrollo.</p>
+                    </div>`;
+                break;
+
+            default:
+                container.innerHTML = `<div class="p-8 text-center text-slate-400">Vista no encontrada.</div>`;
+                break;
+        }
 
         if (window.lucide) lucide.createIcons();
     },
 
-    // Generador de Saludo Algorítmico Temporal
-    getTemporalGreeting() {
-        const hours = new Date().getHours();
-        if (hours >= 6 && hours < 13) return "Buenos días";
-        if (hours >= 13 && hours < 20) return "Buenas tardes";
-        return "Buenas noches";
-    },
-
-    // Motor de Inyección de Plantillas Dinámicas Premium
-    renderView(route) {
-        const container = document.getElementById('app-content-target');
-        if (!container) return;
-
-        // Inyección de Skeletons con Aceleración por Hardware
+    renderModuleLoadError(container, moduleName) {
         container.innerHTML = `
-            <div class="space-y-6 animate-pulse">
-                <div class="h-8 bg-slate-900 rounded-lg w-1/4"></div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="h-32 bg-slate-900 rounded-xl"></div>
-                    <div class="h-32 bg-slate-900 rounded-xl"></div>
-                    <div class="h-32 bg-slate-900 rounded-xl"></div>
-                </div>
+            <div class="card-premium text-center py-12 flex flex-col items-center justify-center gap-3 max-w-xl mx-auto mt-8">
+                <i class="fa-solid fa-triangle-exclamation text-amber-500 text-2xl"></i>
+                <h3 class="text-white font-semibold">Error al cargar el módulo</h3>
+                <p class="text-slate-400 text-xs">No se pudo compilar el archivo de la <strong>${moduleName}</strong>. Asegúrese de que el script esté subido correctamente en su entorno de Vercel.</p>
             </div>
         `;
-
-        setTimeout(() => {
-            switch(route) {
-                case '#dashboard':
-                    this.viewDashboard(container);
-                    break;
-                case '#capacitaciones':
-                    this.viewCapacitaciones(container);
-                    break;
-                case '#evaluaciones':
-                    if (window.ModuleEvaluaciones) {
-                        window.ModuleEvaluaciones.init(container);
-                    } else {
-                        this.viewFallback(container, 'Evaluaciones Técnicas');
-                    }
-                    break;
-                default:
-                    this.viewDashboard(container);
-            }
-            if (window.lucide) lucide.createIcons();
-        }, 200);
-    },
-
-    // ========================================== //
-    // REINGENIERÍA COMPLETA: DASHBOARD PREMIUM   //
-    // ========================================== //
-    viewDashboard(target) {
-        const session = JSON.parse(localStorage.getItem('aoma_session')) || {};
-        const greeting = this.getTemporalGreeting();
-
-        target.innerHTML = `
-            <div class="animate-fade-in space-y-8">
-                <div class="card-premium glass-panel border border-white/5 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 p-8">
-                    <div class="flex items-center gap-6 text-center md:text-left flex-col md:flex-row">
-                        <img src="${session.avatar}" class="w-20 h-20 rounded-2xl object-cover ring-4 ring-cyan-500/20" />
-                        <div>
-                            <h2 class="text-2xl font-bold text-white">${greeting}, ${session.nombre || 'Afiliado'}</h2>
-                            <p class="text-slate-400 text-sm mt-1">Legajo activo en Seccional: <span class="text-cyan-400 font-medium">${session.seccional || 'San Juan'}</span></p>
-                            <div class="flex flex-wrap gap-2 mt-3 justify-center md:justify-start">
-                                <span class="bg-slate-950 px-3 py-1 rounded-lg text-xs border border-slate-800 text-slate-300">Empresa: ${session.empresa || 'No Asignada'}</span>
-                                <span class="bg-slate-950 px-3 py-1 rounded-lg text-xs border border-slate-800 text-slate-300">Rama: ${session.rama || 'General'}</span>
-                                <span class="bg-slate-950 px-3 py-1 rounded-lg text-xs border border-slate-800 text-slate-300">CCT: ${session.convenio || 'General'}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Herramientas Operativas</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <a href="#capacitaciones" class="nav-trigger card-premium group block">
-                            <div class="h-10 w-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-4 group-hover:bg-cyan-500 group-hover:text-white transition-all">
-                                <i data-lucide="book-open" class="h-5 w-5"></i>
-                            </div>
-                            <h4 class="text-white font-medium text-base">Cursos Activos</h4>
-                            <p class="text-xs text-slate-400 mt-1">Acceda a los trayectos de capacitación formativa homologados.</p>
-                        </a>
-
-                        <a href="#videos" class="nav-trigger card-premium group block">
-                            <div class="h-10 w-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-4 group-hover:bg-blue-500 group-hover:text-white transition-all">
-                                <i data-lucide="video" class="h-5 w-5"></i>
-                            </div>
-                            <h4 class="text-white font-medium text-base">Videoteca</h4>
-                            <p class="text-xs text-slate-400 mt-1">Material audiovisual instructivo e inducciones de campo.</p>
-                        </a>
-
-                        <a href="#evaluaciones" class="nav-trigger card-premium group block">
-                            <div class="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4 group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                                <i data-lucide="file-check" class="h-5 w-5"></i>
-                            </div>
-                            <h4 class="text-white font-medium text-base">Evaluaciones</h4>
-                            <p class="text-xs text-slate-400 mt-1">Renda los exámenes obligatorios para habilitación de planta.</p>
-                        </a>
-
-                        <a href="#chat" class="nav-trigger card-premium group block">
-                            <div class="h-10 w-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-4 group-hover:bg-purple-500 group-hover:text-white transition-all">
-                                <i data-lucide="sparkles" class="h-5 w-5"></i>
-                            </div>
-                            <h4 class="text-white font-medium text-base">Asistente IA</h4>
-                            <p class="text-xs text-slate-400 mt-1">Consultas rápidas sobre normativas laborales con Inteligencia Artificial.</p>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="card-premium lg:col-span-2">
-                        <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Progreso Académico Acumulado</h4>
-                        <div class="flex items-end justify-between h-48 pt-6 border-b border-slate-800">
-                            <div class="w-12 flex flex-col items-center gap-2">
-                                <div class="w-full bg-gradient-to-t from-cyan-500 to-blue-500 rounded-t-md transition-all duration-500" style="height: 40%"></div>
-                                <span class="text-[10px] text-slate-500">Abril</span>
-                            </div>
-                            <div class="w-12 flex flex-col items-center gap-2">
-                                <div class="w-full bg-gradient-to-t from-cyan-500 to-blue-500 rounded-t-md transition-all duration-500" style="height: 75%"></div>
-                                <span class="text-[10px] text-slate-500">Mayo</span>
-                            </div>
-                            <div class="w-12 flex flex-col items-center gap-2">
-                                <div class="w-full bg-gradient-to-t from-cyan-500 to-blue-500 rounded-t-md transition-all duration-500" style="height: 95%"></div>
-                                <span class="text-[10px] text-slate-500">Junio</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-premium flex flex-col justify-between">
-                        <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Estado de Legajo</h4>
-                        <div class="space-y-4">
-                            <div class="flex justify-between items-center p-3 bg-slate-950 rounded-xl border border-slate-800">
-                                <span class="text-xs text-slate-400">Horas Realizadas</span>
-                                <span class="text-sm font-bold text-white">48 hs</span>
-                            </div>
-                            <div class="flex justify-between items-center p-3 bg-slate-950 rounded-xl border border-slate-800">
-                                <span class="text-xs text-slate-400">Exámenes Aprobados</span>
-                                <span class="text-sm font-bold text-emerald-400">100%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    },
-
-    // ========================================== //
-    // REINGENIERÍA: MODULO DE CAPACITACIONES SEG.//
-    // ========================================== //
-    viewCapacitaciones(target) {
-        const session = JSON.parse(localStorage.getItem('aoma_session')) || {};
-        
-        // Renderizado Dinámico e Inteligente en base al Perfil Restringido del Usuario
-        target.innerHTML = `
-            <div class="animate-fade-in space-y-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-white">Ecosistema de Capacitación</h2>
-                    <p class="text-slate-400 text-sm mt-1">Contenido técnico segmentado de acuerdo a su encuadre convencional.</p>
-                </div>
-
-                <div id="branch-render-target" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    ${session.rama === 'MINERÍA EXTRACTIVA' ? `
-                        <div class="card-premium lg:col-span-2">
-                            <div class="flex items-center gap-3 mb-6">
-                                <i data-lucide="pickaxe" class="h-6 w-6 text-cyan-400"></i>
-                                <h3 class="text-lg font-bold text-white">Proyectos de la Rama: Minería Extractiva</h3>
-                            </div>
-                            <p class="text-slate-400 text-sm mb-4">Usted tiene acceso exclusivo a los módulos de: <strong>${session.empresa}</strong></p>
-                            
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div class="p-5 bg-slate-950 border border-cyan-500/30 rounded-xl shadow-lg relative overflow-hidden group">
-                                    <div class="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-xl"></div>
-                                    <h4 class="text-white font-semibold text-base">${session.empresa}</h4>
-                                    <p class="text-xs text-slate-500 mt-1">CCT e Inducciones de Campo Activas.</p>
-                                    <button class="mt-4 w-full btn btn-primary py-2 text-xs" onclick="AppInstance.navigateTo('#evaluaciones')">Ingresar a Contenido</button>
-                                </div>
-                            </div>
-                        </div>
-                    ` : `
-                        <div class="card-premium group">
-                            <h3 class="text-xl font-bold text-white mb-2">${session.rama || 'Rama General'}</h3>
-                            <p class="text-sm text-slate-400 mb-4">Acceso unificado a la biblioteca convencional y técnica de su sector industrial.</p>
-                            <span class="inline-flex items-center rounded-md bg-cyan-500/10 px-2 py-1 text-xs font-medium text-cyan-400 ring-1 ring-inset ring-cyan-500/20">${session.convenio || 'CCT Activo'}</span>
-                            <button class="mt-6 w-full btn btn-secondary py-2.5" onclick="AppInstance.navigateTo('#evaluaciones')">Ver Módulos de Evaluación</button>
-                        </div>
-                    `}
-                </div>
-            </div>
-        `;
-    },
-
-    viewFallback(container, moduleName) {
-        container.innerHTML = `
-            <div class="text-center py-12 card-premium">
-                <i data-lucide="construction" class="h-12 w-12 text-slate-600 mx-auto mb-4"></i>
-                <h3 class="text-lg font-bold text-white">Módulo ${moduleName} en Acople Técnico</h3>
-                <p class="text-sm text-slate-400 mt-2">La vista solicitada se integrará por completo en la siguiente fase de desarrollo.</p>
-            </div>
-        `;
-    },
-
-    renderGlobalToasts() {
-        if (!document.getElementById('toast-container')) {
-            const wrapper = document.createElement('div');
-            wrapper.id = 'toast-container';
-            wrapper.className = 'toast-wrapper';
-            document.body.appendChild(wrapper);
-        }
     },
 
     showToast(message, type = 'success') {
-        const container = document.getElementById('toast-container');
-        if (!container) return;
-
         const toast = document.createElement('div');
-        toast.className = `toast ${type} animate-fade-in`;
-        
-        const icons = { success: 'circle-check', danger: 'circle-alert', warning: 'triangle-alert' };
-
-        toast.innerHTML = `
-            <i data-lucide="${icons[type] || 'info'}" class="h-5 w-5"></i>
-            <span class="text-sm font-medium text-white">${message}</span>
-        `;
-        container.appendChild(toast);
-        if (window.lucide) lucide.createIcons();
-
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 3500);
+        toast.className = `fixed bottom-4 right-4 z-50 px-4 py-3 rounded-xl border text-xs shadow-xl animate-slide-up flex items-center gap-2 ${
+            type === 'success' 
+                ? 'bg-emerald-950/90 text-emerald-400 border-emerald-500/30' 
+                : 'bg-rose-950/90 text-rose-400 border-rose-500/30'
+        }`;
+        toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> <span>${message}</span>`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
     }
 };
 
