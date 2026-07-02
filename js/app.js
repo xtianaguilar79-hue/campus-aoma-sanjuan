@@ -79,17 +79,27 @@ class AOMACampus {
         if (sidebarToggle) {
             sidebarToggle.addEventListener('click', (e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 this.toggleSidebar();
             });
         }
 
-        // Click fuera del sidebar en móvil
+        // Click fuera del sidebar en móvil - CORREGIDO
         document.addEventListener('click', (e) => {
             const sidebar = document.getElementById('sidebar');
             const toggle = document.getElementById('sidebarToggle');
             
-            if (window.innerWidth < 1024 && sidebar && !sidebar.classList.contains('hidden')) {
-                if (!sidebar.contains(e.target) && (!toggle || !toggle.contains(e.target))) {
+            if (window.innerWidth < 1024 && sidebar) {
+                // NO cerrar si el click fue en el botón hamburguesa
+                if (toggle && toggle.contains(e.target)) {
+                    return;
+                }
+                // NO cerrar si el click fue DENTRO del sidebar
+                if (sidebar.contains(e.target)) {
+                    return;
+                }
+                // Solo cerrar si el sidebar está visible (no tiene 'hidden')
+                if (!sidebar.classList.contains('hidden')) {
                     sidebar.classList.add('hidden');
                 }
             }
@@ -138,7 +148,7 @@ class AOMACampus {
             });
         }
 
-        // Navegación del sidebar
+        // Navegación del sidebar - con delegación de eventos
         const sidebar = document.getElementById('sidebar');
         if (sidebar) {
             sidebar.addEventListener('click', (e) => {
@@ -149,10 +159,11 @@ class AOMACampus {
                     const page = navItem.dataset.page;
                     if (page) {
                         this.navigateTo(page);
+                        // En móvil, cerrar sidebar después de navegar
                         if (window.innerWidth < 1024) {
                             setTimeout(() => {
                                 sidebar.classList.add('hidden');
-                            }, 200);
+                            }, 300);
                         }
                     }
                 }
@@ -168,6 +179,11 @@ class AOMACampus {
             }
             if (e.key === 'Escape') {
                 this.closeAllModals();
+                // En móvil, también cerrar sidebar con Escape
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar && window.innerWidth < 1024) {
+                    sidebar.classList.add('hidden');
+                }
             }
         });
 
@@ -247,14 +263,26 @@ class AOMACampus {
         if (!sidebar) return;
         
         if (window.innerWidth < 1024) {
+            // MÓVIL: mostrar/ocultar con animación
             sidebar.classList.toggle('hidden');
             sidebar.classList.remove('collapsed');
+            
+            // Si se está abriendo, agregar animación
+            if (!sidebar.classList.contains('hidden')) {
+                sidebar.style.transform = 'translateX(0)';
+            } else {
+                sidebar.style.transform = 'translateX(-100%)';
+            }
+            
+            console.log('📱 Sidebar móvil:', sidebar.classList.contains('hidden') ? 'oculto' : 'visible');
         } else {
+            // DESKTOP: colapsar/expandir
             this.sidebarCollapsed = !this.sidebarCollapsed;
             sidebar.classList.toggle('collapsed', this.sidebarCollapsed);
             if (mainContent) {
                 mainContent.classList.toggle('expanded', this.sidebarCollapsed);
             }
+            console.log('️ Sidebar desktop:', this.sidebarCollapsed ? 'colapsado' : 'expandido');
         }
     }
 
@@ -573,7 +601,7 @@ class AOMACampus {
                             </select>
                         </div>
                         <div class="filter-group">
-                            <input type="text" class="app-input" id="filterBuscar" placeholder="🔍 Buscar curso..." oninput="app.filtrarCursos()">
+                            <input type="text" class="app-input" id="filterBuscar" placeholder=" Buscar curso..." oninput="app.filtrarCursos()">
                         </div>
                     </div>
                 </div>
@@ -1253,11 +1281,15 @@ class AOMACampus {
         if (!sidebar) return;
         
         if (window.innerWidth < 1024) {
+            // MÓVIL: ocultar sidebar y resetear transform
             sidebar.classList.add('hidden');
             sidebar.classList.remove('collapsed');
+            sidebar.style.transform = 'translateX(-100%)';
             if (mainContent) mainContent.classList.remove('expanded');
         } else {
+            // DESKTOP: mostrar sidebar
             sidebar.classList.remove('hidden');
+            sidebar.style.transform = '';
             if (mainContent) mainContent.classList.remove('expanded');
         }
     }
