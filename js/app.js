@@ -1,10 +1,10 @@
 // ============================================
 // APLICACIÓN PRINCIPAL - CAMPUS VIRTUAL AOMA
-// Con búsqueda interna y chat inteligente
 // ============================================
 
 let currentUser = null;
 let currentPage = 'inicio';
+let currentSubPage = null;
 let isDarkMode = false;
 let searchHighlights = [];
 let currentHighlightIndex = -1;
@@ -140,16 +140,26 @@ function togglePassword() {
 // ============================================
 // NAVEGACIÓN
 // ============================================
-function navigateTo(page) {
+function navigateTo(page, subPage = null) {
     currentPage = page;
+    currentSubPage = subPage;
     
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.page === page);
+    // Update desktop nav
+    document.querySelectorAll('.desktop-nav .nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.page === page && !subPage);
     });
     
-    if (window.innerWidth < 1024) {
+    // Update sidebar nav
+    document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.page === page && !subPage);
+    });
+    
+    // Close mobile sidebar
+    if (window.innerWidth <= 1024) {
         const sidebar = document.getElementById('sidebar');
-        if (sidebar) sidebar.classList.add('hidden');
+        const overlay = document.getElementById('sidebarOverlay');
+        if (sidebar) sidebar.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
     }
     
     const content = document.getElementById('pageContent');
@@ -158,14 +168,19 @@ function navigateTo(page) {
     }
     
     setTimeout(() => {
-        renderPage(page, content);
+        renderPage(page, content, subPage);
     }, 100);
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function renderPage(page, container) {
+function renderPage(page, container, subPage = null) {
     if (!container) return;
+    
+    if (page === 'convenios' && subPage) {
+        renderConveniosSubpage(container, subPage);
+        return;
+    }
     
     switch (page) {
         case 'inicio':
@@ -186,49 +201,88 @@ function renderPage(page, container) {
         case 'faq':
             renderFAQ(container);
             break;
-        case 'chat':
-            openChat();
-            renderChatPage(container);
-            break;
         default:
-            if (page.startsWith('actividad-')) {
-                const activityId = page.replace('actividad-', '');
-                renderActividad(container, activityId);
-            } else {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Página no encontrada</h3></div>';
-            }
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Página no encontrada</h3></div>';
     }
 }
 
-// ============================================
-// OBTENER LEYES Y CONVENIOS (CON FALLBACK A DATA)
-// ============================================
-function getLeyes() {
-    const leyes = [];
-    if (typeof LEY_LCT_20744 !== 'undefined') leyes.push(LEY_LCT_20744);
-    if (typeof LEY_19587 !== 'undefined') leyes.push(LEY_19587);
-    if (typeof LEY_24557 !== 'undefined') leyes.push(LEY_24557);
-    if (typeof LEY_24013 !== 'undefined') leyes.push(LEY_24013);
-    if (typeof LEY_23551 !== 'undefined') leyes.push(LEY_23551);
-    
-    if (leyes.length === 0 && typeof DATA !== 'undefined' && DATA.leyes && DATA.leyes.length > 0) {
-        return DATA.leyes;
+function renderConveniosSubpage(container, subPage) {
+    const data = DATA.convenios[subPage];
+    if (!data) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Convenio no encontrado</h3></div>';
+        return;
     }
     
-    return leyes;
+    container.innerHTML = `
+        <div class="page-header">
+            <button class="btn btn-ghost" onclick="navigateTo('convenios')">
+                <i class="fas fa-arrow-left"></i> Volver a Convenios
+            </button>
+        </div>
+        <div class="section">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                <i class="fas ${data.icono}" style="font-size: 2.5rem; color: ${data.color};"></i>
+                <div>
+                    <h1 class="section-title" style="margin-bottom: 0.25rem;">${data.nombre}</h1>
+                    <p style="color: var(--text-secondary); margin: 0;">${data.descripcion}</p>
+                </div>
+            </div>
+            
+            <div class="convenios-list">
+                ${data.cct.map(cct => `
+                    <div class="convenio-item" onclick="showConvenioDetalle('${subPage}', '${cct.numero}')">
+                        <div class="convenio-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <div class="convenio-info">
+                            <h3>${cct.numero}</h3>
+                            <p class="convenio-subtitle">${cct.subtitulo}</p>
+                            <p class="convenio-title">${cct.titulo}</p>
+                        </div>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
 }
 
-function getConvenios() {
-    const convenios = [];
-    if (typeof CTT_302_75 !== 'undefined') convenios.push(CTT_302_75);
-    if (typeof CTT_36_89 !== 'undefined') convenios.push(CTT_36_89);
-    if (typeof CTT_238_94 !== 'undefined') convenios.push(CTT_238_94);
+function showConvenioDetalle(categoriaKey, cctNumero) {
+    const categoria = DATA.convenios[categoriaKey];
+    const cct = categoria.cct.find(c => c.numero === cctNumero);
     
-    if (convenios.length === 0 && typeof DATA !== 'undefined' && DATA.convenios && DATA.convenios.length > 0) {
-        return DATA.convenios;
+    if (!cct) {
+        showToast('Convenio no encontrado', 'error');
+        return;
     }
     
-    return convenios;
+    // Get content from global variable
+    const cctContent = window[cct.variable];
+    const contenido = cctContent ? cctContent.contenido : '<p>Contenido no disponible. El archivo del convenio no fue cargado correctamente.</p>';
+    
+    const container = document.getElementById('pageContent');
+    container.innerHTML = `
+        <div class="page-header">
+            <button class="btn btn-ghost" onclick="navigateTo('convenios', '${categoriaKey}')">
+                <i class="fas fa-arrow-left"></i> Volver
+            </button>
+        </div>
+        <div class="section" id="convenioContentSection">
+            <div class="convenio-header">
+                <div class="convenio-badge">${cct.numero}</div>
+                <h2 class="section-title" style="margin-bottom: 0.5rem;">${cct.titulo}</h2>
+                <p class="convenio-subtitle-large">${cct.subtitulo}</p>
+                <p class="convenio-categoria">${categoria.nombre}</p>
+            </div>
+            <div class="ley-content" id="convenioLeyContent">
+                ${contenido}
+            </div>
+        </div>
+    `;
+    
+    setTimeout(() => {
+        createSearchBar('convenioContentSection', '#convenioLeyContent');
+    }, 100);
 }
 
 // ============================================
@@ -386,11 +440,9 @@ function escapeRegExp(string) {
 
 function renderDashboard(container) {
     const actCount = Object.keys(DATA.actividades).length;
-    const convenios = getConvenios();
-    const convCount = convenios.length;
+    const convCount = Object.keys(DATA.convenios).length;
     const cursoCount = DATA.cursos.length;
-    const leyes = getLeyes();
-    const leyCount = leyes.length;
+    const leyCount = 5;
     
     container.innerHTML = `
         <div class="page-header">
@@ -402,7 +454,7 @@ function renderDashboard(container) {
             <div class="stat-card" style="cursor: pointer;" onclick="navigateTo('convenios')">
                 <div class="stat-icon">📋</div>
                 <div class="stat-value">${convCount}</div>
-                <div class="stat-label">Convenios CCT</div>
+                <div class="stat-label">Categorías de Convenios</div>
             </div>
             <div class="stat-card accent" style="cursor: pointer;" onclick="navigateTo('actividad-mineria-extractiva')">
                 <div class="stat-icon">🏭</div>
@@ -562,65 +614,62 @@ function inscribirse(cursoId) {
 }
 
 function renderConvenios(container) {
-    const convenios = getConvenios();
+    const convenios = DATA.convenios;
     
     container.innerHTML = `
         <div class="page-header">
             <h1>Convenios Colectivos de Trabajo 📋</h1>
-            <p>Normativas vigentes por actividad</p>
+            <p>Convenios organizados por actividad</p>
         </div>
-        <div class="cards-grid">
-            ${convenios.map(c => {
-                const act = DATA.actividades[c.actividad];
-                return `
-                    <div class="card" onclick="showConvenioDetalle('${c.numero}')">
-                        <div class="card-header" style="background: var(--gradient-primary);">
-                            <i class="fas fa-file-contract"></i>
-                            <span class="card-badge">${c.numero}</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-category">${act ? act.nombre : c.categoria}</div>
-                            <h3 class="card-title">${c.titulo}</h3>
-                            <p class="card-description">${c.resumen}</p>
-                            <div class="card-meta">
-                                <span><i class="far fa-calendar"></i> Actualizado: ${DATA.formatDate(c.actualizado)}</span>
+        
+        <div class="convenios-categories">
+            ${Object.entries(convenios).map(([key, categoria]) => `
+                <div class="convenio-category">
+                    <div class="category-header" onclick="toggleCategory('${key}')">
+                        <div class="category-info">
+                            <i class="fas ${categoria.icono}" style="color: ${categoria.color};"></i>
+                            <div>
+                                <h2>${categoria.nombre}</h2>
+                                <p>${categoria.descripcion}</p>
                             </div>
                         </div>
+                        <i class="fas fa-chevron-down category-arrow" id="arrow-${key}"></i>
                     </div>
-                `;
-            }).join('')}
+                    
+                    <div class="category-content hidden" id="content-${key}">
+                        <div class="convenios-list">
+                            ${categoria.cct.map(cct => `
+                                <div class="convenio-item" onclick="showConvenioDetalle('${key}', '${cct.numero}')">
+                                    <div class="convenio-icon">
+                                        <i class="fas fa-file-contract"></i>
+                                    </div>
+                                    <div class="convenio-info">
+                                        <h3>${cct.numero}</h3>
+                                        <p class="convenio-subtitle">${cct.subtitulo}</p>
+                                        <p class="convenio-title">${cct.titulo}</p>
+                                    </div>
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('')}
         </div>
     `;
 }
 
-function showConvenioDetalle(numero) {
-    const convenios = getConvenios();
-    const conv = convenios.find(c => c.numero === numero);
-    if (!conv) return;
+function toggleCategory(key) {
+    const content = document.getElementById(`content-${key}`);
+    const arrow = document.getElementById(`arrow-${key}`);
     
-    const container = document.getElementById('pageContent');
-    container.innerHTML = `
-        <div class="page-header">
-            <button class="btn btn-ghost" onclick="navigateTo('convenios')">
-                <i class="fas fa-arrow-left"></i> Volver a convenios
-            </button>
-        </div>
-        <div class="section" id="convenioContentSection">
-            <div class="card-category" style="margin-bottom: 0.5rem;">${conv.numero}</div>
-            <h2 class="section-title" style="margin-bottom: 1rem;">${conv.titulo}</h2>
-            <div class="card-meta" style="margin-bottom: 1.5rem;">
-                <span><i class="fas fa-tag"></i> ${conv.categoria}</span>
-                <span><i class="far fa-calendar"></i> Actualizado: ${DATA.formatDate(conv.actualizado)}</span>
-            </div>
-            <div class="ley-content" id="convenioLeyContent">
-                ${conv.contenido}
-            </div>
-        </div>
-    `;
-    
-    setTimeout(() => {
-        createSearchBar('convenioContentSection', '#convenioLeyContent');
-    }, 100);
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+    } else {
+        content.classList.add('hidden');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+    }
 }
 
 function renderEscalas(container) {
@@ -667,7 +716,13 @@ function renderEscalas(container) {
 }
 
 function renderLegislacion(container) {
-    const leyes = getLeyes();
+    const leyes = [
+        { numero: 'Ley 20.744', titulo: 'Ley de Contrato de Trabajo', categoria: 'Laboral General', resumen: 'Régimen legal del contrato de trabajo', variable: 'LEY_LCT_20744' },
+        { numero: 'Ley 19.587', titulo: 'Ley de Higiene y Seguridad en el Trabajo', categoria: 'Seguridad', resumen: 'Normas mínimas de higiene y seguridad', variable: 'LEY_19587' },
+        { numero: 'Ley 24.557', titulo: 'Ley de Riesgos del Trabajo', categoria: 'Seguridad', resumen: 'Sistema de riesgos del trabajo y ART', variable: 'LEY_24557' },
+        { numero: 'Ley 24.013', titulo: 'Ley Nacional de Empleo', categoria: 'Empleo', resumen: 'Política de empleo y prestaciones por desempleo', variable: 'LEY_24013' },
+        { numero: 'Ley 23.551', titulo: 'Ley de Asociaciones Sindicales', categoria: 'Gremial', resumen: 'Sindicatos y actividad gremial', variable: 'LEY_23551' }
+    ];
     
     container.innerHTML = `
         <div class="page-header">
@@ -675,27 +730,32 @@ function renderLegislacion(container) {
             <p>Leyes y normativas laborales aplicables al sector minero</p>
         </div>
         <div class="cards-grid">
-            ${leyes.map(l => `
-                <div class="card" onclick="showLeyDetalle('${l.numero}')">
-                    <div class="card-header" style="background: linear-gradient(135deg, #475569, #334155);">
-                        <i class="fas fa-balance-scale"></i>
-                        <span class="card-badge">${l.numero}</span>
+            ${leyes.map(l => {
+                const leyData = window[l.variable];
+                return `
+                    <div class="card" onclick="showLeyDetalle('${l.variable}')">
+                        <div class="card-header" style="background: linear-gradient(135deg, #475569, #334155);">
+                            <i class="fas fa-balance-scale"></i>
+                            <span class="card-badge">${l.numero}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-category">${l.categoria}</div>
+                            <h3 class="card-title">${l.titulo}</h3>
+                            <p class="card-description">${leyData ? leyData.resumen : l.resumen}</p>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="card-category">${l.categoria}</div>
-                        <h3 class="card-title">${l.titulo}</h3>
-                        <p class="card-description">${l.resumen}</p>
-                    </div>
-                </div>
-            `).join('')}
+                `;
+            }).join('')}
         </div>
     `;
 }
 
-function showLeyDetalle(numero) {
-    const leyes = getLeyes();
-    const ley = leyes.find(l => l.numero === numero);
-    if (!ley) return;
+function showLeyDetalle(variable) {
+    const ley = window[variable];
+    if (!ley) {
+        showToast('Ley no encontrada', 'error');
+        return;
+    }
     
     const container = document.getElementById('pageContent');
     container.innerHTML = `
@@ -705,10 +765,10 @@ function showLeyDetalle(numero) {
             </button>
         </div>
         <div class="section" id="leyContentSection">
-            <div class="card-category" style="margin-bottom: 0.5rem;">${ley.numero}</div>
-            <h2 class="section-title" style="margin-bottom: 0.5rem;">${ley.titulo}</h2>
-            <div class="card-meta" style="margin-bottom: 1.5rem;">
-                <span><i class="fas fa-tag"></i> ${ley.categoria}</span>
+            <div class="convenio-header">
+                <div class="convenio-badge">${ley.numero}</div>
+                <h2 class="section-title" style="margin-bottom: 0.5rem;">${ley.titulo}</h2>
+                <p class="convenio-categoria">${ley.categoria}</p>
             </div>
             <div class="ley-content" id="leyLeyContent">
                 ${ley.contenido}
@@ -770,7 +830,6 @@ function renderActividad(container, activityId) {
     const videosAct = DATA.videos.filter(v => v.categoria === activityId);
     const faqsAct = DATA.faqs[activityId] || [];
     const escalasAct = DATA.escalas[activityId] || [];
-    const conveniosAct = getConvenios().filter(c => c.actividad === activityId);
     
     container.innerHTML = `
         <div class="activity-hero">
@@ -784,23 +843,6 @@ function renderActividad(container, activityId) {
                 <p style="margin-top: 0.5rem;"><strong>Convenio:</strong> ${act.ctt}</p>
             </div>
         </div>
-        
-        ${conveniosAct.length > 0 ? `
-            <div class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Convenio Colectivo</h2>
-                </div>
-                ${conveniosAct.map(c => `
-                    <div class="card" onclick="showConvenioDetalle('${c.numero}')" style="cursor: pointer;">
-                        <div class="card-body">
-                            <div class="card-category">${c.numero}</div>
-                            <h3 class="card-title">${c.titulo}</h3>
-                            <p class="card-description">${c.resumen}</p>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        ` : ''}
         
         ${escalasAct.length > 0 ? `
             <div class="section">
@@ -895,7 +937,7 @@ function renderActividad(container, activityId) {
 }
 
 // ============================================
-// CHAT INTELIGENTE MEJORADO
+// CHAT
 // ============================================
 function openChat() {
     const chatWindow = document.getElementById('chatWindow');
@@ -924,7 +966,7 @@ function initChatMessages() {
     const quickReplies = document.getElementById('chatQuickReplies');
     
     if (messages && messages.children.length === 0) {
-        addChatMessage('bot', `¡Hola ${currentUser.name.split(' ')[0]}! 👋 Soy el asistente virtual de AOMA San Juan. Puedo ayudarte con:\n\n• 📋 Convenios colectivos (CTT 302/75, 36/89, 238/94)\n• ⚖️ Leyes laborales (LCT 20.744, Ley 23.551, etc.)\n• 💰 Escalas salariales\n• 🎓 Cursos y capacitaciones\n\n¿En qué puedo ayudarte?`);
+        addChatMessage('bot', `¡Hola ${currentUser.name.split(' ')[0]}! 👋 Soy el asistente virtual de AOMA San Juan. Puedo ayudarte con:\n\n• 📋 Convenios colectivos\n• ⚖️ Leyes laborales\n• 💰 Escalas salariales\n• 🎓 Cursos y capacitaciones\n\n¿En qué puedo ayudarte?`);
     }
     
     if (quickReplies && quickReplies.children.length === 0) {
@@ -1015,131 +1057,7 @@ function getBotResponse(userMessage) {
         }
     }
     
-    const convenios = getConvenios();
-    for (const conv of convenios) {
-        const contenidoLimpio = conv.contenido.replace(/<[^>]*>/g, ' ').toLowerCase();
-        if (contenidoLimpio.includes(q)) {
-            const match = findRelevantSection(conv.contenido, q);
-            return `📋 <strong>${conv.numero} - ${conv.titulo}</strong><br><br>${match}<br><br>Podés consultar el convenio completo en "Convenios CCT" y usar la barra de búsqueda para encontrar más detalles.`;
-        }
-        if (conv.titulo.toLowerCase().includes(q) || conv.resumen.toLowerCase().includes(q)) {
-            return `📋 Encontré: <strong>${conv.titulo}</strong><br><br>${conv.resumen}<br><br>Podés consultarlo completo en "Convenios CCT".`;
-        }
-    }
-    
-    const leyes = getLeyes();
-    for (const ley of leyes) {
-        const contenidoLimpio = ley.contenido.replace(/<[^>]*>/g, ' ').toLowerCase();
-        if (contenidoLimpio.includes(q)) {
-            const match = findRelevantSection(ley.contenido, q);
-            return `⚖️ <strong>${ley.numero} - ${ley.titulo}</strong><br><br>${match}<br><br>Podés consultar la ley completa en "Legislación" y usar la barra de búsqueda para encontrar más detalles.`;
-        }
-        if (ley.titulo.toLowerCase().includes(q) || ley.resumen.toLowerCase().includes(q)) {
-            return `⚖️ <strong>${ley.numero} - ${ley.titulo}</strong><br><br>${ley.resumen}`;
-        }
-    }
-    
-    for (const curso of DATA.cursos) {
-        if (curso.titulo.toLowerCase().includes(q) || curso.descripcion.toLowerCase().includes(q)) {
-            return `🎓 Encontré el curso: <strong>${curso.titulo}</strong><br><br>${curso.descripcion}<br><br>Duración: ${curso.duracion} | Nivel: ${curso.nivel}`;
-        }
-    }
-    
-    return `No encontré información específica sobre "${userMessage}". Te recomiendo:<br><br>1️⃣ Revisar las secciones del menú lateral<br>2️⃣ Usar la barra de búsqueda dentro de cada ley o convenio<br>3️⃣ Contactar a la Seccional al (0264) 422-XXXX<br><br>¿Hay algo más en lo que pueda ayudarte?`;
-}
-
-function findRelevantSection(contenidoHTML, query) {
-    const regex = new RegExp(`(<h[34][^>]*>.*?${escapeRegExp(query)}.*?</h[34]>)(.*?)(?=<h[34]|$)`, 'is');
-    const match = contenidoHTML.match(regex);
-    
-    if (match) {
-        const titulo = match[1].replace(/<[^>]*>/g, '');
-        const contenido = match[2].replace(/<[^>]*>/g, '').trim().substring(0, 300);
-        return `<strong>${titulo}</strong><br><br>${contenido}${contenido.length >= 300 ? '...' : ''}`;
-    }
-    
-    const textoLimpio = contenidoHTML.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-    const idx = textoLimpio.toLowerCase().indexOf(query);
-    if (idx !== -1) {
-        const inicio = Math.max(0, idx - 100);
-        const fin = Math.min(textoLimpio.length, idx + query.length + 200);
-        const fragmento = textoLimpio.substring(inicio, fin);
-        return `...${fragmento}...`;
-    }
-    
-    return 'Información disponible en el documento.';
-}
-
-function renderChatPage(container) {
-    container.innerHTML = `
-        <div class="page-header">
-            <h1>Consultas Virtuales 💬</h1>
-            <p>Hacé tus consultas al asistente virtual de AOMA</p>
-        </div>
-        <div class="section" style="padding: 0; overflow: hidden;">
-            <div style="height: 500px; display: flex; flex-direction: column;">
-                <div id="chatPageMessages" style="flex: 1; overflow-y: auto; padding: 1.5rem; background: var(--bg-input);">
-                    <div class="chat-welcome" style="text-align: center; padding: 2rem;">
-                        <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 2rem;">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <h2 style="color: var(--text-primary); margin-bottom: 0.5rem;">¡Hola ${currentUser.name.split(' ')[0]}! 👋</h2>
-                        <p style="color: var(--text-secondary);">Soy el asistente virtual de AOMA San Juan.</p>
-                    </div>
-                </div>
-                <form onsubmit="handleChatPageSubmit(event)" style="padding: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem;">
-                    <input type="text" id="chatPageInput" placeholder="Escribí tu consulta..." style="flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: var(--radius-full); font-family: inherit;" autocomplete="off">
-                    <button type="submit" style="width: 44px; height: 44px; background: var(--gradient-primary); border: none; border-radius: 50%; color: white; cursor: pointer;">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-    `;
-}
-
-function handleChatPageSubmit(e) {
-    e.preventDefault();
-    const input = document.getElementById('chatPageInput');
-    const text = input.value.trim();
-    if (!text) return;
-    
-    const container = document.getElementById('chatPageMessages');
-    const welcome = container.querySelector('.chat-welcome');
-    if (welcome) welcome.remove();
-    
-    addChatPageMessage('user', text);
-    input.value = '';
-    
-    setTimeout(() => {
-        const response = getBotResponse(text);
-        addChatPageMessage('bot', response);
-    }, 800);
-}
-
-function addChatPageMessage(type, text) {
-    const container = document.getElementById('chatPageMessages');
-    if (!container) return;
-    
-    const div = document.createElement('div');
-    div.className = 'chat-message ' + type;
-    div.style.marginBottom = '1rem';
-    
-    const time = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-    const avatar = type === 'user' 
-        ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
-        : '<i class="fas fa-robot"></i>';
-    
-    div.innerHTML = `
-        <div class="chat-message-avatar">${avatar}</div>
-        <div>
-            <div class="chat-message-content">${text}</div>
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">${time}</div>
-        </div>
-    `;
-    
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
+    return DATA.chatResponses.default;
 }
 
 // ============================================
@@ -1201,7 +1119,48 @@ function showToast(message, type = 'info') {
 }
 
 // ============================================
-// EVENTOS - CORREGIDO CON LOS IDs DEL HTML
+// MODALES
+// ============================================
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    const overlay = document.getElementById('modalOverlay');
+    if (modal) modal.classList.add('hidden');
+    if (overlay) overlay.classList.add('hidden');
+    
+    if (modalId === 'videoModal') {
+        const frame = document.getElementById('videoFrame');
+        if (frame) frame.src = '';
+    }
+}
+
+function downloadCertificate() {
+    const canvas = document.getElementById('certificateCanvas');
+    if (canvas) {
+        const link = document.createElement('a');
+        link.download = 'certificado-aoma.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        showToast('✅ Certificado descargado', 'success');
+    }
+}
+
+// ============================================
+// SIDEBAR SUBMENU (MOBILE)
+// ============================================
+function toggleSidebarSubmenu(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const navItem = e.currentTarget.parentElement;
+    const submenu = navItem.querySelector('.submenu');
+    
+    if (submenu) {
+        submenu.classList.toggle('active');
+    }
+}
+
+// ============================================
+// EVENTOS
 // ============================================
 function setupEvents() {
     const loginForm = document.getElementById('loginForm');
@@ -1209,45 +1168,78 @@ function setupEvents() {
         loginForm.addEventListener('submit', handleLogin);
     }
     
-    // ✅ CORREGIDO: Ahora usa sidebarToggle (como está en el HTML)
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar) sidebar.classList.toggle('hidden');
-        });
-    }
-    
-    document.addEventListener('click', (e) => {
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebarToggle');
+    // Desktop navigation
+    document.querySelectorAll('.desktop-nav .nav-item').forEach(item => {
+        const link = item.querySelector('.nav-link');
+        const submenu = item.querySelector('.submenu');
         
-        if (window.innerWidth < 1024 && sidebar && sidebarToggle) {
-            if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-                sidebar.classList.add('hidden');
-            }
+        if (link && !submenu) {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = item.dataset.page;
+                if (page) navigateTo(page);
+            });
+        } else if (submenu) {
+            submenu.querySelectorAll('a').forEach(subLink => {
+                subLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = item.dataset.page;
+                    const subPage = subLink.dataset.subpage;
+                    if (page && subPage) navigateTo(page, subPage);
+                });
+            });
         }
     });
     
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const page = item.dataset.page;
-            if (page) {
-                navigateTo(page);
-            }
-        });
+    // Sidebar navigation
+    document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+        const link = item.querySelector('.nav-link');
+        const submenu = item.querySelector('.submenu');
+        
+        if (link && !submenu) {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = item.dataset.page;
+                if (page) navigateTo(page);
+            });
+        } else if (submenu) {
+            submenu.querySelectorAll('a').forEach(subLink => {
+                subLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = item.dataset.page;
+                    const subPage = subLink.dataset.subpage;
+                    if (page && subPage) navigateTo(page, subPage);
+                });
+            });
+        }
     });
     
-    // ✅ CORREGIDO: Ahora usa themeToggle (como está en el HTML)
+    // Sidebar toggle
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
+        });
+    }
+    
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    }
+    
+    // Theme toggle
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);
     }
     
-    // ✅ CORREGIDO: Ahora usa chatToggle (como está en el HTML)
+    // Chat toggle
     const chatToggle = document.getElementById('chatToggle');
     const chatClose = document.getElementById('chatClose');
     const chatForm = document.getElementById('chatInputForm');
@@ -1269,13 +1261,15 @@ function setupEvents() {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeChat();
+            if (sidebar) sidebar.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
         }
     });
     
     window.addEventListener('resize', () => {
-        if (window.innerWidth >= 1024) {
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar) sidebar.classList.remove('hidden');
+        if (window.innerWidth > 1024) {
+            if (sidebar) sidebar.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
         }
     });
 }
