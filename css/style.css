@@ -1,9 +1,10 @@
 /* ============================================
    CAMPUS VIRTUAL AOMA SAN JUAN
-   Menú estilo UG Noticias Mineras
+   Archivo de estilos principal
    ============================================ */
 
 :root {
+    /* Colores institucionales */
     --primary: #1e3a8a;
     --primary-dark: #1e40af;
     --primary-light: #3b82f6;
@@ -23,6 +24,11 @@
     --gray-800: #1f2937;
     --gray-900: #111827;
     
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    
     --bg-body: #f4f7fc;
     --bg-card: #ffffff;
     --bg-header: #ffffff;
@@ -33,6 +39,7 @@
     --text-muted: #6b7280;
     
     --border: #e5e7eb;
+    --border-light: #f3f4f6;
     
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
     --shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -65,6 +72,7 @@
     --text-muted: #94a3b8;
     
     --border: #334155;
+    --border-light: #1e293b;
 }
 
 *, *::before, *::after {
@@ -168,7 +176,7 @@ body {
 }
 
 /* ============================================
-   NAV PILLS (botones estilo UG Noticias)
+   NAV PILLS
    ============================================ */
 .nav-pills {
     display: flex;
@@ -240,6 +248,23 @@ body {
 .icon-btn:hover {
     background: var(--primary);
     color: white;
+}
+
+.badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.625rem;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .user-menu {
@@ -335,7 +360,7 @@ body {
 }
 
 /* ============================================
-   MOBILE MENU OVERLAY
+   MOBILE MENU
    ============================================ */
 .mobile-menu-overlay {
     position: fixed;
@@ -473,6 +498,107 @@ body {
 .page-header p {
     color: var(--text-secondary);
     font-size: 1rem;
+}
+
+/* ============================================
+   BARRA DE BÚSQUEDA DE CONTENIDO (FIJA)
+   ============================================ */
+.content-search-bar {
+    position: sticky;
+    top: var(--header-height);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.content-search-bar .search-icon {
+    color: var(--accent);
+    font-size: 1.125rem;
+}
+
+.content-search-bar input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    background: var(--bg-input);
+    color: var(--text-primary);
+}
+
+.content-search-bar input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.content-search-bar .search-count {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.content-search-bar .btn-search-nav {
+    width: 32px;
+    height: 32px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.content-search-bar .btn-search-nav:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.content-search-bar .btn-search-nav:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.content-search-bar .btn-search-nav:disabled:hover {
+    background: var(--bg-input);
+    color: var(--text-secondary);
+}
+
+/* Resaltado de coincidencias */
+.search-highlight {
+    background: #fecaca;
+    color: #991b1b;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.search-highlight.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.3);
+}
+
+[data-theme="dark"] .search-highlight {
+    background: #991b1b;
+    color: #fecaca;
+}
+
+[data-theme="dark"] .search-highlight.active {
+    background: var(--accent);
+    color: white;
 }
 
 /* ============================================
@@ -1240,89 +1366,6 @@ body {
 }
 
 /* ============================================
-   SEARCH BAR
-   ============================================ */
-.search-bar-container {
-    position: sticky;
-    top: 0;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 0.75rem 1rem;
-    margin-bottom: 1.5rem;
-    box-shadow: var(--shadow-md);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.search-bar-container .search-icon {
-    color: var(--accent);
-    font-size: 1.125rem;
-}
-
-.search-bar-container input {
-    flex: 1;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-family: inherit;
-    font-size: 0.9375rem;
-    background: var(--bg-input);
-    color: var(--text-primary);
-}
-
-.search-bar-container input:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-.search-bar-container .search-count {
-    font-size: 0.8125rem;
-    color: var(--text-muted);
-    white-space: nowrap;
-}
-
-.search-bar-container .btn-search-nav {
-    width: 32px;
-    height: 32px;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    transition: var(--transition);
-}
-
-.search-bar-container .btn-search-nav:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-}
-
-.search-bar-container .btn-search-nav:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.search-highlight {
-    background: #fecaca;
-    color: var(--primary-dark);
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-weight: 600;
-}
-
-.search-highlight.active {
-    background: var(--accent);
-    color: white;
-}
-
-/* ============================================
    SCROLLBAR
    ============================================ */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -1378,6 +1421,16 @@ body {
     
     .activity-hero { height: 200px; }
     .activity-hero-content h1 { font-size: 1.5rem; }
+    
+    /* Barra de búsqueda en móvil */
+    .content-search-bar {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .content-search-bar input {
+        flex: 1 1 100%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1391,4 +1444,4 @@ body {
     }
     
     .mobile-menu { max-width: 100%; }
-   }
+}
