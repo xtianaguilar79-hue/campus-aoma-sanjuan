@@ -5,6 +5,8 @@
 
 let currentUser = null;
 let currentPage = 'inicio';
+let searchHighlights = [];
+let currentHighlightIndex = -1;
 
 // ============================================
 // INICIALIZACIÓN
@@ -34,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function showLogin() {
-    // Login simple para demo
     const html = `
         <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
             <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 20px 25px rgba(0,0,0,0.15); width: 100%; max-width: 420px;">
@@ -120,17 +121,14 @@ function toggleTheme() {
 function navigateTo(page) {
     currentPage = page;
     
-    // Actualizar pills desktop
     document.querySelectorAll('.nav-pill').forEach(pill => {
         pill.classList.toggle('active', pill.dataset.page === page);
     });
     
-    // Actualizar pills mobile
     document.querySelectorAll('.mobile-nav-pill').forEach(pill => {
         pill.classList.toggle('active', pill.dataset.page === page);
     });
     
-    // Cerrar menú mobile
     closeMobileMenu();
     
     const content = document.getElementById('pageContent');
@@ -196,7 +194,6 @@ function getConvenios() {
 // EVENTOS
 // ============================================
 function setupEvents() {
-    // Menú hamburguesa
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -217,27 +214,23 @@ function setupEvents() {
         mobileMenuOverlay.addEventListener('click', closeMobileMenu);
     }
     
-    // Nav pills desktop
     document.querySelectorAll('.nav-pill').forEach(pill => {
         pill.addEventListener('click', () => {
             navigateTo(pill.dataset.page);
         });
     });
     
-    // Nav pills mobile
     document.querySelectorAll('.mobile-nav-pill').forEach(pill => {
         pill.addEventListener('click', () => {
             navigateTo(pill.dataset.page);
         });
     });
     
-    // Theme
     const themeBtn = document.getElementById('themeBtn');
     if (themeBtn) {
         themeBtn.addEventListener('click', toggleTheme);
     }
     
-    // User menu
     const userMenu = document.getElementById('userMenu');
     if (userMenu) {
         userMenu.addEventListener('click', (e) => {
@@ -251,7 +244,6 @@ function setupEvents() {
         if (dropdown) dropdown.classList.remove('active');
     });
     
-    // Chat
     const chatBtn = document.getElementById('chatBtn');
     const chatClose = document.getElementById('chatClose');
     const chatWindow = document.getElementById('chatWindow');
@@ -288,6 +280,145 @@ function setupEvents() {
 function closeMobileMenu() {
     document.getElementById('mobileMenu')?.classList.remove('active');
     document.getElementById('mobileMenuOverlay')?.classList.remove('active');
+}
+
+// ============================================
+// BÚSQUEDA DENTRO DEL CONTENIDO
+// ============================================
+function setupContentSearch(contentSelector) {
+    const searchInput = document.getElementById('contentSearchInput');
+    const searchCount = document.getElementById('contentSearchCount');
+    const btnPrev = document.getElementById('contentSearchPrev');
+    const btnNext = document.getElementById('contentSearchNext');
+    const btnClear = document.getElementById('contentSearchClear');
+    
+    if (!searchInput) return;
+    
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim();
+        if (query.length < 2) {
+            clearContentHighlights();
+            if (searchCount) searchCount.textContent = '0 resultados';
+            if (btnPrev) btnPrev.disabled = true;
+            if (btnNext) btnNext.disabled = true;
+            return;
+        }
+        performContentSearch(query, contentSelector, searchCount, btnPrev, btnNext);
+    });
+    
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            navigateHighlight(1);
+        }
+        if (e.key === 'Escape') {
+            searchInput.value = '';
+            clearContentHighlights();
+            if (searchCount) searchCount.textContent = '0 resultados';
+            if (btnPrev) btnPrev.disabled = true;
+            if (btnNext) btnNext.disabled = true;
+        }
+    });
+    
+    if (btnPrev) {
+        btnPrev.addEventListener('click', () => navigateHighlight(-1));
+    }
+    
+    if (btnNext) {
+        btnNext.addEventListener('click', () => navigateHighlight(1));
+    }
+    
+    if (btnClear) {
+        btnClear.addEventListener('click', () => {
+            searchInput.value = '';
+            clearContentHighlights();
+            if (searchCount) searchCount.textContent = '0 resultados';
+            if (btnPrev) btnPrev.disabled = true;
+            if (btnNext) btnNext.disabled = true;
+        });
+    }
+}
+
+function performContentSearch(query, contentSelector, countEl, btnPrev, btnNext) {
+    clearContentHighlights();
+    
+    const contentEl = document.querySelector(contentSelector);
+    if (!contentEl) return;
+    
+    const walker = document.createTreeWalker(
+        contentEl,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode: (node) => {
+                if (node.parentElement.tagName === 'SCRIPT' || 
+                    node.parentElement.tagName === 'STYLE' ||
+                    node.parentElement.classList.contains('search-highlight')) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+                if (node.textContent.toLowerCase().includes(query.toLowerCase())) {
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+                return NodeFilter.FILTER_REJECT;
+            }
+        }
+    );
+    
+    const textNodes = [];
+    let currentNode;
+    while (currentNode = walker.nextNode()) {
+        textNodes.push(currentNode);
+    }
+    
+    textNodes.forEach(textNode => {
+        const text = textNode.textContent;
+        const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+        const span = document.createElement('span');
+        span.innerHTML = text.replace(regex, '<mark class="search-highlight">$1</mark>');
+        textNode.parentNode.replaceChild(span, textNode);
+    });
+    
+    searchHighlights = Array.from(document.querySelectorAll('.search-highlight'));
+    currentHighlightIndex = -1;
+    
+    if (countEl) {
+        countEl.textContent = `${searchHighlights.length} resultado${searchHighlights.length !== 1 ? 's' : ''}`;
+    }
+    if (btnPrev) btnPrev.disabled = searchHighlights.length === 0;
+    if (btnNext) btnNext.disabled = searchHighlights.length === 0;
+    
+    if (searchHighlights.length > 0) {
+        navigateHighlight(1);
+    }
+}
+
+function navigateHighlight(direction) {
+    if (searchHighlights.length === 0) return;
+    
+    if (currentHighlightIndex >= 0 && currentHighlightIndex < searchHighlights.length) {
+        searchHighlights[currentHighlightIndex].classList.remove('active');
+    }
+    
+    currentHighlightIndex += direction;
+    if (currentHighlightIndex >= searchHighlights.length) currentHighlightIndex = 0;
+    if (currentHighlightIndex < 0) currentHighlightIndex = searchHighlights.length - 1;
+    
+    const highlight = searchHighlights[currentHighlightIndex];
+    highlight.classList.add('active');
+    highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function clearContentHighlights() {
+    document.querySelectorAll('.search-highlight').forEach(mark => {
+        const parent = mark.parentNode;
+        parent.replaceChild(document.createTextNode(mark.textContent), mark);
+        parent.normalize();
+    });
+    searchHighlights = [];
+    currentHighlightIndex = -1;
+}
+
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 // ============================================
@@ -479,14 +610,36 @@ function showConvenioDetalle(numero) {
                 <i class="fas fa-arrow-left"></i> Volver a convenios
             </button>
         </div>
+        
+        <!-- BARRA DE BÚSQUEDA FIJA -->
+        <div class="content-search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="contentSearchInput" placeholder="Buscar en este documento... (ej: vacaciones, despido, salario)">
+            <span class="search-count" id="contentSearchCount">0 resultados</span>
+            <button class="btn-search-nav" id="contentSearchPrev" title="Anterior" disabled>
+                <i class="fas fa-chevron-up"></i>
+            </button>
+            <button class="btn-search-nav" id="contentSearchNext" title="Siguiente" disabled>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <button class="btn-search-nav" id="contentSearchClear" title="Limpiar búsqueda">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
         <div class="section">
             <div class="card-category" style="margin-bottom: 0.5rem;">${conv.numero}</div>
             <h2 class="section-title" style="margin-bottom: 1rem;">${conv.titulo}</h2>
-            <div style="line-height: 1.8; color: var(--text-secondary);">
+            <div class="ley-content" id="convenioContent">
                 ${conv.contenido}
             </div>
         </div>
     `;
+    
+    // Inicializar búsqueda después de renderizar
+    setTimeout(() => {
+        setupContentSearch('#convenioContent');
+    }, 100);
 }
 
 function renderEscalas(container) {
@@ -570,14 +723,36 @@ function showLeyDetalle(numero) {
                 <i class="fas fa-arrow-left"></i> Volver a legislación
             </button>
         </div>
+        
+        <!-- BARRA DE BÚSQUEDA FIJA -->
+        <div class="content-search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="contentSearchInput" placeholder="Buscar en esta ley... (ej: vacaciones, despido, salario)">
+            <span class="search-count" id="contentSearchCount">0 resultados</span>
+            <button class="btn-search-nav" id="contentSearchPrev" title="Anterior" disabled>
+                <i class="fas fa-chevron-up"></i>
+            </button>
+            <button class="btn-search-nav" id="contentSearchNext" title="Siguiente" disabled>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <button class="btn-search-nav" id="contentSearchClear" title="Limpiar búsqueda">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
         <div class="section">
             <div class="card-category" style="margin-bottom: 0.5rem;">${ley.numero}</div>
             <h2 class="section-title" style="margin-bottom: 0.5rem;">${ley.titulo}</h2>
-            <div class="ley-content">
+            <div class="ley-content" id="leyContent">
                 ${ley.contenido}
             </div>
         </div>
     `;
+    
+    // Inicializar búsqueda después de renderizar
+    setTimeout(() => {
+        setupContentSearch('#leyContent');
+    }, 100);
 }
 
 function renderFAQ(container) {
@@ -749,7 +924,7 @@ function getBotResponse(userMessage) {
         return '💰 Podés consultar las escalas salariales en el menú → "Escalas Salariales".';
     }
     if (q.includes('convenio') || q.includes('ctt')) {
-        return ' Tenemos convenios cargados: CTT 302/75, CTT 36/89 y CTT 238/94. Consultalos en "Convenios CCT".';
+        return '📋 Tenemos convenios cargados: CTT 302/75, CTT 36/89 y CTT 238/94. Consultalos en "Convenios CCT".';
     }
     if (q.includes('ley') || q.includes('legislación')) {
         return '⚖️ Tenemos leyes laborales cargadas. Consultalas en "Legislación".';
