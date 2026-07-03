@@ -3,405 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Campus Virtual AOMA San Juan - Plataforma de Capacitación Gremial">
-    <meta name="theme-color" content="#475569">
+    <meta name="description" content="Campus Virtual AOMA San Juan">
+    <meta name="theme-color" content="#1e3a8a">
     <title>Campus Virtual AOMA | Asociación Obrera Minera Argentina</title>
     
-    <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dark.css">
-    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loadingScreen" class="loading-screen">
-        <div class="loading-content">
-            <div class="loading-logo">
-                <i class="fas fa-mountain"></i>
-            </div>
-            <div class="loading-spinner"></div>
-            <p class="loading-text">Cargando Campus Virtual AOMA...</p>
-        </div>
-    </div>
-
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen hidden">
-        <div class="login-background">
-            <div class="login-overlay"></div>
-            <div class="login-pattern"></div>
-        </div>
-        
-        <div class="login-container">
-            <div class="login-card glass">
-                <div class="login-header">
-                    <div class="login-logo-wrapper">
-                        <div class="login-logo">
-                            <i class="fas fa-mountain"></i>
-                        </div>
-                        <div class="login-badge">
-                            <span class="badge-dot"></span>
-                            <span class="badge-text">Plataforma Oficial</span>
-                        </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-left">
+                <button class="menu-btn" id="menuBtn" aria-label="Menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i class="fas fa-mountain"></i>
                     </div>
-                    <h1 class="login-title">Campus Virtual AOMA</h1>
-                    <p class="login-subtitle">Asociación Obrera Minera Argentina<br>Seccional San Juan</p>
-                </div>
-
-                <form id="loginForm" class="login-form" novalidate>
-                    <div class="form-group">
-                        <label for="username" class="form-label">
-                            <i class="fas fa-user"></i>
-                            <span>Usuario (DNI o Legajo)</span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="text" id="username" class="form-input" placeholder="Ingrese su usuario" autocomplete="username" required>
-                            <div class="input-icon">
-                                <i class="fas fa-user-circle"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password" class="form-label">
-                            <i class="fas fa-lock"></i>
-                            <span>Contraseña</span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="password" id="password" class="form-input" placeholder="••••••••" autocomplete="current-password" required>
-                            <button type="button" class="toggle-password" aria-label="Mostrar contraseña" onclick="togglePassword()">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="form-options">
-                        <label class="checkbox-wrapper">
-                            <input type="checkbox" id="rememberMe">
-                            <span>Recordar usuario</span>
-                        </label>
-                        <a href="#" class="forgot-link">¿Olvidó su contraseña?</a>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-login" id="loginBtn">
-                        <span class="btn-text">Ingresar al Campus</span>
-                        <span class="btn-loader hidden">
-                            <i class="fas fa-circle-notch fa-spin"></i>
-                        </span>
-                    </button>
-
-                    <div class="login-alert hidden" id="loginAlert">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <span id="loginAlertText"></span>
-                    </div>
-                </form>
-
-                <div class="login-footer">
-                    <div class="login-demo">
-                        <p><strong>Demo:</strong> usuario: <code>admin</code> | pass: <code>admin</code></p>
-                        <p><strong>Delegado:</strong> usuario: <code>delegado</code> | pass: <code>1234</code></p>
+                    <div class="brand-text">
+                        <h1>AOMA San Juan</h1>
+                        <span>Campus Virtual</span>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Main Application -->
-    <div id="app" class="app hidden">
-        <!-- Header -->
-        <header class="header" id="header">
-            <div class="header-container">
-                <div class="header-left">
-                    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <div class="brand">
-                        <div class="brand-logo">
-                            <i class="fas fa-mountain"></i>
-                        </div>
-                        <div class="brand-info">
-                            <h1 class="brand-title">AOMA San Juan</h1>
-                            <span class="brand-subtitle">Campus Virtual</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Desktop Navigation -->
-                <nav class="desktop-nav" id="desktopNav">
-                    <ul class="nav-menu">
-                        <li class="nav-item active" data-page="inicio">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-home"></i>
-                                <span>Inicio</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="cursos">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-graduation-cap"></i>
-                                <span>Capacitaciones</span>
-                            </a>
-                        </li>
-                        <li class="nav-item has-submenu" data-page="convenios">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-file-contract"></i>
-                                <span>Convenios CCT</span>
-                                <i class="fas fa-chevron-down submenu-arrow"></i>
-                            </a>
-                            <ul class="submenu">
-                                <li><a href="#" data-subpage="cal-piedra">Cal y Piedra</a></li>
-                                <li><a href="#" data-subpage="molienda">Molienda</a></li>
-                                <li><a href="#" data-subpage="cemento">Cemento</a></li>
-                                <li><a href="#" data-subpage="extractiva">Extractiva</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item" data-page="escalas">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-money-bill-wave"></i>
-                                <span>Escalas Salariales</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="legislacion">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-balance-scale"></i>
-                                <span>Legislación</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="faq">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-question-circle"></i>
-                                <span>Preguntas Frecuentes</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-
-                <div class="header-right">
-                    <button class="header-btn" id="themeToggle" aria-label="Cambiar tema">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    
-                    <button class="header-btn notification-btn" id="notificationBtn" aria-label="Notificaciones">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge" id="notificationBadge">3</span>
-                    </button>
-
-                    <div class="user-menu" id="userMenu">
-                        <div class="user-info">
-                            <span class="user-name" id="userName">Usuario</span>
-                            <span class="user-role" id="userRole">Delegado</span>
-                        </div>
-                        <div class="user-avatar" id="userAvatar">
-                            <span class="avatar-initials">U</span>
-                        </div>
-                        <div class="user-dropdown" id="userDropdown">
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-user"></i>
-                                <span>Mi Perfil</span>
-                            </a>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-cog"></i>
-                                <span>Configuración</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item danger" onclick="logout()">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>Cerrar Sesión</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Sidebar (Mobile) -->
-        <aside class="sidebar" id="sidebar">
-            <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <span class="nav-section-title">Principal</span>
-                    <ul class="nav-list">
-                        <li class="nav-item active" data-page="inicio">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-home nav-icon"></i>
-                                <span class="nav-text">Inicio</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="cursos">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-graduation-cap nav-icon"></i>
-                                <span class="nav-text">Capacitaciones</span>
-                            </a>
-                        </li>
-                        <li class="nav-item has-submenu" data-page="convenios">
-                            <a href="#" class="nav-link" onclick="toggleSidebarSubmenu(event)">
-                                <i class="fas fa-file-contract nav-icon"></i>
-                                <span class="nav-text">Convenios CCT</span>
-                                <i class="fas fa-chevron-down submenu-arrow"></i>
-                            </a>
-                            <ul class="submenu">
-                                <li><a href="#" data-subpage="cal-piedra">Cal y Piedra</a></li>
-                                <li><a href="#" data-subpage="molienda">Molienda</a></li>
-                                <li><a href="#" data-subpage="cemento">Cemento</a></li>
-                                <li><a href="#" data-subpage="extractiva">Extractiva</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item" data-page="escalas">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-money-bill-wave nav-icon"></i>
-                                <span class="nav-text">Escalas Salariales</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="nav-section">
-                    <span class="nav-section-title">Información</span>
-                    <ul class="nav-list">
-                        <li class="nav-item" data-page="legislacion">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-balance-scale nav-icon"></i>
-                                <span class="nav-text">Legislación</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-page="faq">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-question-circle nav-icon"></i>
-                                <span class="nav-text">Preguntas Frecuentes</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+            <!-- Nav Pills (visible en desktop) -->
+            <nav class="nav-pills" id="navPills">
+                <button class="nav-pill active" data-page="inicio">
+                    <i class="fas fa-home"></i> Inicio
+                </button>
+                <button class="nav-pill" data-page="cursos">
+                    <i class="fas fa-graduation-cap"></i> Capacitaciones
+                </button>
+                <button class="nav-pill" data-page="convenios">
+                    <i class="fas fa-file-contract"></i> Convenios CCT
+                </button>
+                <button class="nav-pill" data-page="escalas">
+                    <i class="fas fa-money-bill-wave"></i> Escalas Salariales
+                </button>
+                <button class="nav-pill" data-page="legislacion">
+                    <i class="fas fa-balance-scale"></i> Legislación
+                </button>
+                <button class="nav-pill" data-page="faq">
+                    <i class="fas fa-question-circle"></i> Preguntas Frecuentes
+                </button>
             </nav>
 
-            <div class="sidebar-footer">
-                <div class="user-progress">
-                    <div class="progress-info">
-                        <span>Progreso General</span>
-                        <span class="progress-value" id="sidebarProgress">0%</span>
+            <div class="header-right">
+                <button class="icon-btn" id="themeBtn" title="Cambiar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <button class="icon-btn" id="notificationBtn" title="Notificaciones">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+
+                <div class="user-menu" id="userMenu">
+                    <div class="user-info">
+                        <span class="user-name" id="userName">Usuario</span>
+                        <span class="user-role" id="userRole">Delegado</span>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="sidebarProgressFill"></div>
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" class="dropdown-item"><i class="fas fa-user"></i> Mi Perfil</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-cog"></i> Configuración</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
                     </div>
                 </div>
             </div>
-        </aside>
+        </div>
+    </header>
 
-        <!-- Sidebar Overlay -->
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
 
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <div id="pageContent"></div>
-        </main>
-
-        <!-- Chat Widget -->
-        <div class="chat-widget" id="chatWidget">
-            <button class="chat-toggle" id="chatToggle" aria-label="Abrir chat">
-                <i class="fas fa-comments"></i>
-                <span class="chat-badge">1</span>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <span class="mobile-menu-title">Menú</span>
+            <button class="mobile-menu-close" id="mobileMenuClose">
+                <i class="fas fa-times"></i>
             </button>
-            <div class="chat-window hidden" id="chatWindow">
-                <div class="chat-header">
-                    <div class="chat-header-info">
-                        <div class="chat-avatar">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div>
-                            <h3>Asistente AOMA</h3>
-                            <span class="chat-status"><span class="status-dot online"></span>En línea</span>
-                        </div>
+        </div>
+
+        <div class="mobile-menu-section">
+            <div class="mobile-menu-section-title">Principal</div>
+            <button class="mobile-nav-pill active" data-page="inicio">
+                <i class="fas fa-home"></i> Inicio
+            </button>
+            <button class="mobile-nav-pill" data-page="cursos">
+                <i class="fas fa-graduation-cap"></i> Capacitaciones
+            </button>
+            <button class="mobile-nav-pill" data-page="convenios">
+                <i class="fas fa-file-contract"></i> Convenios CCT
+            </button>
+            <button class="mobile-nav-pill" data-page="escalas">
+                <i class="fas fa-money-bill-wave"></i> Escalas Salariales
+            </button>
+        </div>
+
+        <div class="mobile-menu-section">
+            <div class="mobile-menu-section-title">Por Actividad</div>
+            <button class="mobile-nav-pill" data-page="actividad-mineria-extractiva">
+                <i class="fas fa-gem"></i> Minería Extractiva
+            </button>
+            <button class="mobile-nav-pill" data-page="actividad-cemento">
+                <i class="fas fa-industry"></i> Cemento
+            </button>
+            <button class="mobile-nav-pill" data-page="actividad-cal-piedra">
+                <i class="fas fa-mountain"></i> Cal y Piedra
+            </button>
+            <button class="mobile-nav-pill" data-page="actividad-molienda">
+                <i class="fas fa-cogs"></i> Molienda
+            </button>
+        </div>
+
+        <div class="mobile-menu-section">
+            <div class="mobile-menu-section-title">Información</div>
+            <button class="mobile-nav-pill" data-page="legislacion">
+                <i class="fas fa-balance-scale"></i> Legislación
+            </button>
+            <button class="mobile-nav-pill" data-page="faq">
+                <i class="fas fa-question-circle"></i> Preguntas Frecuentes
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <div id="pageContent"></div>
+    </main>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-btn" id="chatBtn">
+            <i class="fas fa-comments"></i>
+            <span class="chat-badge">1</span>
+        </button>
+        <div class="chat-window hidden" id="chatWindow">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar"><i class="fas fa-robot"></i></div>
+                    <div>
+                        <h3>Asistente AOMA</h3>
+                        <span class="chat-status"><span class="status-dot online"></span>En línea</span>
                     </div>
-                    <button class="chat-close" id="chatClose">
-                        <i class="fas fa-times"></i>
-                    </button>
                 </div>
-                <div class="chat-messages" id="chatMessages"></div>
-                <div class="chat-quick-replies" id="chatQuickReplies"></div>
-                <form class="chat-input-form" id="chatInputForm">
-                    <input type="text" class="chat-input" id="chatInput" placeholder="Escribe tu consulta..." autocomplete="off">
-                    <button type="submit" class="chat-send">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
+                <button class="chat-close" id="chatClose"><i class="fas fa-times"></i></button>
             </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-quick-replies" id="chatQuickReplies"></div>
+            <form class="chat-form" id="chatForm">
+                <input type="text" id="chatInput" placeholder="Escribe tu consulta..." autocomplete="off">
+                <button type="submit"><i class="fas fa-paper-plane"></i></button>
+            </form>
         </div>
     </div>
 
-    <!-- Modals -->
-    <div class="modal-overlay hidden" id="modalOverlay"></div>
-    
-    <!-- Video Modal -->
-    <div class="modal video-modal hidden" id="videoModal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h3 id="videoModalTitle">Video</h3>
-                <button class="modal-close" onclick="closeModal('videoModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="video-container">
-                    <iframe id="videoFrame" class="video-iframe" src="" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div class="video-info" id="videoModalInfo"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Certificate Modal -->
-    <div class="modal certificate-modal hidden" id="certificateModal">
-        <div class="modal-content modal-medium">
-            <div class="modal-header">
-                <h3>Certificado de Finalización</h3>
-                <button class="modal-close" onclick="closeModal('certificateModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <canvas id="certificateCanvas" class="certificate-canvas"></canvas>
-                <div class="certificate-actions">
-                    <button class="btn btn-primary" onclick="downloadCertificate()">
-                        <i class="fas fa-download"></i> Descargar PDF
-                    </button>
-                    <button class="btn btn-secondary" onclick="closeModal('certificateModal')">
-                        Cerrar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Notification Toast Container -->
+    <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- Scripts -->
-    <script src="js/variables.js"></script>
-    <script src="js/utils.js"></script>
     <script src="js/data.js"></script>
     <script src="js/content/leyes/lct-20744.js"></script>
-    <script src="js/content/leyes/ley-24013.js"></script>
     <script src="js/content/leyes/ley-19587.js"></script>
     <script src="js/content/leyes/ley-23551.js"></script>
     <script src="js/content/leyes/ley-24557.js"></script>
-    <script src="js/content/convenios/ctt-36-89.js"></script>
-    <script src="js/content/convenios/ctt-37-89.js"></script>
-    <script src="js/content/convenios/ctt-38-89.js"></script>
-    <script src="js/content/convenios/ctt-53-89.js"></script>
-    <script src="js/content/convenios/ctt-54-89.js"></script>
-    <script src="js/content/convenios/ctt-veladero.js"></script>
-    <script src="js/content/convenios/ctt-gualcamayo.js"></script>
-    <script src="js/content/convenios/ctt-vicuna.js"></script>
+    <script src="js/content/leyes/ley-24013.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
