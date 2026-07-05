@@ -1444,4 +1444,180 @@ body {
     }
     
     .mobile-menu { max-width: 100%; }
+/* ============================================
+   ESTILOS DE CAPACITACIONES
+   ============================================ */
+.capacitacion-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.capacitacion-content .modulo {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.capacitacion-content .modulo-intro {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.capacitacion-content .modulo-intro h2 {
+    color: white;
+    border-bottom: 2px solid rgba(255,255,255,0.3);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.capacitacion-content .modulo-intro p {
+    color: rgba(255,255,255,0.95);
+    line-height: 1.8;
+    font-size: 1.0625rem;
+}
+
+.capacitacion-content h2 {
+    color: var(--primary);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid var(--accent);
+}
+
+.capacitacion-content h3 {
+    color: var(--primary-dark);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem;
+    padding-left: 1rem;
+    border-left: 4px solid var(--accent);
+}
+
+.capacitacion-content p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-size: 1.0625rem;
+}
+
+.capacitacion-content ul {
+    margin: 1rem 0 1.5rem 1.5rem;
+    color: var(--text-secondary);
+}
+
+.capacitacion-content ul li {
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    font-size: 1.0625rem;
+    padding-left: 0.5rem;
+}
+
+.capacitacion-content ul li::marker {
+    color: var(--accent);
+    font-size: 1.25rem;
+}
+
+.capacitacion-content blockquote {
+    background: var(--bg-input);
+    border-left: 4px solid var(--accent);
+    padding: 1.5rem 2rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 1.0625rem;
+    line-height: 1.8;
+}
+
+.capacitacion-content .tabla-modulos {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.capacitacion-content .tabla-modulos thead {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.capacitacion-content .tabla-modulos th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9375rem;
+}
+
+.capacitacion-content .tabla-modulos td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+.capacitacion-content .tabla-modulos tbody tr:hover {
+    background: var(--bg-input);
+}
+
+.capacitacion-content .modulo-bibliografia {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.capacitacion-content .modulo-bibliografia h2 {
+    color: var(--primary);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 0.75rem;
+}
+
+.capacitacion-content .modulo-bibliografia ul li {
+    margin-bottom: 1rem;
+    font-size: 0.9375rem;
+}
+
+.capacitacion-content .modulo-bibliografia ul li em {
+    color: var(--primary);
+}
+
+/* Responsive para capacitaciones */
+@media (max-width: 768px) {
+    .capacitacion-content .modulo {
+        padding: 1.25rem;
+    }
+    
+    .capacitacion-content .modulo-intro {
+        padding: 1.5rem;
+    }
+    
+    .capacitacion-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .capacitacion-content h3 {
+        font-size: 1.125rem;
+    }
+    
+    .capacitacion-content p,
+    .capacitacion-content ul li {
+        font-size: 1rem;
+    }
+    
+    .capacitacion-content blockquote {
+        padding: 1rem 1.25rem;
+    }
 }
