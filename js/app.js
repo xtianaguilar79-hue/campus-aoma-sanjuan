@@ -1,5 +1,6 @@
 // ============================================
 // APLICACIÓN PRINCIPAL - CAMPUS VIRTUAL AOMA
+// Archivo: js/app.js
 // ============================================
 
 let currentUser = null;
@@ -200,15 +201,12 @@ function getConvenios() {
 }
 
 function getCapacitaciones() {
-    // Combina cursos base de DATA.cursos con capacitaciones en archivos separados
     const capacitacionesSeparadas = [];
     
-    // Buscar capacitaciones en variables globales
     if (typeof CAPACITACION_NEGOCIACION_COLECTIVA !== 'undefined') {
         capacitacionesSeparadas.push(CAPACITACION_NEGOCIACION_COLECTIVA);
     }
     
-    // Combinar: las capacitaciones separadas reemplazan las de mismo ID
     const cursosCombinados = [...DATA.cursos];
     
     capacitacionesSeparadas.forEach(cap => {
@@ -227,6 +225,7 @@ function getCapacitaciones() {
 // EVENTOS
 // ============================================
 function setupEvents() {
+    // Menú móvil
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -247,23 +246,27 @@ function setupEvents() {
         mobileMenuOverlay.addEventListener('click', closeMobileMenu);
     }
     
+    // Navegación desktop
     document.querySelectorAll('.nav-pill').forEach(pill => {
         pill.addEventListener('click', () => {
             navigateTo(pill.dataset.page);
         });
     });
     
+    // Navegación móvil
     document.querySelectorAll('.mobile-nav-pill').forEach(pill => {
         pill.addEventListener('click', () => {
             navigateTo(pill.dataset.page);
         });
     });
     
+    // Tema oscuro
     const themeBtn = document.getElementById('themeBtn');
     if (themeBtn) {
         themeBtn.addEventListener('click', toggleTheme);
     }
     
+    // Menú usuario
     const userMenu = document.getElementById('userMenu');
     if (userMenu) {
         userMenu.addEventListener('click', (e) => {
@@ -278,10 +281,11 @@ function setupEvents() {
         if (dropdown) dropdown.classList.remove('active');
     });
     
+    // Chat - SOLO botones de abrir/cerrar
+    // El formulario lo maneja chat-ia.js con initChatIA()
     const chatBtn = document.getElementById('chatBtn');
     const chatClose = document.getElementById('chatClose');
     const chatWindow = document.getElementById('chatWindow');
-    const chatForm = document.getElementById('chatForm');
     
     if (chatBtn) {
         chatBtn.addEventListener('click', () => {
@@ -295,20 +299,8 @@ function setupEvents() {
         });
     }
     
-    if (chatForm) {
-        chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if (text) {
-                addChatMessage('user', text);
-                input.value = '';
-                setTimeout(() => {
-                    addChatMessage('bot', getBotResponse(text));
-                }, 800);
-            }
-        });
-    }
+    // ⚠️ NO agregar listener para chatForm aquí
+    // chat-ia.js ya lo maneja con la API de Groq
 }
 
 function closeMobileMenu() {
@@ -621,7 +613,6 @@ function showCursoDetalle(cursoId) {
             </div>
         </div>
         
-        <!-- BARRA DE BÚSQUEDA FIJA -->
         <div class="content-search-bar">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="contentSearchInput" placeholder="Buscar en este curso... (ej: EPP, seguridad, salario)">
@@ -735,7 +726,6 @@ function showConvenioDetalle(numero) {
             </div>
         </div>
         
-        <!-- BARRA DE BÚSQUEDA FIJA -->
         <div class="content-search-bar">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="contentSearchInput" placeholder="Buscar en este convenio... (ej: vacaciones, salario, jornada)">
@@ -871,7 +861,6 @@ function showLeyDetalle(numero) {
             </div>
         </div>
         
-        <!-- BARRA DE BÚSQUEDA FIJA -->
         <div class="content-search-bar">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="contentSearchInput" placeholder="Buscar en esta ley... (ej: vacaciones, despido, salario)">
@@ -1040,7 +1029,7 @@ function renderActividad(container, activityId) {
 }
 
 // ============================================
-// CHAT
+// CHAT - Funciones auxiliares
 // ============================================
 function addChatMessage(type, text) {
     const messages = document.getElementById('chatMessages');
@@ -1066,6 +1055,8 @@ function addChatMessage(type, text) {
     messages.scrollTop = messages.scrollHeight;
 }
 
+// ⚠️ Esta función getBotResponse queda como FALLBACK
+// Pero el chat principal usa getBotResponseGroq de chat-ia.js
 function getBotResponse(userMessage) {
     const q = userMessage.toLowerCase().trim();
     

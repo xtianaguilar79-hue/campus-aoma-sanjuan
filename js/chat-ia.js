@@ -5,40 +5,38 @@
 
 // Configuración de la API de Groq
 const GROQ_CONFIG = {
-    apiKey: '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', // ⚠️ REEMPLAZA CON TU CLAVE REAL
+    apiKey: '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',
     model: 'llama-3.3-70b-versatile',
     endpoint: 'https://api.groq.com/openai/v1/chat/completions',
     temperature: 0.7,
     maxTokens: 1000
 };
 
-// Historial de conversación (para contexto)
+// Historial de conversación
 let conversationHistory = [];
 
-// System Prompt (instrucciones para la IA)
+// System Prompt
 const SYSTEM_PROMPT = `Eres el asistente virtual del Campus Virtual AOMA San Juan (Asociación Obrera Minera Argentina).
 
 Tu rol es ayudar a delegados, dirigentes y trabajadores del sector minero con:
 - Consultas sobre convenios colectivos de trabajo (CCT)
 - Escalas salariales
-- Legislación laboral
+- Legislación laboral (LCT 20.744, Ley 19.587, Ley 23.551, Ley 24.557, Ley 24.013)
 - Cursos y capacitaciones disponibles
-- Información general sobre actividades mineras
+- Información general sobre actividades mineras (Minería Extractiva, Cemento, Cal y Piedra, Molienda)
 
 Reglas importantes:
 1. Responde de manera clara, profesional y amigable
-2. Si no sabes algo específico, recomiendales consultar las secciones del menú o contactar a la Seccional
-3. Usa emojis moderadamente para hacer la conversación más amigable
-4. Mantén las respuestas concisas (máximo 3-4 párrafos)
-5. Si te preguntan sobre temas fuera del ámbito laboral/minero, redirige amablemente al tema`;
+2. Si no sabés algo específico, recomendá consultar las secciones del menú o contactar a la Seccional al (0264) 422-XXXX
+3. Usá emojis moderadamente para hacer la conversación más amigable
+4. Mantené las respuestas concisas (máximo 3-4 párrafos)
+5. Si te preguntan sobre temas fuera del ámbito laboral/minero, redirigí amablemente al tema
+6. Si te preguntan sobre leyes específicas, citá el artículo correspondiente cuando sea posible`;
 
 // ============================================
-// FUNCIÓN PRINCIPAL: Reemplaza getBotResponse de app.js
+// FUNCIÓN PRINCIPAL: Llama a la API de Groq
 // ============================================
-async function getBotResponse(userMessage) {
-    // Mostrar indicador de "escribiendo..."
-    addChatMessage('bot', '<div class="typing-indicator"><span></span><span></span><span></span></div>');
-    
+async function getBotResponseGroq(userMessage) {
     try {
         // Agregar mensaje del usuario al historial
         conversationHistory.push({
@@ -68,7 +66,9 @@ async function getBotResponse(userMessage) {
         });
         
         if (!response.ok) {
-            throw new Error(`Error de API: ${response.status}`);
+            const errorData = await response.json().catch(() => ({}));
+            console.error('Error de Groq:', response.status, errorData);
+            throw new Error(`Error de API: ${response.status} - ${errorData.error?.message || 'Desconocido'}`);
         }
         
         const data = await response.json();
@@ -80,102 +80,179 @@ async function getBotResponse(userMessage) {
             content: botResponse
         });
         
-        // Limitar el historial a las últimas 10 conversaciones (para no gastar muchos tokens)
+        // Limitar el historial a las últimas 20 conversaciones
         if (conversationHistory.length > 20) {
             conversationHistory = conversationHistory.slice(-20);
         }
         
-        // Remover el indicador de "escribiendo" y mostrar la respuesta real
-        removeTypingIndicator();
         return botResponse;
         
     } catch (error) {
-        console.error('Error al llamar a Groq:', error);
-        removeTypingIndicator();
-        return '⚠️ Hubo un error al procesar tu consulta. Por favor, intentá de nuevo en unos segundos.';
+        console.error('❌ Error al llamar a Groq:', error);
+        return `⚠️ Hubo un error al procesar tu consulta: ${error.message}\n\nPor favor, intentá de nuevo en unos segundos. Si el problema persiste, contactá a la Seccional al (0264) 422-XXXX.`;
     }
 }
 
 // ============================================
-// FUNCIONES AUXILIARES
+// INICIALIZACIÓN DEL CHAT
 // ============================================
-function removeTypingIndicator() {
-    const messages = document.getElementById('chatMessages');
-    if (!messages) return;
+function initChatIA() {
+    console.log('🤖 Chat IA: Iniciando con Groq');
     
-    const typingIndicator = messages.querySelector('.typing-indicator');
-    if (typingIndicator) {
-        typingIndicator.parentElement.remove();
-    }
-}
-
-// ============================================
-// INICIALIZACIÓN
-// ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🤖 Chat IA: Iniciado con Groq');
-    
-    // Modificar el evento submit del formulario del chat para usar la nueva función
     const chatForm = document.getElementById('chatForm');
-    if (chatForm) {
-        // Remover el listener anterior
-        const newChatForm = chatForm.cloneNode(true);
-        chatForm.parentNode.replaceChild(newChatForm, chatForm);
-        
-        // Agregar el nuevo listener
-        newChatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            
-            if (text) {
-                addChatMessage('user', text);
-                input.value = '';
-                
-                // Llamar a la IA (ahora es asíncrono)
-                const response = await getBotResponse(text);
-                addChatMessage('bot', response);
-            }
-        });
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+    
+    if (!chatForm || !chatInput || !chatMessages) {
+        console.warn('⚠️ Elementos del chat no encontrados');
+        return;
     }
-});
+    
+    // Agregar event listener al formulario
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const text = chatInput.value.trim();
+        if (!text) return;
+        
+        // Mostrar mensaje del usuario
+        addChatMessageIA('user', text);
+        chatInput.value = '';
+        
+        // Mostrar indicador de "escribiendo"
+        const typingId = showTypingIndicator(chatMessages);
+        
+        // Llamar a la IA
+        const response = await getBotResponseGroq(text);
+        
+        // Remover indicador y mostrar respuesta
+        removeTypingIndicator(chatMessages, typingId);
+        addChatMessageIA('bot', response);
+    });
+    
+    console.log('✅ Chat IA: Listo');
+}
 
 // ============================================
-// ESTILOS PARA EL INDICADOR DE "ESCRIBIENDO"
+// FUNCIONES AUXILIARES DEL CHAT
 // ============================================
-const style = document.createElement('style');
-style.textContent = `
-    .typing-indicator {
-        display: flex;
-        gap: 4px;
-        padding: 0.5rem 0;
-    }
+function addChatMessageIA(type, text) {
+    const chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) return;
     
-    .typing-indicator span {
-        width: 8px;
-        height: 8px;
-        background: var(--text-muted);
-        border-radius: 50%;
-        animation: typing 1.4s infinite;
-    }
+    const div = document.createElement('div');
+    div.className = 'chat-message ' + type;
     
-    .typing-indicator span:nth-child(2) {
-        animation-delay: 0.2s;
-    }
+    const time = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    const avatar = type === 'user' 
+        ? (typeof currentUser !== 'undefined' && currentUser 
+            ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
+            : 'U')
+        : '<i class="fas fa-robot"></i>';
     
-    .typing-indicator span:nth-child(3) {
-        animation-delay: 0.4s;
-    }
+    // Convertir saltos de línea a <br> para formato markdown básico
+    const formattedText = text
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>');
     
-    @keyframes typing {
-        0%, 60%, 100% {
-            transform: translateY(0);
-            opacity: 0.7;
+    div.innerHTML = `
+        <div class="chat-message-avatar">${avatar}</div>
+        <div>
+            <div class="chat-message-content">${formattedText}</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">${time}</div>
+        </div>
+    `;
+    
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTypingIndicator(container) {
+    const typingId = 'typing-' + Date.now();
+    const div = document.createElement('div');
+    div.className = 'chat-message bot';
+    div.id = typingId;
+    div.innerHTML = `
+        <div class="chat-message-avatar"><i class="fas fa-robot"></i></div>
+        <div>
+            <div class="chat-message-content">
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    `;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+    return typingId;
+}
+
+function removeTypingIndicator(container, typingId) {
+    const typing = document.getElementById(typingId);
+    if (typing) typing.remove();
+}
+
+// ============================================
+// ESTILOS PARA EL INDICADOR
+// ============================================
+if (!document.getElementById('chat-ia-styles')) {
+    const style = document.createElement('style');
+    style.id = 'chat-ia-styles';
+    style.textContent = `
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 0.5rem 0;
+            align-items: center;
         }
-        30% {
-            transform: translateY(-10px);
-            opacity: 1;
+        
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--text-muted, #6b7280);
+            border-radius: 50%;
+            animation: typing-bounce 1.4s infinite;
         }
-    }
-`;
-document.head.appendChild(style);
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing-bounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+        
+        .chat-message-content strong {
+            color: var(--primary, #1e3a8a);
+        }
+        
+        .chat-message-content em {
+            color: var(--text-secondary, #4b5563);
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// ============================================
+// INICIAR CUANDO EL DOM ESTÉ LISTO
+// ============================================
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initChatIA);
+} else {
+    initChatIA();
+}
