@@ -171,16 +171,27 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Scripts -->
+    <!-- ============================================
+         SCRIPTS - ORDEN IMPORTANTE
+         ============================================ -->
+    
+    <!-- 1. Base de datos principal -->
     <script src="js/data.js"></script>
+    
+    <!-- 2. Leyes (archivos separados) -->
     <script src="js/content/leyes/lct-20744.js"></script>
     <script src="js/content/leyes/ley-19587.js"></script>
     <script src="js/content/leyes/ley-23551.js"></script>
     <script src="js/content/leyes/ley-24557.js"></script>
     <script src="js/content/leyes/ley-24013.js"></script>
-    <!-- Capacitaciones -->
+    
+    <!-- 3. Capacitaciones (archivos separados) -->
     <script src="js/content/capacitaciones/negociacion-colectiva.js"></script>
-    <script src="js/app.js"></script>
+    
+    <!-- 4. Chat IA -->
     <script src="js/chat-ia.js"></script>
+    
+    <!-- 5. Aplicación principal (DEBE IR AL FINAL) -->
+    <script src="js/app.js"></script>
 </body>
 </html>
