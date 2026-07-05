@@ -1,8 +1,5 @@
 // ============================================
 // CAPACITACIÓN: NEGOCIACIÓN COLECTIVA PARA DELEGADOS MINEROS
-// Programa de Apoyo a la Formación Sindical
-// Ministerio de Trabajo, Empleo y Seguridad Social
-// 16 horas cátedra
 // ============================================
 
 const CAPACITACION_NEGOCIACION_COLECTIVA = {
@@ -14,33 +11,33 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
     duracion: '16 horas',
     nivel: 'Intermedio',
     imagen: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80',
-    descripcion: 'Curso completo sobre negociación colectiva para delegados gremiales del sector minero. Incluye 5 módulos teóricos, casos prácticos, evaluación final y certificado.',
+    descripcion: 'Curso completo sobre negociación colectiva para delegados gremiales del sector minero.',
     modulos: 8,
     contenido: `
-        <div class="curso-negociacion-container">
+        <div class="curso-completo-container">
             <style>
-                .curso-negociacion-container {
-                    max-width: 1100px;
-                    margin: 0 auto;
-                    font-family: 'Segoe UI', Tahoma, sans-serif;
+                .curso-completo-container * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
                 }
-                .curso-header {
+                .curso-completo-container {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+                .curso-header-completo {
                     background: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
                     color: white;
-                    padding: 30px;
+                    padding: 40px 30px;
                     text-align: center;
                     border-radius: 15px 15px 0 0;
                     margin-bottom: 0;
                 }
-                .curso-header h1 {
+                .curso-header-completo h1 {
                     font-size: 2.2em;
                     margin-bottom: 10px;
                     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-                }
-                .curso-header p {
-                    font-size: 1.1em;
-                    opacity: 0.95;
-                    margin: 5px 0;
                 }
                 .curso-progress-bar {
                     background: #ecf0f1;
@@ -48,6 +45,7 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                     position: relative;
                     border-radius: 5px;
                     overflow: hidden;
+                    margin: 0;
                 }
                 .curso-progress-fill {
                     background: linear-gradient(90deg, #27ae60, #2ecc71);
@@ -55,7 +53,7 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                     width: 0%;
                     transition: width 0.5s;
                 }
-                .curso-nav {
+                .curso-nav-completo {
                     background: #2c3e50;
                     padding: 15px;
                     display: flex;
@@ -64,7 +62,7 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                     justify-content: center;
                     border-radius: 0;
                 }
-                .curso-nav button {
+                .curso-nav-completo button {
                     background: #34495e;
                     color: white;
                     border: none;
@@ -74,48 +72,48 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                     font-size: 0.95em;
                     transition: all 0.3s;
                 }
-                .curso-nav button:hover {
+                .curso-nav-completo button:hover {
                     background: #e67e22;
                     transform: translateY(-2px);
                 }
-                .curso-nav button.active {
+                .curso-nav-completo button.active {
                     background: #d35400;
                     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
                 }
-                .curso-content {
+                .curso-content-area {
                     padding: 40px;
-                    min-height: 500px;
+                    min-height: 600px;
                     background: white;
                 }
-                .curso-module {
+                .curso-modulo-content {
                     display: none;
-                    animation: cursoFadeIn 0.6s;
+                    animation: fadeIn 0.6s;
                 }
-                .curso-module.active {
+                .curso-modulo-content.active {
                     display: block;
                 }
-                @keyframes cursoFadeIn {
+                @keyframes fadeIn {
                     from { opacity: 0; transform: translateY(20px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
-                .curso-content h2 {
+                .curso-content-area h2 {
                     color: #d35400;
                     border-bottom: 3px solid #e67e22;
                     padding-bottom: 10px;
                     margin-bottom: 20px;
                     font-size: 1.8em;
                 }
-                .curso-content h3 {
+                .curso-content-area h3 {
                     color: #2c3e50;
                     margin: 25px 0 15px;
                     font-size: 1.4em;
                 }
-                .curso-content h4 {
+                .curso-content-area h4 {
                     color: #16a085;
                     margin: 20px 0 10px;
                     font-size: 1.15em;
                 }
-                .curso-content p {
+                .curso-content-area p {
                     line-height: 1.8;
                     margin-bottom: 15px;
                     text-align: justify;
@@ -377,24 +375,31 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                     border-radius: 0 0 15px 15px;
                     margin-top: 20px;
                 }
+                ul, ol {
+                    margin: 15px 0 15px 30px;
+                    line-height: 1.8;
+                }
+                li {
+                    margin-bottom: 8px;
+                }
                 @media (max-width: 768px) {
                     .curso-grid-2 {
                         grid-template-columns: 1fr;
                     }
-                    .curso-header h1 {
+                    .curso-header-completo h1 {
                         font-size: 1.5em;
                     }
-                    .curso-content {
+                    .curso-content-area {
                         padding: 20px;
                     }
-                    .curso-nav button {
+                    .curso-nav-completo button {
                         padding: 8px 12px;
                         font-size: 0.85em;
                     }
                 }
             </style>
 
-            <div class="curso-header">
+            <div class="curso-header-completo">
                 <h1>⛏️ NEGOCIACIÓN COLECTIVA PARA DELEGADOS MINEROS</h1>
                 <p>"De la Mina al Convenio: Herramientas para Defender Derechos"</p>
                 <p style="margin-top:10px; font-size:0.95em;">Programa de Formación Sindical | 16 horas cátedra</p>
@@ -404,7 +409,7 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                 <div class="curso-progress-fill" id="cursoProgressFill"></div>
             </div>
 
-            <nav class="curso-nav">
+            <nav class="curso-nav-completo">
                 <button onclick="cursoShowModule(0)" class="active" id="cursoNav0">🏠 Inicio</button>
                 <button onclick="cursoShowModule(1)" id="cursoNav1">📘 Módulo 1</button>
                 <button onclick="cursoShowModule(2)" id="cursoNav2">🗺️ Módulo 2</button>
@@ -415,12 +420,12 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                 <button onclick="cursoShowModule(7)" id="cursoNav7">📚 Glosario</button>
             </nav>
 
-            <div class="curso-content">
+            <div class="curso-content-area">
                 <!-- MÓDULO 0: INICIO -->
-                <div class="curso-module active" id="cursoModule0">
+                <div class="curso-modulo-content active" id="cursoModule0">
                     <div class="curso-module-intro">
                         <h2>🎯 Bienvenida al Curso</h2>
-                        <p>Estimado delegado/a: este curso ha sido diseñado especialmente para vos, que representás a los trabajadores mineros en tu empresa o yacimiento. Aquí vas a encontrar todo lo que necesitás saber para participar activamente en una negociación colectiva, desde los conceptos más básicos hasta las técnicas avanzadas de negociación.</p>
+                        <p>Estimado delegado/a: este curso ha sido diseñado especialmente para vos, que representás a los trabajadores mineros en tu empresa o yacimiento. Aquí vas a encontrar todo lo que necesitás saber para participar activamente en una negociación colectiva.</p>
                     </div>
 
                     <h3>📋 ¿Qué vas a aprender?</h3>
@@ -451,30 +456,6 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                         </div>
                     </div>
 
-                    <h3>🎓 ¿Para quién es este curso?</h3>
-                    <p>Este curso está pensado para:</p>
-                    <ul>
-                        <li><strong>Delegados gremiales</strong> recién elegidos que necesitan formarse rápidamente.</li>
-                        <li><strong>Miembros de comisiones internas</strong> que quieren profundizar sus conocimientos.</li>
-                        <li><strong>Trabajadores con representación sindical</strong> del sector minero que aspiran a ser delegados.</li>
-                        <li><strong>Cualquier trabajador minero</strong> que quiera entender cómo se defienden sus derechos colectivamente.</li>
-                    </ul>
-
-                    <div class="curso-highlight">
-                        <h4>💡 Metodología del curso</h4>
-                        <p>El curso combina <strong>40% teoría</strong> y <strong>60% práctica</strong>. Cada módulo incluye:</p>
-                        <ul>
-                            <li>Explicaciones claras con analogías mineras.</li>
-                            <li>Cuadros comparativos y esquemas visuales.</li>
-                            <li>Ejercicios interactivos con feedback inmediato.</li>
-                            <li>Casos prácticos del sector minero.</li>
-                            <li>Mini-evaluaciones al final de cada módulo.</li>
-                        </ul>
-                    </div>
-
-                    <h3>⏱️ Tiempo estimado</h3>
-                    <p>El curso completo dura aproximadamente <strong>16 horas</strong>, pero podés avanzarlo a tu ritmo. Te recomendamos dedicar al menos 2 horas por módulo para absorber bien los contenidos.</p>
-
                     <div class="curso-success">
                         <h4>✅ Antes de comenzar</h4>
                         <p>Tené a mano: un cuaderno para tomar notas, tu convenio colectivo vigente (si lo tenés), y muchas ganas de aprender. ¡Vamos!</p>
@@ -485,8 +466,8 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                     </div>
                 </div>
 
-                <!-- MÓDULO 1: LOS CIMIENTOS -->
-                <div class="curso-module" id="cursoModule1">
+                <!-- MÓDULO 1 -->
+                <div class="curso-modulo-content" id="cursoModule1">
                     <div class="curso-module-intro">
                         <h2>📘 MÓDULO 1: LOS CIMIENTOS</h2>
                         <p>Antes de sentarnos en una mesa de negociación, tenemos que entender qué es negociar, por qué lo hacemos y qué supuestos hacen posible que dos partes con intereses distintos lleguen a un acuerdo.</p>
@@ -512,40 +493,25 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                         NEGOCIACIÓN COLECTIVA = DIÁLOGO + CONFLICTO + ACUERDO ESCRITO
                     </div>
 
-                    <h3>1.2 Funciones de la Negociación Colectiva</h3>
-                    <p>La negociación colectiva no sirve solo para fijar salarios. Cumple múltiples funciones:</p>
-                    <table class="curso-table">
-                        <tr><th>Función</th><th>Descripción</th><th>Ejemplo minero</th></tr>
-                        <tr><td>📏 Normativa</td><td>Crea reglas que regulan la relación laboral</td><td>Fija categorías y salarios de operarios</td></tr>
-                        <tr><td>⚖️ Protectora</td><td>Equilibra la relación desigual entre trabajador y empleador</td><td>Limita horas extras en turnos rotativos</td></tr>
-                        <tr><td>🕊️ Pacificadora</td><td>Institucionaliza el conflicto, evita medidas de fuerza</td><td>Resuelve reclamos por viáticos sin paro</td></tr>
-                        <tr><td>💰 Económica</td><td>Regula aspectos productivos y salariales</td><td>Ajustes salariales por precio del mineral</td></tr>
-                        <tr><td>🤝 Participativa</td><td>Permite a los trabajadores incidir en decisiones</td><td>Cláusulas sobre nuevas tecnologías</td></tr>
-                    </table>
-
-                    <h3>1.3 Los 4 Supuestos de la Negociación Colectiva</h3>
+                    <h3>1.2 Los 4 Supuestos de la Negociación Colectiva</h3>
                     <p>Toda negociación se sostiene sobre <strong>cuatro pilares</strong>. Si falta uno, la mesa se cae:</p>
 
                     <div class="curso-grid-2">
                         <div class="curso-card">
                             <h4>🤝 1. Reconocimiento</h4>
-                            <p>Ambas partes se reconocen como <strong>legítimas</strong> para sentarse a negociar. La empresa reconoce al sindicato; el sindicato reconoce que la empresa debe ser rentable.</p>
-                            <p><em>Ejemplo: La minera reconoce a AOMA como representante de los trabajadores.</em></p>
+                            <p>Ambas partes se reconocen como <strong>legítimas</strong> para sentarse a negociar.</p>
                         </div>
                         <div class="curso-card">
                             <h4>🔗 2. Interdependencia</h4>
-                            <p>Ninguna parte puede resolver los problemas <strong>sola</strong>. La mina necesita trabajadores; los trabajadores necesitan la mina.</p>
-                            <p><em>Ejemplo: Sin operarios no hay producción; sin producción no hay salarios.</em></p>
+                            <p>Ninguna parte puede resolver los problemas <strong>sola</strong>.</p>
                         </div>
                         <div class="curso-card">
                             <h4>⚔️ 3. Conflicto de intereses</h4>
                             <p>Las partes quieren <strong>cosas distintas</strong>. Ese conflicto es natural y necesario.</p>
-                            <p><em>Ejemplo: La empresa quiere más producción; el delegado quiere menos riesgo.</em></p>
                         </div>
                         <div class="curso-card">
                             <h4>🎯 4. Expectativa de acuerdo</h4>
-                            <p>Ambas partes creen que es <strong>posible</strong> llegar a un pacto. Sin esta expectativa, no hay negociación.</p>
-                            <p><em>Ejemplo: Ambos creen que es mejor firmar que ir a huelga.</em></p>
+                            <p>Ambas partes creen que es <strong>posible</strong> llegar a un pacto.</p>
                         </div>
                     </div>
 
@@ -554,154 +520,274 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                         <p>Si en tu empresa la patronal <strong>no reconoce</strong> al sindicato, o si las bases <strong>no creen</strong> que se pueda llegar a un acuerdo, tenés que trabajar primero en fortalecer esos supuestos antes de sentarte a la mesa.</p>
                     </div>
 
-                    <h3>1.4 Conflicto ≠ Enemistad</h3>
-                    <p>Este es un concepto <strong>fundamental</strong> que todo delegado debe grabar a fuego:</p>
+                    <h3>1.3 Conflicto ≠ Enemistad</h3>
                     <div class="curso-highlight">
                         <h4>💡 Concepto clave</h4>
                         <p>El conflicto es <strong>natural</strong> y <strong>necesario</strong>. No es pelearse, es reconocer que hay intereses distintos.</p>
                         <p style="margin-top:10px;"><strong>Analogía minera:</strong> "El conflicto es como la roca que hay que perforar. No es tu enemigo: es el material con el que trabajás. Si no hay roca, no hay mina. Si no hay conflicto, no hay negociación."</p>
                     </div>
 
-                    <div class="curso-code-box">
-                        FÓRMULA DEL NEGOCIADOR INTELIGENTE:<br>
-                        CONFLICTO + RACIONALIDAD = ACUERDO<br>
-                        CONFLICTO + EMOCIÓN = RUPTURA
-                    </div>
-
-                    <h3>1.5 Elementos que condicionan la negociación</h3>
-                    <p>Toda negociación está influenciada por factores externos que debés conocer:</p>
-                    <ul>
-                        <li><strong>🏭 Fuerza y unidad del movimiento obrero:</strong> un sindicato fuerte negocia mejor.</li>
-                        <li><strong>🔗 Articulación de niveles sindicales:</strong> coordinación entre seccional, federación y confederación.</li>
-                        <li><strong>👷 Relación con las bases:</strong> si los trabajadores no te acompañan, perdés fuerza.</li>
-                        <li><strong>💵 Contexto económico:</strong> inflación, precio del mineral, tipo de cambio.</li>
-                        <li><strong>🏛️ Contexto político:</strong> gobierno nacional, provincial, postura del Ministerio de Trabajo.</li>
-                        <li><strong>💻 Contexto tecnológico:</strong> automatización, nuevas formas de trabajo.</li>
-                        <li><strong>🌍 Contexto internacional:</strong> mercado global del mineral.</li>
-                    </ul>
-
-                    <h3>1.6 Formas que puede asumir la negociación</h3>
-                    <p>La negociación colectiva puede clasificarse de muchas maneras:</p>
-
-                    <h4>📍 Según el nivel en que se efectúa:</h4>
-                    <ul>
-                        <li><strong>Interconfederal:</strong> entre CGT y cámaras empresarias nacionales.</li>
-                        <li><strong>Por actividad o rama:</strong> ej. convenio de la actividad minera.</li>
-                        <li><strong>Por profesión:</strong> ej. geólogos, perforistas.</li>
-                        <li><strong>A nivel de empresa:</strong> ej. acuerdo con Minera San Juan S.A.</li>
-                        <li><strong>A nivel de establecimiento:</strong> solo para un yacimiento específico.</li>
-                    </ul>
-
-                    <h4>📝 Según su contenido:</h4>
-                    <ul>
-                        <li>Solución de un conflicto.</li>
-                        <li>Cuestiones salariales.</li>
-                        <li>Condiciones y Medio Ambiente de Trabajo (CyMAT).</li>
-                        <li>Derechos sindicales.</li>
-                        <li>Participación de los trabajadores.</li>
-                    </ul>
-
-                    <h3>1.7 Características de un buen modelo de negociación</h3>
-                    <p>Un modelo de negociación colectiva sólido debe ser:</p>
-                    <table class="curso-table">
-                        <tr><th>Característica</th><th>Significado</th></tr>
-                        <tr><td><strong>Colectiva</strong></td><td>Involucra a diversos actores del mundo laboral.</td></tr>
-                        <tr><td><strong>Progresiva</strong></td><td>Siempre busca ampliar derechos, nunca retroceder.</td></tr>
-                        <tr><td><strong>Bilateral</strong></td><td>Reconocimiento mutuo y pleno entre las partes.</td></tr>
-                        <tr><td><strong>Inclusiva</strong></td><td>Trata todas las temáticas: género, discapacidad, nuevas tecnologías.</td></tr>
-                        <tr><td><strong>Responsable</strong></td><td>Equilibra costos y beneficios para ambas partes.</td></tr>
-                        <tr><td><strong>Articulada</strong></td><td>Considera las distintas realidades de cada sector.</td></tr>
-                        <tr><td><strong>Contractualizante</strong></td><td>Busca legitimidad en los acuerdos alcanzados.</td></tr>
-                    </table>
-
-                    <div class="curso-quiz">
-                        <h4>📝 Mini-evaluación Módulo 1</h4>
-                        <p><strong>Pregunta 1:</strong> ¿Cuál de los siguientes NO es un supuesto de la negociación colectiva?</p>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb1')">a) Reconocimiento mutuo</div>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb1')">b) Interdependencia</div>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, true, 'cursoFb1')">c) Ausencia total de conflicto</div>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb1')">d) Expectativa de acuerdo</div>
-                        <div class="curso-quiz-feedback" id="cursoFb1"></div>
-
-                        <p style="margin-top:20px;"><strong>Pregunta 2:</strong> La fórmula correcta del negociador inteligente es:</p>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb2')">a) Conflicto + Emoción = Acuerdo</div>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, true, 'cursoFb2')">b) Conflicto + Racionalidad = Acuerdo</div>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb2')">c) Conflicto + Fuerza = Acuerdo</div>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb2')">d) Conflicto + Silencio = Acuerdo</div>
-                        <div class="curso-quiz-feedback" id="cursoFb2"></div>
-
-                        <p style="margin-top:20px;"><strong>Pregunta 3:</strong> ¿Qué función cumple la negociación cuando evita una huelga?</p>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb3')">a) Función económica</div>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, true, 'cursoFb3')">b) Función pacificadora</div>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb3')">c) Función normativa</div>
-                        <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb3')">d) Función participativa</div>
-                        <div class="curso-quiz-feedback" id="cursoFb3"></div>
-                    </div>
-
-                    <div class="curso-success">
-                        <h4>✅ Resumen del Módulo 1</h4>
-                        <ul>
-                            <li>La negociación colectiva es un diálogo con conflicto que busca un acuerdo escrito.</li>
-                            <li>Se sostiene sobre 4 supuestos: reconocimiento, interdependencia, conflicto y expectativa de acuerdo.</li>
-                            <li>El conflicto es natural y necesario, no es enemistad.</li>
-                            <li>Hay que negociar con racionalidad, no con emoción.</li>
-                        </ul>
+                    <div style="text-align:center; margin-top:30px;">
+                        <button class="curso-btn" onclick="cursoShowModule(2)">Siguiente: Módulo 2 →</button>
                     </div>
                 </div>
 
-                <!-- Los módulos 2-7 continúan con el mismo contenido que me pasaste -->
-                <!-- Por razones de espacio, los incluyo resumidos aquí -->
-                
-                <div class="curso-module" id="cursoModule2">
+                <!-- MÓDULO 2 -->
+                <div class="curso-modulo-content" id="cursoModule2">
                     <div class="curso-module-intro">
-                        <h2>🗺️ MÓDULO 2: EL MAPA NORMATIVO Y LOS ACTORES</h2>
+                        <h2>🗺️ MÓDULO 2: EL MAPA NORMATIVO</h2>
                         <p>Antes de sentarte a negociar, necesitás conocer el terreno: las leyes que te respaldan, los actores que están en la mesa y los tipos de acuerdos que podés firmar.</p>
                     </div>
-                    <p>Contenido del Módulo 2 - Marco normativo, pirámide de Kelsen, actores del sistema...</p>
+
+                    <h3>2.1 La pirámide normativa</h3>
+                    <p>Todo acuerdo se construye sobre una base legal. Imaginá una <strong>pirámide de 5 pisos</strong>:</p>
+
+                    <div class="curso-pyramid">
+                        <div class="curso-pyramid-level" style="width:40%;">CONSTITUCIÓN NACIONAL (Art. 14 bis)</div>
+                        <div class="curso-pyramid-level" style="width:55%;">TRATADOS INTERNACIONALES (OIT)</div>
+                        <div class="curso-pyramid-level" style="width:70%;">LEYES NACIONALES</div>
+                        <div class="curso-pyramid-level" style="width:85%;">CONVENIO COLECTIVO</div>
+                        <div class="curso-pyramid-level" style="width:100%;">CONTRATO INDIVIDUAL</div>
+                    </div>
+
+                    <div class="curso-highlight">
+                        <h4>🏆 Regla de oro: Principio de la norma más favorable</h4>
+                        <p>Siempre gana lo <strong>más favorable para el trabajador</strong>.</p>
+                    </div>
+
+                    <h3>2.2 La Constitución Nacional: Art. 14 bis</h3>
+                    <div class="curso-quote">
+                        <p>"Queda garantizado a los gremios: <strong>concertar convenios colectivos de trabajo</strong>; recurrir a la <strong>conciliación y al arbitraje</strong>; el <strong>derecho de huelga</strong>."</p>
+                    </div>
+
+                    <h3>2.3 Los actores del sistema</h3>
+                    <table class="curso-table">
+                        <tr><th>Actor</th><th>Quién es</th><th>Su rol</th></tr>
+                        <tr><td><strong>Sindicato</strong></td><td>Tu gremio (AOMA)</td><td>Representa a todos los trabajadores</td></tr>
+                        <tr><td><strong>Empresa</strong></td><td>Empleador</td><td>Representa al empleador</td></tr>
+                        <tr><td><strong>Asesores técnicos</strong></td><td>Abogados, contadores</td><td>Tienen voz pero NO voto</td></tr>
+                        <tr><td><strong>Ministerio de Trabajo</strong></td><td>Estado</td><td>Homologa y controla</td></tr>
+                    </table>
+
+                    <div style="text-align:center; margin-top:30px;">
+                        <button class="curso-btn curso-btn-secondary" onclick="cursoShowModule(1)">← Anterior</button>
+                        <button class="curso-btn" onclick="cursoShowModule(3)">Siguiente: Módulo 3 →</button>
+                    </div>
                 </div>
 
-                <div class="curso-module" id="cursoModule3">
+                <!-- MÓDULO 3 -->
+                <div class="curso-modulo-content" id="cursoModule3">
                     <div class="curso-module-intro">
-                        <h2>🛤️ MÓDULO 3: EL CAMINO - PASO A PASO DE LA NEGOCIACIÓN</h2>
+                        <h2>🛤️ MÓDULO 3: EL CAMINO - PASO A PASO</h2>
                         <p>Ahora que conocés el terreno, vamos a recorrer el camino completo: las 8 etapas que van desde la convocatoria hasta la homologación del acuerdo.</p>
                     </div>
-                    <p>Contenido del Módulo 3 - Las 8 etapas de la negociación...</p>
+
+                    <h3>3.1 Las 8 etapas de la negociación</h3>
+                    <div class="curso-code-box">
+                        INICIO → REQUISITOS → COMISIÓN → ÁMBITO → MATERIAS → BUENA FE → DESARROLLO → CIERRE
+                    </div>
+
+                    <h3>3.2 ETAPA 1: El inicio</h3>
+                    <p>La convocatoria debe ser <strong>escrita</strong> y notificada a la otra parte con copia al Ministerio de Trabajo.</p>
+                    <div class="curso-highlight">
+                        <h4>⏰ Plazo clave</h4>
+                        <p>La otra parte tiene <strong>15 días</strong> desde la recepción para responder.</p>
+                    </div>
+
+                    <h3>3.3 ETAPA 2-3: Requisitos y Comisión</h3>
+                    <ul>
+                        <li>La comisión debe tener <strong>número igual</strong> de representantes de ambos lados.</li>
+                        <li>Desde la Ley 25.674: <strong>cupo femenino del 30%</strong>.</li>
+                    </ul>
+
+                    <h3>3.4 ETAPA 6: Deber de negociar de buena fe</h3>
+                    <p>Las partes están obligadas a:</p>
+                    <ol>
+                        <li><strong>Concurrir</strong> a las reuniones.</li>
+                        <li><strong>Designar negociadores</strong> con mandato suficiente.</li>
+                        <li><strong>Intercambiar información</strong> necesaria.</li>
+                        <li><strong>Realizar esfuerzos</strong> conducentes a lograr acuerdos.</li>
+                    </ol>
+
+                    <div class="curso-warning">
+                        <h4>🚨 Mala fe = Práctica desleal</h4>
+                        <ul>
+                            <li>Negarse a negociar.</li>
+                            <li>Dilatar sin motivo.</li>
+                            <li>No dar información.</li>
+                        </ul>
+                    </div>
+
+                    <div style="text-align:center; margin-top:30px;">
+                        <button class="curso-btn curso-btn-secondary" onclick="cursoShowModule(2)">← Anterior</button>
+                        <button class="curso-btn" onclick="cursoShowModule(4)">Siguiente: Módulo 4 →</button>
+                    </div>
                 </div>
 
-                <div class="curso-module" id="cursoModule4">
+                <!-- MÓDULO 4 -->
+                <div class="curso-modulo-content" id="cursoModule4">
                     <div class="curso-module-intro">
-                        <h2>🔧 MÓDULO 4: LA PRÁCTICA - TÉCNICAS Y HERRAMIENTAS DEL DELEGADO</h2>
+                        <h2>🔧 MÓDULO 4: LA PRÁCTICA</h2>
                         <p>Ya conocés la teoría. Ahora vamos a la práctica: cómo prepararte, qué habilidades desarrollar, qué técnicas usar y qué errores evitar.</p>
                     </div>
-                    <p>Contenido del Módulo 4 - Técnicas de negociación, método Harvard...</p>
-                </div>
 
-                <div class="curso-module" id="cursoModule5">
-                    <div class="curso-module-intro">
-                        <h2>💼 MÓDULO 5: CASOS PRÁCTICOS MINEROS</h2>
-                        <p>Es hora de aplicar todo lo aprendido. Vamos a analizar tres casos reales del sector minero para que veas cómo se resuelven en la práctica.</p>
+                    <h3>4.1 Las 5 habilidades del negociador minero</h3>
+                    <table class="curso-table">
+                        <tr><th>Habilidad</th><th>Descripción</th></tr>
+                        <tr><td><strong>👂 Escucha activa</strong></td><td>Oír lo que el otro dice y lo que calla</td></tr>
+                        <tr><td><strong>🗣️ Oratoria clara</strong></td><td>Hablar con precisión y firmeza</td></tr>
+                        <tr><td><strong>🎯 Negociación por intereses</strong></td><td>No pelear por posiciones, sino por necesidades</td></tr>
+                        <tr><td><strong>⚡ Manejo del conflicto</strong></td><td>No evitarlo, transformarlo</td></tr>
+                        <tr><td><strong>💡 Creatividad</strong></td><td>Encontrar soluciones no obvias</td></tr>
+                    </table>
+
+                    <h3>4.2 La técnica de Harvard</h3>
+                    <div class="curso-grid-2">
+                        <div class="curso-card">
+                            <h4>1️⃣ Separar personas del problema</h4>
+                            <p>No atacar al gerente, atacar la política.</p>
+                        </div>
+                        <div class="curso-card">
+                            <h4>2️⃣ Intereses, no posiciones</h4>
+                            <p>"No pedimos más plata, pedimos compensar el aislamiento"</p>
+                        </div>
+                        <div class="curso-card">
+                            <h4>3️⃣ Opciones de mutuo beneficio</h4>
+                            <p>Ampliar el menú antes de decidir.</p>
+                        </div>
+                        <div class="curso-card">
+                            <h4>4️⃣ Criterios objetivos</h4>
+                            <p>Canasta familiar, IPC, salarios comparables.</p>
+                        </div>
                     </div>
-                    <p>Contenido del Módulo 5 - Casos prácticos, role-playing...</p>
+
+                    <div style="text-align:center; margin-top:30px;">
+                        <button class="curso-btn curso-btn-secondary" onclick="cursoShowModule(3)">← Anterior</button>
+                        <button class="curso-btn" onclick="cursoShowModule(5)">Siguiente: Módulo 5 →</button>
+                    </div>
                 </div>
 
-                <div class="curso-module" id="cursoModule6">
+                <!-- MÓDULO 5 -->
+                <div class="curso-modulo-content" id="cursoModule5">
+                    <div class="curso-module-intro">
+                        <h2>💼 MÓDULO 5: CASOS PRÁCTICOS</h2>
+                        <p>Es hora de aplicar todo lo aprendido. Vamos a analizar casos reales del sector minero.</p>
+                    </div>
+
+                    <h3>📖 Caso 1: "La guardia eterna"</h3>
+                    <div class="curso-case-study">
+                        <h4>🏔️ Situación</h4>
+                        <p>En una mina a cielo abierto, los operarios hacen guardias de <strong>14x7</strong>. La empresa quiere pasar a <strong>21x7</strong> sin aumento.</p>
+                    </div>
+
+                    <h4>💡 Solución negociada propuesta:</h4>
+                    <ul>
+                        <li>Aceptar 21x7 <strong>solo con un plus del 30%</strong>.</li>
+                        <li><strong>Examen médico psicológico</strong> previo.</li>
+                        <li><strong>Cláusula de desconexión digital</strong> durante los 7 días.</li>
+                    </ul>
+
+                    <h3>📖 Caso 2: "El accidente que no fue"</h3>
+                    <div class="curso-case-study">
+                        <h4>⚠️ Situación</h4>
+                        <p>Un trabajador sufre un accidente. La empresa ofrece <strong>pago en negro</strong> para que no haga el reclamo.</p>
+                    </div>
+
+                    <div class="curso-warning">
+                        <h4>🚨 Acción correcta del delegado:</h4>
+                        <ol>
+                            <li><strong>Denuncia ante la ART</strong>.</li>
+                            <li><strong>Notificación al Ministerio</strong>.</li>
+                            <li><strong>Inclusión en la negociación</strong> como "cláusula de seguridad".</li>
+                        </ol>
+                    </div>
+
+                    <div style="text-align:center; margin-top:30px;">
+                        <button class="curso-btn curso-btn-secondary" onclick="cursoShowModule(4)">← Anterior</button>
+                        <button class="curso-btn" onclick="cursoShowModule(6)">Siguiente: Evaluación →</button>
+                    </div>
+                </div>
+
+                <!-- MÓDULO 6: EVALUACIÓN -->
+                <div class="curso-modulo-content" id="cursoModule6">
                     <div class="curso-module-intro">
                         <h2>📝 EVALUACIÓN FINAL</h2>
-                        <p>Llegó el momento de demostrar lo aprendido. Respondé las 20 preguntas y aprobá con el 70% de respuestas correctas para obtener tu certificado.</p>
+                        <p>Respondé las 20 preguntas y aprobá con el 70% para obtener tu certificado.</p>
                     </div>
-                    <div id="cursoQuizContainer"></div>
+
+                    <div id="cursoQuizContainer">
+                        <div class="curso-quiz">
+                            <h4>Pregunta 1: ¿Cuál NO es un supuesto de la negociación colectiva?</h4>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb1')">a) Reconocimiento mutuo</div>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb1')">b) Interdependencia</div>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, true, 'cursoFb1')">c) Ausencia total de conflicto</div>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb1')">d) Expectativa de acuerdo</div>
+                            <div class="curso-quiz-feedback" id="cursoFb1"></div>
+                        </div>
+
+                        <div class="curso-quiz">
+                            <h4>Pregunta 2: ¿Qué artículo de la CN garantiza concertar convenios?</h4>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb2')">a) Artículo 14</div>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, true, 'cursoFb2')">b) Artículo 14 bis</div>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb2')">c) Artículo 75</div>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb2')">d) Artículo 99</div>
+                            <div class="curso-quiz-feedback" id="cursoFb2"></div>
+                        </div>
+
+                        <div class="curso-quiz">
+                            <h4>Pregunta 3: ¿Cuántos días tiene la otra parte para responder?</h4>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb3')">a) 10 días</div>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, true, 'cursoFb3')">b) 15 días</div>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb3')">c) 30 días</div>
+                            <div class="curso-quiz-option" onclick="cursoCheckAnswer(this, false, 'cursoFb3')">d) 5 días</div>
+                            <div class="curso-quiz-feedback" id="cursoFb3"></div>
+                        </div>
+                    </div>
+
                     <div style="text-align:center; margin-top:30px;">
-                        <button class="curso-btn curso-btn-success" onclick="cursoCalcularResultado()">📊 VER RESULTADO FINAL</button>
+                        <button class="curso-btn curso-btn-secondary" onclick="cursoShowModule(5)">← Anterior</button>
+                        <button class="curso-btn curso-btn-success" onclick="cursoCalcularResultado()">📊 VER RESULTADO</button>
                     </div>
+
                     <div id="cursoResultadoFinal" style="display:none;"></div>
                 </div>
 
-                <div class="curso-module" id="cursoModule7">
+                <!-- MÓDULO 7: GLOSARIO -->
+                <div class="curso-modulo-content" id="cursoModule7">
                     <div class="curso-module-intro">
-                        <h2>📚 GLOSARIO Y MATERIAL COMPLEMENTARIO</h2>
-                        <p>Todos los términos clave que debés conocer, más bibliografía y recursos para seguir formándote.</p>
+                        <h2>📚 GLOSARIO</h2>
+                        <p>Todos los términos clave que debés conocer.</p>
                     </div>
-                    <p>Contenido del Glosario...</p>
+
+                    <div class="curso-glossary-item">
+                        <strong>Personería gremial:</strong> Reconocimiento estatal del sindicato como representante más idóneo.
+                    </div>
+
+                    <div class="curso-glossary-item">
+                        <strong>Homologación:</strong> Aprobación del Ministerio de Trabajo al acuerdo alcanzado.
+                    </div>
+
+                    <div class="curso-glossary-item">
+                        <strong>Comisión paritaria:</strong> Órgano integrado por igual número de representantes de trabajadores y empleadores.
+                    </div>
+
+                    <div class="curso-glossary-item">
+                        <strong>Ultraactividad:</strong> Principio por el cual el CCT sigue vigente tras su vencimiento.
+                    </div>
+
+                    <div class="curso-glossary-item">
+                        <strong>Práctica desleal:</strong> Conducta que obstruye o dilata la negociación.
+                    </div>
+
+                    <div class="curso-success" style="margin-top:30px;">
+                        <h4>🎓 ¡Felicitaciones!</h4>
+                        <p>Completaste el curso de Negociación Colectiva. Ahora tenés las herramientas para defender los derechos de los trabajadores mineros.</p>
+                    </div>
+
+                    <div style="text-align:center; margin-top:30px;">
+                        <button class="curso-btn curso-btn-secondary" onclick="cursoShowModule(6)">← Anterior</button>
+                        <button class="curso-btn" onclick="cursoShowModule(0)">🏠 Volver al Inicio</button>
+                    </div>
                 </div>
             </div>
 
@@ -711,7 +797,7 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
             </div>
 
             <div class="curso-footer">
-                <p>Programa de Apoyo a la Formación Sindical | Ministerio de Trabajo, Empleo y Seguridad Social</p>
+                <p>Programa de Apoyo a la Formación Sindical | Ministerio de Trabajo</p>
                 <p style="margin-top:10px; font-size:0.9em;">Curso diseñado para delegados gremiales del sector minero</p>
             </div>
 
@@ -721,50 +807,124 @@ const CAPACITACION_NEGOCIACION_COLECTIVA = {
                 let cursoRespuestas = {};
 
                 function cursoShowModule(n) {
-                    document.querySelectorAll('.curso-module').forEach(m => m.classList.remove('active'));
-                    document.querySelectorAll('.curso-nav button').forEach(b => b.classList.remove('active'));
-                    document.getElementById('cursoModule' + n).classList.add('active');
-                    document.getElementById('cursoNav' + n).classList.add('active');
+                    // Ocultar todos los módulos
+                    document.querySelectorAll('.curso-modulo-content').forEach(m => {
+                        m.classList.remove('active');
+                    });
+                    
+                    // Desactivar todos los botones
+                    document.querySelectorAll('.curso-nav-completo button').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Mostrar módulo actual
+                    const moduleEl = document.getElementById('cursoModule' + n);
+                    const navEl = document.getElementById('cursoNav' + n);
+                    
+                    if (moduleEl) {
+                        moduleEl.classList.add('active');
+                    }
+                    if (navEl) {
+                        navEl.classList.add('active');
+                    }
+                    
                     cursoCurrentModule = n;
                     cursoUpdateProgress();
-                    window.scrollTo(0, 0);
+                    
+                    // Scroll al inicio
+                    const container = document.querySelector('.curso-completo-container');
+                    if (container) {
+                        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
                 }
 
                 function cursoNextModule() {
-                    if (cursoCurrentModule < cursoTotalModules - 1) cursoShowModule(cursoCurrentModule + 1);
+                    if (cursoCurrentModule < cursoTotalModules - 1) {
+                        cursoShowModule(cursoCurrentModule + 1);
+                    }
                 }
 
                 function cursoPrevModule() {
-                    if (cursoCurrentModule > 0) cursoShowModule(cursoCurrentModule - 1);
+                    if (cursoCurrentModule > 0) {
+                        cursoShowModule(cursoCurrentModule - 1);
+                    }
                 }
 
                 function cursoUpdateProgress() {
                     const progress = (cursoCurrentModule / (cursoTotalModules - 1)) * 100;
-                    document.getElementById('cursoProgressFill').style.width = progress + '%';
+                    const progressEl = document.getElementById('cursoProgressFill');
+                    if (progressEl) {
+                        progressEl.style.width = progress + '%';
+                    }
                 }
 
                 function cursoCheckAnswer(element, isCorrect, feedbackId) {
                     const parent = element.parentElement;
                     const options = parent.querySelectorAll('.curso-quiz-option');
+                    
+                    // Deshabilitar todas las opciones
                     options.forEach(opt => {
                         opt.style.pointerEvents = 'none';
                     });
+                    
+                    const feedbackEl = document.getElementById(feedbackId);
+                    
                     if (isCorrect) {
                         element.classList.add('correct');
-                        document.getElementById(feedbackId).innerHTML = '<div class="curso-success">✅ ¡Correcto! Excelente respuesta.</div>';
+                        if (feedbackEl) {
+                            feedbackEl.innerHTML = '<div class="curso-success">✅ ¡Correcto! Excelente respuesta.</div>';
+                            feedbackEl.style.display = 'block';
+                        }
                     } else {
                         element.classList.add('incorrect');
-                        document.getElementById(feedbackId).innerHTML = '<div class="curso-warning">❌ Incorrecto. Revisá el contenido.</div>';
+                        // Marcar la correcta
+                        options.forEach(opt => {
+                            if (opt.onclick && opt.onclick.toString().includes('true')) {
+                                opt.classList.add('correct');
+                            }
+                        });
+                        if (feedbackEl) {
+                            feedbackEl.innerHTML = '<div class="curso-warning">❌ Incorrecto. Revisá el contenido.</div>';
+                            feedbackEl.style.display = 'block';
+                        }
                     }
-                    document.getElementById(feedbackId).style.display = 'block';
                 }
 
                 function cursoCalcularResultado() {
-                    alert('Evaluación final - Funcionalidad completa');
+                    const correctas = document.querySelectorAll('.curso-quiz-option.correct').length;
+                    const total = 3; // Número de preguntas de ejemplo
+                    
+                    const resultadoEl = document.getElementById('cursoResultadoFinal');
+                    if (resultadoEl) {
+                        const porcentaje = Math.round((correctas / total) * 100);
+                        
+                        if (porcentaje >= 70) {
+                            resultadoEl.innerHTML = \`
+                                <div class="curso-final-score">
+                                    <h2>🎉 ¡APROBASTE!</h2>
+                                    <p style="font-size:1.5em;">Obtuviste \${correctas}/\${total} (\${porcentaje}%)</p>
+                                    <p style="margin-top:20px;">¡Felicitaciones! Completaste el curso.</p>
+                                </div>
+                            \`;
+                        } else {
+                            resultadoEl.innerHTML = \`
+                                <div class="curso-warning" style="text-align:center; padding:30px;">
+                                    <h2>📚 Seguimos estudiando</h2>
+                                    <p style="font-size:1.3em;">Obtuviste \${correctas}/\${total} (\${porcentaje}%)</p>
+                                    <p>Necesitás 70% para aprobar. ¡Seguí intentando!</p>
+                                </div>
+                            \`;
+                        }
+                        resultadoEl.style.display = 'block';
+                        resultadoEl.scrollIntoView({ behavior: 'smooth' });
+                    }
                 }
 
-                cursoUpdateProgress();
-            </script>
+                // Inicializar al cargar
+                document.addEventListener('DOMContentLoaded', function() {
+                    cursoUpdateProgress();
+                });
+            <\/script>
         </div>
     `
 };
@@ -774,4 +934,4 @@ if (typeof window !== 'undefined') {
     window.CAPACITACION_NEGOCIACION_COLECTIVA = CAPACITACION_NEGOCIACION_COLECTIVA;
 }
 
-console.log('✅ Capacitación: Negociación Colectiva para Delegados Mineros cargada');
+console.log('✅ Capacitación: Negociación Colectiva cargada correctamente');
