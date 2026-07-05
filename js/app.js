@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// ============================================
+// LOGIN / LOGOUT
+// ============================================
 function showLogin() {
     const html = `
         <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
@@ -121,10 +124,12 @@ function toggleTheme() {
 function navigateTo(page) {
     currentPage = page;
     
+    // Actualizar pills desktop
     document.querySelectorAll('.nav-pill').forEach(pill => {
         pill.classList.toggle('active', pill.dataset.page === page);
     });
     
+    // Actualizar pills mobile
     document.querySelectorAll('.mobile-nav-pill').forEach(pill => {
         pill.classList.toggle('active', pill.dataset.page === page);
     });
@@ -171,6 +176,9 @@ function renderPage(page, container) {
     }
 }
 
+// ============================================
+// OBTENER DATOS (LEYES Y CONVENIOS)
+// ============================================
 function getLeyes() {
     const leyes = [];
     if (typeof LEY_LCT_20744 !== 'undefined') leyes.push(LEY_LCT_20744);
@@ -182,12 +190,43 @@ function getLeyes() {
 }
 
 function getConvenios() {
-    const convenios = [];
-    if (typeof CTT_302_75 !== 'undefined') convenios.push(CTT_302_75);
-    if (typeof CTT_36_89 !== 'undefined') convenios.push(CTT_36_89);
-    if (typeof CTT_238_94 !== 'undefined') convenios.push(CTT_238_94);
-    if (convenios.length === 0 && DATA.convenios) return DATA.convenios;
-    return convenios;
+    // Devuelve el array de convenios de DATA
+    // Si hay archivos separados cargados, usa su contenido
+    return DATA.convenios.map(conv => {
+        // Si existe la variable global con el contenido, usarla
+        if (conv.variable && typeof window[conv.variable] !== 'undefined') {
+            const contenidoGlobal = window[conv.variable];
+            return {
+                ...conv,
+                contenido: contenidoGlobal.contenido || contenidoGlobal
+            };
+        }
+        return conv;
+    });
+}
+
+function getCapacitaciones() {
+    // Combina cursos base con capacitaciones en archivos separados
+    const capacitacionesSeparadas = [];
+    
+    // Buscar capacitaciones en variables globales
+    if (typeof CAPACITACION_NEGOCIACION_COLECTIVA !== 'undefined') {
+        capacitacionesSeparadas.push(CAPACITACION_NEGOCIACION_COLECTIVA);
+    }
+    
+    // Combinar: las capacitaciones separadas reemplazan las de mismo ID
+    const cursosCombinados = [...DATA.cursos];
+    
+    capacitacionesSeparadas.forEach(cap => {
+        const index = cursosCombinados.findIndex(c => c.id === cap.id);
+        if (index !== -1) {
+            cursosCombinados[index] = cap;
+        } else {
+            cursosCombinados.push(cap);
+        }
+    });
+    
+    return cursosCombinados;
 }
 
 // ============================================
@@ -201,8 +240,8 @@ function setupEvents() {
     
     if (menuBtn) {
         menuBtn.addEventListener('click', () => {
-            mobileMenu.classList.add('active');
-            mobileMenuOverlay.classList.add('active');
+            if (mobileMenu) mobileMenu.classList.add('active');
+            if (mobileMenuOverlay) mobileMenuOverlay.classList.add('active');
         });
     }
     
@@ -235,7 +274,8 @@ function setupEvents() {
     if (userMenu) {
         userMenu.addEventListener('click', (e) => {
             e.stopPropagation();
-            document.getElementById('userDropdown').classList.toggle('active');
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) dropdown.classList.toggle('active');
         });
     }
     
@@ -251,13 +291,13 @@ function setupEvents() {
     
     if (chatBtn) {
         chatBtn.addEventListener('click', () => {
-            chatWindow.classList.toggle('hidden');
+            if (chatWindow) chatWindow.classList.toggle('hidden');
         });
     }
     
     if (chatClose) {
         chatClose.addEventListener('click', () => {
-            chatWindow.classList.add('hidden');
+            if (chatWindow) chatWindow.classList.add('hidden');
         });
     }
     
@@ -278,8 +318,10 @@ function setupEvents() {
 }
 
 function closeMobileMenu() {
-    document.getElementById('mobileMenu')?.classList.remove('active');
-    document.getElementById('mobileMenuOverlay')?.classList.remove('active');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    if (mobileMenu) mobileMenu.classList.remove('active');
+    if (mobileMenuOverlay) mobileMenuOverlay.classList.remove('active');
 }
 
 // ============================================
@@ -422,13 +464,14 @@ function escapeRegExp(string) {
 }
 
 // ============================================
-// RENDERIZADO
+// RENDERIZADO - DASHBOARD
 // ============================================
 function renderDashboard(container) {
     const actCount = Object.keys(DATA.actividades).length;
     const convenios = getConvenios();
     const convCount = convenios.length;
-    const cursoCount = DATA.cursos.length;
+    const cursos = getCapacitaciones();
+    const cursoCount = cursos.length;
     const leyes = getLeyes();
     const leyCount = leyes.length;
     
@@ -509,14 +552,19 @@ function renderDashboard(container) {
     `;
 }
 
+// ============================================
+// RENDERIZADO - CURSOS
+// ============================================
 function renderCursos(container) {
+    const cursos = getCapacitaciones();
+    
     container.innerHTML = `
         <div class="page-header">
             <h1>Capacitaciones 🎓</h1>
             <p>Cursos disponibles organizados por actividad minera</p>
         </div>
         <div class="cards-grid">
-            ${DATA.cursos.map(c => {
+            ${cursos.map(c => {
                 const act = DATA.actividades[c.actividad];
                 return `
                     <div class="card" onclick="showCursoDetalle(${c.id})">
@@ -541,7 +589,8 @@ function renderCursos(container) {
 }
 
 function showCursoDetalle(cursoId) {
-    const curso = DATA.cursos.find(c => c.id === cursoId);
+    const cursos = getCapacitaciones();
+    const curso = cursos.find(c => c.id === cursoId);
     if (!curso) return;
     
     const act = DATA.actividades[curso.actividad];
@@ -558,63 +607,19 @@ function showCursoDetalle(cursoId) {
             <div class="activity-hero-content">
                 <h1><i class="fas ${act ? act.icono : 'fa-graduation-cap'}"></i> ${curso.titulo}</h1>
                 <p>${curso.descripcion}</p>
+                <div style="margin-top: 1rem; display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.875rem;">
+                    <span><i class="fas fa-user"></i> ${curso.instructor}</span>
+                    <span><i class="fas fa-clock"></i> ${curso.duracion}</span>
+                    <span><i class="fas fa-signal"></i> ${curso.nivel}</span>
+                    <span><i class="fas fa-book"></i> ${curso.modulos} módulos</span>
+                </div>
             </div>
-        </div>
-        <div class="section">
-            <h2 class="section-title">Contenido del curso</h2>
-            <div style="line-height: 1.8; color: var(--text-secondary); margin-top: 1rem;">
-                ${curso.contenido}
-            </div>
-        </div>
-    `;
-}
-
-function renderConvenios(container) {
-    const convenios = getConvenios();
-    
-    container.innerHTML = `
-        <div class="page-header">
-            <h1>Convenios Colectivos de Trabajo 📋</h1>
-            <p>Normativas vigentes por actividad</p>
-        </div>
-        <div class="cards-grid">
-            ${convenios.map(c => {
-                const act = DATA.actividades[c.actividad];
-                return `
-                    <div class="card" onclick="showConvenioDetalle('${c.numero}')">
-                        <div class="card-header" style="background: var(--gradient-primary);">
-                            <i class="fas fa-file-contract"></i>
-                            <span class="card-badge">${c.numero}</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-category">${act ? act.nombre : c.categoria}</div>
-                            <h3 class="card-title">${c.titulo}</h3>
-                            <p class="card-description">${c.resumen}</p>
-                        </div>
-                    </div>
-                `;
-            }).join('')}
-        </div>
-    `;
-}
-
-function showConvenioDetalle(numero) {
-    const convenios = getConvenios();
-    const conv = convenios.find(c => c.numero === numero);
-    if (!conv) return;
-    
-    const container = document.getElementById('pageContent');
-    container.innerHTML = `
-        <div class="page-header">
-            <button class="btn btn-ghost" onclick="navigateTo('convenios')">
-                <i class="fas fa-arrow-left"></i> Volver a convenios
-            </button>
         </div>
         
         <!-- BARRA DE BÚSQUEDA FIJA -->
         <div class="content-search-bar">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" id="contentSearchInput" placeholder="Buscar en este documento... (ej: vacaciones, despido, salario)">
+            <input type="text" id="contentSearchInput" placeholder="Buscar en este curso... (ej: EPP, seguridad, salario)">
             <span class="search-count" id="contentSearchCount">0 resultados</span>
             <button class="btn-search-nav" id="contentSearchPrev" title="Anterior" disabled>
                 <i class="fas fa-chevron-up"></i>
@@ -628,20 +633,137 @@ function showConvenioDetalle(numero) {
         </div>
         
         <div class="section">
-            <div class="card-category" style="margin-bottom: 0.5rem;">${conv.numero}</div>
-            <h2 class="section-title" style="margin-bottom: 1rem;">${conv.titulo}</h2>
-            <div class="ley-content" id="convenioContent">
-                ${conv.contenido}
+            <h2 class="section-title">Contenido del curso</h2>
+            <div class="ley-content" id="cursoContent" style="line-height: 1.8; color: var(--text-secondary); margin-top: 1rem;">
+                ${curso.contenido}
             </div>
         </div>
     `;
     
-    // Inicializar búsqueda después de renderizar
+    setTimeout(() => {
+        setupContentSearch('#cursoContent');
+    }, 100);
+}
+
+// ============================================
+// RENDERIZADO - CONVENIOS
+// ============================================
+function renderConvenios(container) {
+    const convenios = getConvenios();
+    
+    // Agrupar convenios por actividad
+    const conveniosPorActividad = {};
+    convenios.forEach(conv => {
+        if (!conveniosPorActividad[conv.actividad]) {
+            conveniosPorActividad[conv.actividad] = [];
+        }
+        conveniosPorActividad[conv.actividad].push(conv);
+    });
+    
+    container.innerHTML = `
+        <div class="page-header">
+            <h1>Convenios Colectivos de Trabajo 📋</h1>
+            <p>Normativas vigentes organizadas por actividad</p>
+        </div>
+        
+        ${Object.entries(conveniosPorActividad).map(([actId, conveniosAct]) => {
+            const act = DATA.actividades[actId];
+            if (!act) return '';
+            
+            return `
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas ${act.icono}" style="color: ${act.color};"></i>
+                            ${act.nombre}
+                        </h2>
+                    </div>
+                    <div class="cards-grid">
+                        ${conveniosAct.map(conv => `
+                            <div class="card" onclick="showConvenioDetalle('${conv.numero}')">
+                                <div class="card-header" style="background: linear-gradient(135deg, ${act.color}, ${act.color}dd);">
+                                    <i class="fas fa-file-contract"></i>
+                                    <span class="card-badge">${conv.numero}</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-category">${conv.subtitulo || conv.actividad}</div>
+                                    <h3 class="card-title">${conv.titulo}</h3>
+                                    <p class="card-description">${conv.resumen}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }).join('')}
+    `;
+}
+
+function showConvenioDetalle(numero) {
+    const convenios = getConvenios();
+    const conv = convenios.find(c => c.numero === numero);
+    if (!conv) return;
+    
+    const act = DATA.actividades[conv.actividad];
+    const container = document.getElementById('pageContent');
+    
+    // Si no tiene contenido cargado, mostrar mensaje
+    const contenidoHTML = conv.contenido || `
+        <div class="empty-state">
+            <i class="fas fa-file-alt"></i>
+            <h3>Contenido en carga</h3>
+            <p>El contenido completo del ${conv.numero} se cargará próximamente desde el archivo separado.</p>
+            <p style="margin-top: 1rem; font-size: 0.875rem;"><strong>Resumen:</strong> ${conv.resumen}</p>
+        </div>
+    `;
+    
+    container.innerHTML = `
+        <div class="page-header">
+            <button class="btn btn-ghost" onclick="navigateTo('convenios')">
+                <i class="fas fa-arrow-left"></i> Volver a convenios
+            </button>
+        </div>
+        
+        <div class="activity-hero">
+            <div class="activity-hero-content" style="background: linear-gradient(135deg, ${act ? act.color : '#1e3a8a'}, ${act ? act.color + 'dd' : '#3b82f6'});">
+                <h1><i class="fas fa-file-contract"></i> ${conv.numero}</h1>
+                <p>${conv.subtitulo || conv.titulo}</p>
+                ${act ? `<p style="margin-top: 0.5rem; font-size: 0.875rem;"><strong>Actividad:</strong> ${act.nombre}</p>` : ''}
+            </div>
+        </div>
+        
+        <!-- BARRA DE BÚSQUEDA FIJA -->
+        <div class="content-search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="contentSearchInput" placeholder="Buscar en este convenio... (ej: vacaciones, salario, jornada)">
+            <span class="search-count" id="contentSearchCount">0 resultados</span>
+            <button class="btn-search-nav" id="contentSearchPrev" title="Anterior" disabled>
+                <i class="fas fa-chevron-up"></i>
+            </button>
+            <button class="btn-search-nav" id="contentSearchNext" title="Siguiente" disabled>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <button class="btn-search-nav" id="contentSearchClear" title="Limpiar búsqueda">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title" style="margin-bottom: 1rem;">${conv.titulo}</h2>
+            <div class="ley-content" id="convenioContent">
+                ${contenidoHTML}
+            </div>
+        </div>
+    `;
+    
     setTimeout(() => {
         setupContentSearch('#convenioContent');
     }, 100);
 }
 
+// ============================================
+// RENDERIZADO - ESCALAS
+// ============================================
 function renderEscalas(container) {
     container.innerHTML = `
         <div class="page-header">
@@ -653,7 +775,7 @@ function renderEscalas(container) {
             return `
                 <div class="section">
                     <h2 class="section-title" style="margin-bottom: 1rem;">
-                        <i class="fas ${act ? act.icono : 'fa-money-bill-wave'}"></i>
+                        <i class="fas ${act ? act.icono : 'fa-money-bill-wave'}" style="color: ${act ? act.color : 'var(--primary)'};"></i>
                         ${act ? act.nombre : actId}
                         <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400; margin-left: 0.5rem;">
                             (${act ? act.ctt : ''})
@@ -685,6 +807,9 @@ function renderEscalas(container) {
     `;
 }
 
+// ============================================
+// RENDERIZADO - LEGISLACIÓN
+// ============================================
 function renderLegislacion(container) {
     const leyes = getLeyes();
     
@@ -693,21 +818,32 @@ function renderLegislacion(container) {
             <h1>Legislación Laboral ⚖️</h1>
             <p>Leyes y normativas laborales aplicables al sector minero</p>
         </div>
-        <div class="cards-grid">
-            ${leyes.map(l => `
-                <div class="card" onclick="showLeyDetalle('${l.numero}')">
-                    <div class="card-header" style="background: var(--gradient-primary);">
-                        <i class="fas fa-balance-scale"></i>
-                        <span class="card-badge">${l.numero}</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-category">${l.categoria}</div>
-                        <h3 class="card-title">${l.titulo}</h3>
-                        <p class="card-description">${l.resumen}</p>
-                    </div>
+        
+        ${leyes.length === 0 ? `
+            <div class="section">
+                <div class="empty-state">
+                    <i class="fas fa-balance-scale"></i>
+                    <h3>Leyes en carga</h3>
+                    <p>Las leyes laborales se cargarán próximamente desde archivos separados.</p>
                 </div>
-            `).join('')}
-        </div>
+            </div>
+        ` : `
+            <div class="cards-grid">
+                ${leyes.map(l => `
+                    <div class="card" onclick="showLeyDetalle('${l.numero}')">
+                        <div class="card-header" style="background: var(--gradient-primary);">
+                            <i class="fas fa-balance-scale"></i>
+                            <span class="card-badge">${l.numero}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-category">${l.categoria}</div>
+                            <h3 class="card-title">${l.titulo}</h3>
+                            <p class="card-description">${l.resumen}</p>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `}
     `;
 }
 
@@ -717,11 +853,19 @@ function showLeyDetalle(numero) {
     if (!ley) return;
     
     const container = document.getElementById('pageContent');
+    
     container.innerHTML = `
         <div class="page-header">
             <button class="btn btn-ghost" onclick="navigateTo('legislacion')">
                 <i class="fas fa-arrow-left"></i> Volver a legislación
             </button>
+        </div>
+        
+        <div class="activity-hero">
+            <div class="activity-hero-content" style="background: var(--gradient-primary);">
+                <h1><i class="fas fa-balance-scale"></i> ${ley.numero}</h1>
+                <p>${ley.titulo}</p>
+            </div>
         </div>
         
         <!-- BARRA DE BÚSQUEDA FIJA -->
@@ -741,7 +885,6 @@ function showLeyDetalle(numero) {
         </div>
         
         <div class="section">
-            <div class="card-category" style="margin-bottom: 0.5rem;">${ley.numero}</div>
             <h2 class="section-title" style="margin-bottom: 0.5rem;">${ley.titulo}</h2>
             <div class="ley-content" id="leyContent">
                 ${ley.contenido}
@@ -749,12 +892,14 @@ function showLeyDetalle(numero) {
         </div>
     `;
     
-    // Inicializar búsqueda después de renderizar
     setTimeout(() => {
         setupContentSearch('#leyContent');
     }, 100);
 }
 
+// ============================================
+// RENDERIZADO - FAQ
+// ============================================
 function renderFAQ(container) {
     container.innerHTML = `
         <div class="page-header">
@@ -791,6 +936,9 @@ function toggleFaq(id) {
     if (item) item.classList.toggle('open');
 }
 
+// ============================================
+// RENDERIZADO - ACTIVIDAD
+// ============================================
 function renderActividad(container, activityId) {
     const act = DATA.actividades[activityId];
     if (!act) {
@@ -798,7 +946,8 @@ function renderActividad(container, activityId) {
         return;
     }
     
-    const cursosAct = DATA.cursos.filter(c => c.actividad === activityId);
+    const cursos = getCapacitaciones();
+    const cursosAct = cursos.filter(c => c.actividad === activityId);
     const conveniosAct = getConvenios().filter(c => c.actividad === activityId);
     const escalasAct = DATA.escalas[activityId] || [];
     
@@ -818,17 +967,19 @@ function renderActividad(container, activityId) {
         ${conveniosAct.length > 0 ? `
             <div class="section">
                 <div class="section-header">
-                    <h2 class="section-title">Convenio Colectivo</h2>
+                    <h2 class="section-title">Convenios Colectivos</h2>
                 </div>
-                ${conveniosAct.map(c => `
-                    <div class="card" onclick="showConvenioDetalle('${c.numero}')" style="cursor: pointer;">
-                        <div class="card-body">
-                            <div class="card-category">${c.numero}</div>
-                            <h3 class="card-title">${c.titulo}</h3>
-                            <p class="card-description">${c.resumen}</p>
+                <div class="cards-grid">
+                    ${conveniosAct.map(c => `
+                        <div class="card" onclick="showConvenioDetalle('${c.numero}')" style="cursor: pointer;">
+                            <div class="card-body">
+                                <div class="card-category">${c.numero}</div>
+                                <h3 class="card-title">${c.subtitulo || c.titulo}</h3>
+                                <p class="card-description">${c.resumen}</p>
+                            </div>
                         </div>
-                    </div>
-                `).join('')}
+                    `).join('')}
+                </div>
             </div>
         ` : ''}
         
@@ -903,7 +1054,7 @@ function addChatMessage(type, text) {
     div.innerHTML = `
         <div class="chat-message-avatar">${avatar}</div>
         <div>
-            <div class="chat-message-content">${text}</div>
+            <div class="chat-message-content">${text.replace(/\n/g, '<br>')}</div>
             <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">${time}</div>
         </div>
     `;
@@ -915,23 +1066,39 @@ function addChatMessage(type, text) {
 function getBotResponse(userMessage) {
     const q = userMessage.toLowerCase().trim();
     
-    if (/^(hola|buenas|buenos días)/.test(q)) {
-        return `¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte?`;
-    }
-    if (q.includes('gracias')) return '¡De nada! 😊';
-    
-    if (q.includes('escala') || q.includes('salarial') || q.includes('sueldo')) {
-        return '💰 Podés consultar las escalas salariales en el menú → "Escalas Salariales".';
-    }
-    if (q.includes('convenio') || q.includes('ctt')) {
-        return '📋 Tenemos convenios cargados: CTT 302/75, CTT 36/89 y CTT 238/94. Consultalos en "Convenios CCT".';
-    }
-    if (q.includes('ley') || q.includes('legislación')) {
-        return '⚖️ Tenemos leyes laborales cargadas. Consultalas en "Legislación".';
-    }
-    if (q.includes('curso') || q.includes('capacitacion')) {
-        return `🎓 Tenemos ${DATA.cursos.length} cursos disponibles. Ver en "Capacitaciones".`;
+    // Buscar en respuestas predefinidas
+    for (const [patterns, response] of Object.entries(DATA.chatResponses)) {
+        if (patterns === 'default') continue;
+        const patternList = patterns.split('|');
+        if (patternList.some(p => q.includes(p))) {
+            return response;
+        }
     }
     
-    return 'No encontré información específica. Te recomiendo revisar las secciones del menú o contactar a la Seccional al (0264) 422-XXXX.';
+    // Buscar en FAQs
+    for (const [cat, faqs] of Object.entries(DATA.faqs)) {
+        for (const faq of faqs) {
+            if (faq.pregunta.toLowerCase().includes(q) || faq.respuesta.toLowerCase().includes(q)) {
+                return `📋 <strong>${faq.pregunta}</strong><br><br>${faq.respuesta}`;
+            }
+        }
+    }
+    
+    // Buscar en convenios
+    const convenios = getConvenios();
+    for (const conv of convenios) {
+        if (conv.titulo.toLowerCase().includes(q) || conv.subtitulo.toLowerCase().includes(q) || conv.resumen.toLowerCase().includes(q)) {
+            return `📋 Encontré: <strong>${conv.numero} - ${conv.subtitulo}</strong><br><br>${conv.resumen}<br><br>Consultalo completo en "Convenios CCT".`;
+        }
+    }
+    
+    // Buscar en cursos
+    const cursos = getCapacitaciones();
+    for (const curso of cursos) {
+        if (curso.titulo.toLowerCase().includes(q) || curso.descripcion.toLowerCase().includes(q)) {
+            return `🎓 Encontré el curso: <strong>${curso.titulo}</strong><br><br>${curso.descripcion}<br><br>Duración: ${curso.duracion} | Nivel: ${curso.nivel}`;
+        }
+    }
+    
+    return DATA.chatResponses.default;
 }

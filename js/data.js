@@ -51,90 +51,85 @@ const DATA = {
     },
 
     // ==========================================
-    // 2. CONVENIOS COLECTIVOS (NUEVA ESTRUCTURA)
+    // 2. CONVENIOS COLECTIVOS (ARRAY PLANO)
     // ==========================================
-    convenios: {
-        'cal-piedra': {
-            nombre: 'Cal y Piedra',
-            descripcion: 'Convenio colectivo para trabajadores de cal, piedra y actividades afines',
-            icono: 'fa-mountain',
-            color: '#78716c',
-            cct: [
-                {
-                    numero: 'CCT 36/89',
-                    titulo: 'Convenio Colectivo de Trabajo N° 36/89',
-                    subtitulo: 'Cal, Piedra y Afines',
-                    variable: 'CTT_36_89'
-                }
-            ]
+    // Cada convenio tiene: numero, titulo, subtitulo, actividad, contenido
+    // El contenido se carga desde archivos separados (js/content/convenios/)
+    // Si no existe el archivo separado, se muestra un mensaje placeholder
+    convenios: [
+        {
+            numero: 'CCT 36/89',
+            titulo: 'Convenio Colectivo de Trabajo N° 36/89',
+            subtitulo: 'Cal, Piedra y Afines',
+            actividad: 'cal-piedra',
+            variable: 'CTT_36_89',
+            resumen: 'Convenio colectivo para trabajadores de cal, piedra y actividades afines',
+            contenido: null // Se carga desde js/content/convenios/ctt-36-89.js
         },
-        'molienda': {
-            nombre: 'Molienda de Minerales',
-            descripcion: 'Convenio colectivo para trabajadores de molienda de minerales',
-            icono: 'fa-cogs',
-            color: '#475569',
-            cct: [
-                {
-                    numero: 'CCT 37/89',
-                    titulo: 'Convenio Colectivo de Trabajo N° 37/89',
-                    subtitulo: 'Molienda de Minerales',
-                    variable: 'CTT_37_89'
-                }
-            ]
+        {
+            numero: 'CCT 37/89',
+            titulo: 'Convenio Colectivo de Trabajo N° 37/89',
+            subtitulo: 'Molienda de Minerales',
+            actividad: 'molienda',
+            variable: 'CTT_37_89',
+            resumen: 'Convenio colectivo para trabajadores de molienda de minerales',
+            contenido: null
         },
-        'cemento': {
-            nombre: 'Cemento Portland',
-            descripcion: 'Convenios colectivos para trabajadores de la industria del cemento',
-            icono: 'fa-industry',
-            color: '#64748b',
-            cct: [
-                {
-                    numero: 'CCT 53/89',
-                    titulo: 'Convenio Colectivo de Trabajo N° 53/89',
-                    subtitulo: 'Personal Administrativo del Cemento Portland',
-                    variable: 'CTT_53_89'
-                },
-                {
-                    numero: 'CCT 54/89',
-                    titulo: 'Convenio Colectivo de Trabajo N° 54/89',
-                    subtitulo: 'Personal Obrero del Cemento Portland',
-                    variable: 'CTT_54_89'
-                }
-            ]
+        {
+            numero: 'CCT 38/89',
+            titulo: 'Convenio Colectivo de Trabajo N° 38/89',
+            subtitulo: 'Minería Extractiva',
+            actividad: 'mineria-extractiva',
+            variable: 'CTT_38_89',
+            resumen: 'Convenio colectivo para trabajadores de minería extractiva',
+            contenido: null
         },
-        'extractiva': {
-            nombre: 'Minería Extractiva',
-            descripcion: 'Convenios colectivos para trabajadores de minería extractiva',
-            icono: 'fa-gem',
-            color: '#f59e0b',
-            cct: [
-                {
-                    numero: 'CCT 38/89',
-                    titulo: 'Convenio Colectivo de Trabajo N° 38/89',
-                    subtitulo: 'Minería Extractiva',
-                    variable: 'CTT_38_89'
-                },
-                {
-                    numero: 'CCT Veladero',
-                    titulo: 'Convenio Colectivo - Mina Veladero',
-                    subtitulo: 'Convenio por empresa - Mina Veladero',
-                    variable: 'CTT_VELADERO'
-                },
-                {
-                    numero: 'CCT Gualcamayo',
-                    titulo: 'Convenio Colectivo - Mina Gualcamayo',
-                    subtitulo: 'Convenio por empresa - Mina Gualcamayo',
-                    variable: 'CTT_GUALCAMAYO'
-                },
-                {
-                    numero: 'CCT Vicuña',
-                    titulo: 'Convenio Colectivo - Mina Vicuña',
-                    subtitulo: 'Convenio por empresa - Mina Vicuña',
-                    variable: 'CTT_VICUNA'
-                }
-            ]
+        {
+            numero: 'CCT 53/89',
+            titulo: 'Convenio Colectivo de Trabajo N° 53/89',
+            subtitulo: 'Personal Administrativo del Cemento Portland',
+            actividad: 'cemento',
+            variable: 'CTT_53_89',
+            resumen: 'Convenio para personal administrativo de la industria del cemento',
+            contenido: null
+        },
+        {
+            numero: 'CCT 54/89',
+            titulo: 'Convenio Colectivo de Trabajo N° 54/89',
+            subtitulo: 'Personal Obrero del Cemento Portland',
+            actividad: 'cemento',
+            variable: 'CTT_54_89',
+            resumen: 'Convenio para personal obrero de la industria del cemento',
+            contenido: null
+        },
+        {
+            numero: 'CCT Veladero',
+            titulo: 'Convenio Colectivo - Mina Veladero',
+            subtitulo: 'Convenio por empresa - Mina Veladero',
+            actividad: 'mineria-extractiva',
+            variable: 'CTT_VELADERO',
+            resumen: 'Convenio colectivo específico de la Mina Veladero',
+            contenido: null
+        },
+        {
+            numero: 'CCT Gualcamayo',
+            titulo: 'Convenio Colectivo - Mina Gualcamayo',
+            subtitulo: 'Convenio por empresa - Mina Gualcamayo',
+            actividad: 'mineria-extractiva',
+            variable: 'CTT_GUALCAMAYO',
+            resumen: 'Convenio colectivo específico de la Mina Gualcamayo',
+            contenido: null
+        },
+        {
+            numero: 'CCT Vicuña',
+            titulo: 'Convenio Colectivo - Mina Vicuña',
+            subtitulo: 'Convenio por empresa - Mina Vicuña',
+            actividad: 'mineria-extractiva',
+            variable: 'CTT_VICUNA',
+            resumen: 'Convenio colectivo específico de la Mina Vicuña',
+            contenido: null
         }
-    },
+    ],
 
     // ==========================================
     // 3. ESCALAS SALARIALES
@@ -172,8 +167,10 @@ const DATA = {
     },
 
     // ==========================================
-    // 4. CURSOS / CAPACITACIONES
+    // 4. CURSOS / CAPACITACIONES (BASE)
     // ==========================================
+    // Los cursos con contenido extenso se cargan desde archivos separados
+    // en js/content/capacitaciones/ (ej: negociacion-colectiva.js)
     cursos: [
         {
             id: 1,
@@ -186,7 +183,8 @@ const DATA = {
             imagen: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=80',
             descripcion: 'Curso obligatorio sobre normas de seguridad en minería según Ley 19587.',
             modulos: 5,
-            contenido: '<h3>Módulo 1: Introducción a la seguridad minera</h3><p>La seguridad en minería es fundamental para prevenir accidentes.</p><h3>Módulo 2: EPP obligatorio</h3><p>Elementos de Protección Personal: casco, botas, linterna, etc.</p>'
+            contenido: '<h3>Módulo 1: Introducción a la seguridad minera</h3><p>La seguridad en minería es fundamental para prevenir accidentes.</p><h3>Módulo 2: EPP obligatorio</h3><p>Elementos de Protección Personal: casco, botas, linterna, etc.</p>',
+            archivoSeparado: false
         },
         {
             id: 2,
@@ -199,7 +197,8 @@ const DATA = {
             imagen: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80',
             descripcion: 'Herramientas de negociación y representación gremial para delegados.',
             modulos: 6,
-            contenido: '<h3>El rol del delegado</h3><p>Funciones, derechos y obligaciones del delegado sindical según la Ley 23.551.</p>'
+            contenido: '<h3>El rol del delegado</h3><p>Funciones, derechos y obligaciones del delegado sindical según la Ley 23.551.</p>',
+            archivoSeparado: false
         },
         {
             id: 3,
@@ -212,7 +211,8 @@ const DATA = {
             imagen: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&q=80',
             descripcion: 'Conocimiento del proceso productivo del cemento desde la cantera hasta el producto final.',
             modulos: 5,
-            contenido: '<h3>Proceso completo</h3><p>Extracción, trituración, molienda de crudo, calcinación en horno rotativo, molienda de clínker y ensacado.</p>'
+            contenido: '<h3>Proceso completo</h3><p>Extracción, trituración, molienda de crudo, calcinación en horno rotativo, molienda de clínker y ensacado.</p>',
+            archivoSeparado: false
         },
         {
             id: 4,
@@ -225,7 +225,8 @@ const DATA = {
             imagen: 'https://images.unsplash.com/photo-1565008447742-97f6f38c9858?w=600&q=80',
             descripcion: 'Operación segura de hornos de cal y canteras.',
             modulos: 4,
-            contenido: '<h3>Operación de hornos</h3><p>Técnicas de operación segura de hornos de cal.</p>'
+            contenido: '<h3>Operación de hornos</h3><p>Técnicas de operación segura de hornos de cal.</p>',
+            archivoSeparado: false
         },
         {
             id: 5,
@@ -238,7 +239,8 @@ const DATA = {
             imagen: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&q=80',
             descripcion: 'Procesos de molienda SAG y de bolas.',
             modulos: 6,
-            contenido: '<h3>Molinos SAG</h3><p>Operación y mantenimiento de molinos SAG y de bolas.</p>'
+            contenido: '<h3>Molinos SAG</h3><p>Operación y mantenimiento de molinos SAG y de bolas.</p>',
+            archivoSeparado: false
         },
         {
             id: 6,
@@ -251,7 +253,8 @@ const DATA = {
             imagen: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80',
             descripcion: 'Marco legal y convenios colectivos del sector minero.',
             modulos: 4,
-            contenido: '<h3>Marco normativo</h3><p>Ley de Contrato de Trabajo, Convenios Colectivos, Ley de Riesgos del Trabajo.</p>'
+            contenido: '<h3>Marco normativo</h3><p>Ley de Contrato de Trabajo, Convenios Colectivos, Ley de Riesgos del Trabajo.</p>',
+            archivoSeparado: false
         }
     ],
 
@@ -413,16 +416,16 @@ const DATA = {
         'hola|buenas|buenos días': '¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte hoy?',
         'gracias|thanks': '¡De nada! 😊 Estoy aquí para lo que necesites.',
         'adiós|chau|bye': '¡Hasta luego! 👋 Que tengas un excelente día.',
-        'escala|salarial|sueldo': '💰 Podés consultar las escalas salariales actualizadas en el menú lateral → "Escalas Salariales". Están separadas por actividad: Minería Extractiva, Cemento, Cal y Piedra, y Molienda.',
-        'convenio|ctt': '📋 Tenemos convenios colectivos organizados por actividad:\n\n• Cal y Piedra: CCT 36/89\n• Molienda: CCT 37/89\n• Cemento: CCT 53/89 y 54/89\n• Extractiva: CCT 38/89 + convenios por empresa (Veladero, Gualcamayo, Vicuña)\n\nPodés consultarlos en "Convenios CCT".',
-        'ley|legislación|legislacion': '⚖️ Tenemos 5 leyes laborales cargadas: LCT 20.744, Ley 19.587, Ley 24.557, Ley 24.013 y Ley 23.551. Podés consultarlas en "Legislación".',
-        'curso|capacitacion|capacitación': '🎓 Tenemos 6 cursos disponibles. Podés verlos todos en "Capacitaciones".',
-        'video|charla': '🎥 Tenemos 4 videos en la biblioteca. Podés verlos en la sección de videos.',
+        'escala|salarial|sueldo': '💰 Podés consultar las escalas salariales en el menú → "Escalas Salariales". Están separadas por actividad: Minería Extractiva, Cemento, Cal y Piedra, y Molienda.',
+        'convenio|ctt': '📋 Tenemos 8 convenios colectivos organizados por actividad:\n\n• Cal y Piedra: CCT 36/89\n• Molienda: CCT 37/89\n• Cemento: CCT 53/89 y 54/89\n• Extractiva: CCT 38/89 + convenios por empresa (Veladero, Gualcamayo, Vicuña)\n\nConsultalos en "Convenios CCT".',
+        'ley|legislación|legislacion': '⚖️ Tenemos 5 leyes laborales cargadas: LCT 20.744, Ley 19.587, Ley 24.557, Ley 24.013 y Ley 23.551. Consultalas en "Legislación".',
+        'curso|capacitacion|capacitación': '🎓 Tenemos cursos disponibles organizados por actividad. Ver en "Capacitaciones".',
+        'video|charla': '🎥 Tenemos videos en la biblioteca. Podés verlos en la sección de videos.',
         'contraseña|clave|password': '🔑 Para recuperar tu contraseña, contactá al administrador al email campus@aomasanjuan.org.ar indicando tu DNI y legajo.',
         'horario|atiende|dirección': '🕐 La Seccional San Juan atiende de lunes a viernes de 8:00 a 16:00 hs. Dirección: Rivadavia 345 Oeste, San Juan Capital. Tel: (0264) 422-XXXX',
         'beneficio|delegado': '👤 Como delegado tenés acceso a: capacitaciones gratuitas, escalas salariales actualizadas, asesoramiento legal, horas gremiales y representación ante la empresa.',
         'certificado': '🎓 Al completar un curso y aprobar la evaluación, obtenés un certificado digital con validez gremial.',
-        'veladero|gualcamayo|vicuña': '🏭 Estas son las empresas de minería extractiva en San Juan. Cada una tiene su convenio colectivo específico. Podés consultarlos en "Convenios CCT" → "Extractiva".',
+        'veladero|gualcamayo|vicuña': '🏭 Estas son las empresas de minería extractiva en San Juan. Cada una tiene su convenio colectivo específico. Consultalos en "Convenios CCT" → "Extractiva".',
         'default': 'No encontré información específica sobre eso. Te recomiendo revisar las secciones del menú lateral o contactar a la Seccional al (0264) 422-XXXX.'
     }
 };
@@ -457,7 +460,7 @@ if (typeof window !== 'undefined') {
 
 console.log('✅ Base de datos AOMA cargada');
 console.log('📋 ' + Object.keys(DATA.actividades).length + ' actividades');
-console.log('📜 ' + Object.keys(DATA.convenios).length + ' categorías de convenios');
-console.log('🎓 ' + DATA.cursos.length + ' cursos');
+console.log('📜 ' + DATA.convenios.length + ' convenios colectivos');
+console.log('🎓 ' + DATA.cursos.length + ' cursos base');
 console.log('🎥 ' + DATA.videos.length + ' videos');
 console.log('📰 ' + DATA.noticias.length + ' noticias');
