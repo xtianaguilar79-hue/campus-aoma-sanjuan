@@ -1,6 +1,5 @@
 // ============================================
 // APLICACIÓN PRINCIPAL - CAMPUS VIRTUAL AOMA
-// Menú estilo UG Noticias Mineras
 // ============================================
 
 let currentUser = null;
@@ -124,12 +123,10 @@ function toggleTheme() {
 function navigateTo(page) {
     currentPage = page;
     
-    // Actualizar pills desktop
     document.querySelectorAll('.nav-pill').forEach(pill => {
         pill.classList.toggle('active', pill.dataset.page === page);
     });
     
-    // Actualizar pills mobile
     document.querySelectorAll('.mobile-nav-pill').forEach(pill => {
         pill.classList.toggle('active', pill.dataset.page === page);
     });
@@ -177,7 +174,7 @@ function renderPage(page, container) {
 }
 
 // ============================================
-// OBTENER DATOS (LEYES Y CONVENIOS)
+// OBTENER DATOS
 // ============================================
 function getLeyes() {
     const leyes = [];
@@ -190,10 +187,7 @@ function getLeyes() {
 }
 
 function getConvenios() {
-    // Devuelve el array de convenios de DATA
-    // Si hay archivos separados cargados, usa su contenido
     return DATA.convenios.map(conv => {
-        // Si existe la variable global con el contenido, usarla
         if (conv.variable && typeof window[conv.variable] !== 'undefined') {
             const contenidoGlobal = window[conv.variable];
             return {
@@ -206,7 +200,7 @@ function getConvenios() {
 }
 
 function getCapacitaciones() {
-    // Combina cursos base con capacitaciones en archivos separados
+    // Combina cursos base de DATA.cursos con capacitaciones en archivos separados
     const capacitacionesSeparadas = [];
     
     // Buscar capacitaciones en variables globales
@@ -563,28 +557,39 @@ function renderCursos(container) {
             <h1>Capacitaciones 🎓</h1>
             <p>Cursos disponibles organizados por actividad minera</p>
         </div>
-        <div class="cards-grid">
-            ${cursos.map(c => {
-                const act = DATA.actividades[c.actividad];
-                return `
-                    <div class="card" onclick="showCursoDetalle(${c.id})">
-                        <div class="card-header" style="background-image: url('${c.imagen}'); background-size: cover; background-position: center;">
-                            <span class="card-badge">${c.categoria}</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-category">${act ? act.nombre : 'General'}</div>
-                            <h3 class="card-title">${c.titulo}</h3>
-                            <p class="card-description">${c.descripcion}</p>
-                            <div class="card-meta">
-                                <span><i class="far fa-clock"></i> ${c.duracion}</span>
-                                <span><i class="fas fa-signal"></i> ${c.nivel}</span>
-                                <span><i class="fas fa-book"></i> ${c.modulos} módulos</span>
+        
+        ${cursos.length === 0 ? `
+            <div class="section">
+                <div class="empty-state">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>No hay capacitaciones disponibles</h3>
+                    <p>Próximamente se cargarán nuevos cursos.</p>
+                </div>
+            </div>
+        ` : `
+            <div class="cards-grid">
+                ${cursos.map(c => {
+                    const act = DATA.actividades[c.actividad];
+                    return `
+                        <div class="card" onclick="showCursoDetalle(${c.id})">
+                            <div class="card-header" style="background-image: url('${c.imagen}'); background-size: cover; background-position: center;">
+                                <span class="card-badge">${c.categoria}</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-category">${act ? act.nombre : 'General'}</div>
+                                <h3 class="card-title">${c.titulo}</h3>
+                                <p class="card-description">${c.descripcion}</p>
+                                <div class="card-meta">
+                                    <span><i class="far fa-clock"></i> ${c.duracion}</span>
+                                    <span><i class="fas fa-signal"></i> ${c.nivel}</span>
+                                    <span><i class="fas fa-book"></i> ${c.modulos} módulos</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-            }).join('')}
-        </div>
+                    `;
+                }).join('')}
+            </div>
+        `}
     `;
 }
 
@@ -651,7 +656,6 @@ function showCursoDetalle(cursoId) {
 function renderConvenios(container) {
     const convenios = getConvenios();
     
-    // Agrupar convenios por actividad
     const conveniosPorActividad = {};
     convenios.forEach(conv => {
         if (!conveniosPorActividad[conv.actividad]) {
@@ -707,7 +711,6 @@ function showConvenioDetalle(numero) {
     const act = DATA.actividades[conv.actividad];
     const container = document.getElementById('pageContent');
     
-    // Si no tiene contenido cargado, mostrar mensaje
     const contenidoHTML = conv.contenido || `
         <div class="empty-state">
             <i class="fas fa-file-alt"></i>
@@ -1066,7 +1069,6 @@ function addChatMessage(type, text) {
 function getBotResponse(userMessage) {
     const q = userMessage.toLowerCase().trim();
     
-    // Buscar en respuestas predefinidas
     for (const [patterns, response] of Object.entries(DATA.chatResponses)) {
         if (patterns === 'default') continue;
         const patternList = patterns.split('|');
@@ -1075,7 +1077,6 @@ function getBotResponse(userMessage) {
         }
     }
     
-    // Buscar en FAQs
     for (const [cat, faqs] of Object.entries(DATA.faqs)) {
         for (const faq of faqs) {
             if (faq.pregunta.toLowerCase().includes(q) || faq.respuesta.toLowerCase().includes(q)) {
@@ -1084,7 +1085,6 @@ function getBotResponse(userMessage) {
         }
     }
     
-    // Buscar en convenios
     const convenios = getConvenios();
     for (const conv of convenios) {
         if (conv.titulo.toLowerCase().includes(q) || conv.subtitulo.toLowerCase().includes(q) || conv.resumen.toLowerCase().includes(q)) {
@@ -1092,7 +1092,6 @@ function getBotResponse(userMessage) {
         }
     }
     
-    // Buscar en cursos
     const cursos = getCapacitaciones();
     for (const curso of cursos) {
         if (curso.titulo.toLowerCase().includes(q) || curso.descripcion.toLowerCase().includes(q)) {
