@@ -162,14 +162,14 @@ const DATA = {
             contenido: null
         },
         {
-            numero: 'CCT Vicuña',
-            titulo: 'Convenio Colectivo - Mina Vicuña',
-            subtitulo: 'Convenio por empresa - Mina Vicuña',
-            actividad: 'mineria-extractiva',
-            empresa: 'vicuna',
-            variable: 'CTT_VICUNA',
-            resumen: 'Convenio colectivo específico de la Mina Vicuña',
-            contenido: null
+             numero: 'CCT Vicuña',
+    titulo: 'Convenio Colectivo - Mina Vicuña',
+    subtitulo: 'Convenio por empresa - Mina Vicuña (Deprominsa)',
+    actividad: 'mineria-extractiva',
+    empresa: 'vicuna',
+    variable: 'CCT_VICUNA',
+    resumen: 'Convenio colectivo específico del Proyecto Josemaría/Vicuña (Deprominsa)',
+    contenido: null
         }
     ],
 
