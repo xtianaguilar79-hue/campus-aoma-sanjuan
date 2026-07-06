@@ -78,8 +78,8 @@ const DATA = {
             actividad: 'mineria-extractiva',
             ctt: 'Convenio específico Gualcamayo'
         },
-        'vicuña': {
-            id: 'vicuña',
+        'vicuna': {
+            id: 'vicuna',
             nombre: 'Mina Vicuña',
             empresa: 'Vicuña Corp (Pan American Silver)',
             icono: 'fa-building',
@@ -93,7 +93,7 @@ const DATA = {
     },
 
     // ==========================================
-    // 3. CONVENIOS COLECTIVOS (ARRAY PLANO)
+    // 3. CONVENIOS COLECTIVOS
     // ==========================================
     convenios: [
         {
@@ -141,16 +141,15 @@ const DATA = {
             resumen: 'Convenio para personal obrero de la industria del cemento',
             contenido: null
         },
-        // Convenios por empresa (agrupados bajo actividad 'mineria-extractiva' y empresa específica)
         {
             numero: 'CCT Veladero',
-            titulo: 'Convenio Colectivo - Mina Veladero',
-            subtitulo: 'Convenio por empresa - Mina Veladero',
-            actividad: 'mineria-extractiva',
-            empresa: 'veladero',
-            variable: 'CTT_VELADERO',
-            resumen: 'Convenio colectivo específico de la Mina Veladero (Barrick Gold / Shandong Gold)',
-            contenido: null
+    titulo: 'Convenio Colectivo - Mina Veladero',
+    subtitulo: 'Convenio por empresa - Mina Veladero',
+    actividad: 'mineria-extractiva',
+    empresa: 'veladero',
+    variable: 'CCT_VELADERO',
+    resumen: 'Convenio colectivo específico de la Mina Veladero (Barrick Gold / Shandong Gold)',
+    contenido: null
         },
         {
             numero: 'CCT Gualcamayo',
@@ -159,7 +158,7 @@ const DATA = {
             actividad: 'mineria-extractiva',
             empresa: 'gualcamayo',
             variable: 'CTT_GUALCAMAYO',
-            resumen: 'Convenio colectivo específico de la Mina Gualcamayo (Yamana Gold)',
+            resumen: 'Convenio colectivo específico de la Mina Gualcamayo',
             contenido: null
         },
         {
@@ -167,16 +166,55 @@ const DATA = {
             titulo: 'Convenio Colectivo - Mina Vicuña',
             subtitulo: 'Convenio por empresa - Mina Vicuña',
             actividad: 'mineria-extractiva',
-            empresa: 'vicuña',
+            empresa: 'vicuna',
             variable: 'CTT_VICUNA',
-            resumen: 'Convenio colectivo específico de la Mina Vicuña (Pan American Silver)',
+            resumen: 'Convenio colectivo específico de la Mina Vicuña',
             contenido: null
         }
     ],
 
     // ==========================================
-    // 4. BENEFICIOS SOCIALES (Julio 2026)
-    // Fuente: AOMA - Beneficios JULIO 2026
+    // 4. ESCALAS SALARIALES (solo dentro de actividades)
+    // ==========================================
+    escalas: {
+        'mineria-extractiva': [
+            { categoria: 'Operario de Mina', nivel: 'A', salario: 1100000 },
+            { categoria: 'Operario Especializado', nivel: 'B', salario: 1350000 },
+            { categoria: 'Oficial Minero', nivel: 'C', salario: 1580000 },
+            { categoria: 'Maestro Minero', nivel: 'D', salario: 1850000 },
+            { categoria: 'Técnico Minero', nivel: 'E', salario: 2100000 },
+            { categoria: 'Delegado Sindical', nivel: 'F', salario: 2250000 }
+        ],
+        'cemento': [
+            { categoria: 'Operario de Planta', nivel: 'A', salario: 850000 },
+            { categoria: 'Operario Especializado', nivel: 'B', salario: 980000 },
+            { categoria: 'Oficial 1°', nivel: 'C', salario: 1120000 },
+            { categoria: 'Oficial Maestro', nivel: 'D', salario: 1350000 },
+            { categoria: 'Técnico', nivel: 'E', salario: 1480000 },
+            { categoria: 'Delegado', nivel: 'F', salario: 1620000 }
+        ],
+        'cal-piedra': [
+            { categoria: 'Operario / Canterito', nivel: 'A', salario: 820000 },
+            { categoria: 'Operario Calero', nivel: 'B', salario: 950000 },
+            { categoria: 'Oficial', nivel: 'C', salario: 1100000 },
+            { categoria: 'Maestro Calero/Canterito', nivel: 'D', salario: 1300000 },
+            { categoria: 'Volador Habilitado', nivel: 'E', salario: 1400000 }
+        ],
+        'molienda': [
+            { categoria: 'Operario de Molienda', nivel: 'A', salario: 950000 },
+            { categoria: 'Operario de Molino', nivel: 'B', salario: 1150000 },
+            { categoria: 'Oficial de Planta', nivel: 'C', salario: 1380000 },
+            { categoria: 'Supervisor de Turno', nivel: 'D', salario: 1700000 }
+        ]
+    },
+
+    // ==========================================
+    // 5. CAPACITACIONES (ARRAY VACÍO - solo las que cargues)
+    // ==========================================
+    cursos: [],
+
+    // ==========================================
+    // 6. BENEFICIOS SOCIALES (Julio 2026)
     // ==========================================
     beneficios: {
         reintegros: {
@@ -212,7 +250,7 @@ const DATA = {
                     titulo: 'Hotel por Enfermedad o Fuerza Mayor',
                     porcentaje: '20%',
                     montoMax: null,
-                    descripcion: 'Para afiliados que por motivos de enfermedad o fuerza mayor (demostrable) deban permanecer en San Juan Capital.',
+                    descripcion: 'Para afiliados que por motivos de enfermedad o fuerza mayor deban permanecer en San Juan Capital.',
                     exclusiones: null,
                     documentacion: 'Ticket o factura avalada por ARCA, documentación respaldatoria del motivo, carnet de afiliado y último recibo de sueldo.'
                 },
@@ -251,7 +289,7 @@ const DATA = {
                     titulo: '30 Años de Afiliado',
                     porcentaje: null,
                     montoMax: '7 días + 100 litros de nafta',
-                    descripcion: '7 días de estadía y media pensión (desayuno y cena, sin bebidas) en hoteles AOMA. Incluye valor de 100 litros de nafta súper.',
+                    descripcion: '7 días de estadía y media pensión en hoteles AOMA. Incluye valor de 100 litros de nafta súper.',
                     exclusiones: 'No aplica para temporada alta ni fines de semana largo.',
                     documentacion: 'Documentación que acredite 30 años de afiliación, carnet de afiliado y último recibo de sueldo.'
                 }
@@ -307,7 +345,7 @@ const DATA = {
                     montoMax: null,
                     descripcion: 'Salón Sede AOMA ubicado en Calle La Laja s/n, Las Lomitas (Albardón).',
                     exclusiones: 'Beneficio exclusivo para afiliado titular y grupo familiar primario.',
-                    documentacion: 'Reservas y condiciones: consultar en AOMA Albardón o AOMA Capital. Presentar documentación del evento, carnet de afiliado y último recibo de sueldo.'
+                    documentacion: 'Reservas y condiciones: consultar en AOMA Albardón o AOMA Capital.'
                 },
                 {
                     titulo: 'Salón Los Berros',
@@ -330,7 +368,7 @@ const DATA = {
                     montoMax: null,
                     descripcion: 'Durante todo el año, tarifa promocional para los hoteles ubicados en: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo, Villa Gesell, Tierra Mora.',
                     exclusiones: 'Aplica para titular y grupo familiar directo.',
-                    documentacion: 'Reservas en sedes de AOMA Capital, Albardón, Jáchal. Presentar documentación correspondiente.'
+                    documentacion: 'Reservas en sedes de AOMA Capital, Albardón, Jáchal.'
                 }
             ]
         },
@@ -360,64 +398,7 @@ const DATA = {
     },
 
     // ==========================================
-    // 5. ESCALAS SALARIALES
-    // ==========================================
-    escalas: {
-        'mineria-extractiva': [
-            { categoria: 'Operario de Mina', nivel: 'A', salario: 1100000 },
-            { categoria: 'Operario Especializado', nivel: 'B', salario: 1350000 },
-            { categoria: 'Oficial Minero', nivel: 'C', salario: 1580000 },
-            { categoria: 'Maestro Minero', nivel: 'D', salario: 1850000 },
-            { categoria: 'Técnico Minero', nivel: 'E', salario: 2100000 },
-            { categoria: 'Delegado Sindical', nivel: 'F', salario: 2250000 }
-        ],
-        'cemento': [
-            { categoria: 'Operario de Planta', nivel: 'A', salario: 850000 },
-            { categoria: 'Operario Especializado', nivel: 'B', salario: 980000 },
-            { categoria: 'Oficial 1°', nivel: 'C', salario: 1120000 },
-            { categoria: 'Oficial Maestro', nivel: 'D', salario: 1350000 },
-            { categoria: 'Técnico', nivel: 'E', salario: 1480000 },
-            { categoria: 'Delegado', nivel: 'F', salario: 1620000 }
-        ],
-        'cal-piedra': [
-            { categoria: 'Operario / Canterito', nivel: 'A', salario: 820000 },
-            { categoria: 'Operario Calero', nivel: 'B', salario: 950000 },
-            { categoria: 'Oficial', nivel: 'C', salario: 1100000 },
-            { categoria: 'Maestro Calero/Canterito', nivel: 'D', salario: 1300000 },
-            { categoria: 'Volador Habilitado', nivel: 'E', salario: 1400000 }
-        ],
-        'molienda': [
-            { categoria: 'Operario de Molienda', nivel: 'A', salario: 950000 },
-            { categoria: 'Operario de Molino', nivel: 'B', salario: 1150000 },
-            { categoria: 'Oficial de Planta', nivel: 'C', salario: 1380000 },
-            { categoria: 'Supervisor de Turno', nivel: 'D', salario: 1700000 }
-        ]
-    },
-
-    // ==========================================
-    // 6. CURSOS / CAPACITACIONES (BASE)
-    // ==========================================
-    cursos: [],
-
-    // ==========================================
-    // 7. VIDEOS DE YOUTUBE
-    // ==========================================
-    videos: [
-        {
-            id: 1,
-            titulo: 'Seguridad en Minería Subterránea',
-            categoria: 'mineria-extractiva',
-            youtubeId: 'dQw4w9WgXcQ',
-            duracion: '45:20',
-            thumbnail: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600&q=80',
-            descripcion: 'Charla completa sobre seguridad en minería subterránea.',
-            vistas: 1234,
-            fecha: '2024-01-15'
-        }
-    ],
-
-    // ==========================================
-    // 8. PREGUNTAS FRECUENTES
+    // 7. PREGUNTAS FRECUENTES
     // ==========================================
     faqs: {
         general: [
@@ -429,7 +410,7 @@ const DATA = {
         ],
         beneficios: [
             { pregunta: '¿Qué requisitos necesito para solicitar un reintegro?', respuesta: 'Generalmente necesitás: ticket o factura avalada por ARCA (ex AFIP), carnet de afiliado, último recibo de sueldo, y documentación específica del beneficio (receta médica, partida de nacimiento, etc.).' },
-            { pregunta: '¿Qué es un ticket o factura avalada por ARCA?', respuesta: 'Es un comprobante digital o físico electrónico (factura A, B, C o tickets factura) autorizado con CAE/CAI. Se emite vía web (Comprobantes en Línea), el facturador para monotributistas, o controladores fiscales. La validez se verifica mediante el código de barras o en Mis Comprobantes.' },
+            { pregunta: '¿Qué es un ticket o factura avalada por ARCA?', respuesta: 'Es un comprobante digital o físico electrónico (factura A, B, C o tickets factura) autorizado con CAE/CAI. Se emite vía web (Comprobantes en Línea), el facturador para monotributistas, o controladores fiscales.' },
             { pregunta: '¿A qué hoteles de AOMA puedo acceder?', respuesta: 'AOMA tiene hoteles en: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo, Villa Gesell y Tierra Mora. Todos con tarifa promocional todo el año para afiliados.' },
             { pregunta: '¿El beneficio de hoteles aplica en temporada alta?', respuesta: 'Los beneficios de estadía por matrimonio y por 30 años de afiliado NO aplican para temporada alta ni fines de semana largo. Pero las tarifas promocionales están disponibles todo el año.' },
             { pregunta: '¿Dónde puedo solicitar los beneficios?', respuesta: 'Dirigite o llamá a AOMA Seccional San Juan de lunes a viernes de 08:00 a 17:00 hs. Dirección: Entre Ríos 468 (S) - San Juan. Tel: 0264-4220191. Email: accionsocialyturismo@aomaosamsanjuan.com.ar' }
@@ -452,7 +433,7 @@ const DATA = {
     },
 
     // ==========================================
-    // 9. NOTICIAS
+    // 8. NOTICIAS
     // ==========================================
     noticias: [
         {
@@ -476,22 +457,11 @@ const DATA = {
             autor: 'Secretaría de Formación',
             fecha: '2024-02-20',
             destacado: false
-        },
-        {
-            id: 3,
-            titulo: 'Actualización de escalas salariales Julio 2026',
-            categoria: 'Salarios',
-            resumen: 'Se actualizaron las tablas salariales para todas las actividades.',
-            contenido: 'Contenido completo...',
-            imagen: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80',
-            autor: 'Administración',
-            fecha: '2026-07-01',
-            destacado: true
         }
     ],
 
     // ==========================================
-    // 10. USUARIOS POR DEFECTO
+    // 9. USUARIOS POR DEFECTO
     // ==========================================
     usuarios: [
         {
@@ -512,30 +482,20 @@ const DATA = {
             role: 'delegado',
             active: true,
             department: 'cemento'
-        },
-        {
-            id: 3,
-            username: 'dirigente',
-            password: '1234',
-            name: 'María Fernanda Dirigente',
-            email: 'dirigente@aoma.org.ar',
-            role: 'dirigente',
-            active: true,
-            department: 'mineria-extractiva'
         }
     ],
 
     // ==========================================
-    // 11. RESPUESTAS DEL CHAT
+    // 10. RESPUESTAS DEL CHAT
     // ==========================================
     chatResponses: {
         'hola|buenas|buenos días': '¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte hoy?',
         'gracias|thanks': '¡De nada! 😊 Estoy aquí para lo que necesites.',
         'adiós|chau|bye': '¡Hasta luego! 👋 Que tengas un excelente día.',
-        'escala|salarial|sueldo': '💰 Podés consultar las escalas salariales en el menú → "Escalas Salariales". Están separadas por actividad: Minería Extractiva, Cemento, Cal y Piedra, y Molienda.',
-        'convenio|ctt': '📋 Tenemos 8 convenios colectivos organizados por actividad:\n\n• Cal y Piedra: CCT 36/89\n• Molienda: CCT 37/89\n• Cemento: CCT 53/89 y 54/89\n• Extractiva: CCT 38/89 + convenios por empresa (Veladero, Gualcamayo, Vicuña)\n\nConsultalos en "Convenios CCT".',
+        'escala|salarial|sueldo': '💰 Podés consultar las escalas salariales en el menú → "Convenios CCT" → Elegí tu actividad. Están separadas por actividad: Minería Extractiva, Cemento, Cal y Piedra, y Molienda.',
+        'convenio|ctt': '📋 Tenemos 8 convenios colectivos organizados por actividad y por empresa. Consultalos en "Convenios CCT".',
         'ley|legislación|legislacion': '⚖️ Tenemos 5 leyes laborales cargadas: LCT 20.744, Ley 19.587, Ley 24.557, Ley 24.013 y Ley 23.551. Consultalas en "Legislación".',
-        'curso|capacitacion|capacitación': '🎓 Tenemos cursos disponibles organizados por actividad. Ver en "Capacitaciones".',
+        'curso|capacitacion|capacitación': '🎓 Tenemos cursos disponibles. Ver en "Capacitaciones".',
         'beneficio|reintegro|medicamento|hotel|subsidio': '🎁 AOMA San Juan ofrece múltiples beneficios: reintegros de medicamentos (30%), anteojos (40%), estadías en hoteles, kits escolares, becas y subsidios. Consultalos en "Beneficios".',
         'hotel|hoteles|estadía|vacaciones': '🏨 AOMA tiene hoteles en: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo, Villa Gesell y Tierra Mora. Consultá los beneficios en la sección "Beneficios".',
         'contraseña|clave|password': '🔑 Para recuperar tu contraseña, contactá al administrador al email campus@aomasanjuan.org.ar indicando tu DNI y legajo.',
@@ -566,9 +526,6 @@ DATA.formatDate = function(dateString) {
     });
 };
 
-// ============================================
-// EXPORTAR GLOBALMENTE
-// ============================================
 if (typeof window !== 'undefined') {
     window.DATA = DATA;
 }
@@ -578,6 +535,4 @@ console.log('📋 ' + Object.keys(DATA.actividades).length + ' actividades');
 console.log('🏢 ' + Object.keys(DATA.empresas).length + ' empresas');
 console.log('📜 ' + DATA.convenios.length + ' convenios colectivos');
 console.log('🎁 ' + Object.keys(DATA.beneficios).length + ' categorías de beneficios');
-console.log('🎓 ' + DATA.cursos.length + ' cursos base');
-console.log('🎥 ' + DATA.videos.length + ' videos');
-console.log('📰 ' + DATA.noticias.length + ' noticias');
+console.log('🎓 ' + DATA.cursos.length + ' cursos cargados');
