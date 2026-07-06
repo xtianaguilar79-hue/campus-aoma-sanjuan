@@ -161,6 +161,14 @@ body {
     justify-content: center;
     color: white;
     font-size: 1.125rem;
+    overflow: hidden;
+}
+
+/* Logo en el header */
+.brand-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .brand-text h1 {
@@ -176,7 +184,7 @@ body {
 }
 
 /* ============================================
-   NAV PILLS
+   NAV PILLS (Desktop)
    ============================================ */
 .nav-pills {
     display: flex;
@@ -218,6 +226,79 @@ body {
 
 .nav-pill i {
     font-size: 0.875rem;
+}
+
+/* ============================================
+   DROPDOWN DE CONVENIOS
+   ============================================ */
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu-convenios {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    min-width: 320px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 200;
+    padding: 0.75rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.nav-dropdown:hover .dropdown-menu-convenios {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-section {
+    padding: 0.5rem;
+}
+
+.dropdown-section-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.625rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.dropdown-link:hover {
+    background: var(--bg-input);
+    color: var(--primary);
+}
+
+.dropdown-link i {
+    color: var(--accent);
+    width: 16px;
+    text-align: center;
 }
 
 /* ============================================
@@ -1366,86 +1447,7 @@ body {
 }
 
 /* ============================================
-   SCROLLBAR
-   ============================================ */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-input); }
-::-webkit-scrollbar-thumb {
-    background: var(--gray-400);
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover { background: var(--gray-500); }
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-@media (max-width: 1024px) {
-    .nav-pills { display: none; }
-    
-    .header-container { padding: 0 1rem; }
-    
-    .user-info { display: none; }
-    
-    .main-content { padding: 1.5rem; }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    :root { --header-height: 60px; }
-    
-    .header-container { padding: 0 0.75rem; }
-    
-    .brand-text span { display: none; }
-    
-    .main-content { padding: 1rem; }
-    
-    .stats-grid { grid-template-columns: 1fr; }
-    
-    .cards-grid { grid-template-columns: 1fr; }
-    
-    .page-header h1 { font-size: 1.5rem; }
-    
-    .section { padding: 1.25rem; }
-    
-    .chat-window {
-        width: calc(100vw - 2rem);
-        right: -0.5rem;
-    }
-    
-    .activity-hero { height: 200px; }
-    .activity-hero-content h1 { font-size: 1.5rem; }
-    
-    /* Barra de búsqueda en móvil */
-    .content-search-bar {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    
-    .content-search-bar input {
-        flex: 1 1 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .header-right .icon-btn:not(#themeBtn) {
-        display: none;
-    }
-    
-    .chat-widget {
-        bottom: 1rem;
-        right: 1rem;
-    }
-    
-    .mobile-menu { max-width: 100%; }
-/* ============================================
-   ESTILOS DE CAPACITACIONES
+   CAPACITACIONES
    ============================================ */
 .capacitacion-content {
     max-width: 900px;
@@ -1594,107 +1596,8 @@ body {
     color: var(--primary);
 }
 
-/* Responsive para capacitaciones */
-@media (max-width: 768px) {
-    .capacitacion-content .modulo {
-        padding: 1.25rem;
-    }
-    
-    .capacitacion-content .modulo-intro {
-        padding: 1.5rem;
-    }
-    
-    .capacitacion-content h2 {
-        font-size: 1.5rem;
-    }
-    
-    .capacitacion-content h3 {
-        font-size: 1.125rem;
-    }
-    
-    .capacitacion-content p,
-    .capacitacion-content ul li {
-        font-size: 1rem;
-    }
-    
-    .capacitacion-content blockquote {
-        padding: 1rem 1.25rem;
-    }
 /* ============================================
-   DROPDOWN DE CONVENIOS (Desktop)
-   ============================================ */
-.nav-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-menu-convenios {
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    left: 0;
-    min-width: 320px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-xl);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.2s ease;
-    z-index: 200;
-    padding: 0.75rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-}
-
-.nav-dropdown:hover .dropdown-menu-convenios {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.dropdown-section {
-    padding: 0.5rem;
-}
-
-.dropdown-section-title {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.25rem 0.5rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-}
-
-.dropdown-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.625rem;
-    color: var(--text-primary);
-    text-decoration: none;
-    font-size: 0.875rem;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.dropdown-link:hover {
-    background: var(--bg-input);
-    color: var(--primary);
-}
-
-.dropdown-link i {
-    color: var(--accent);
-    width: 16px;
-    text-align: center;
-}
-
-/* ============================================
-   BENEFICIOS - CARDS PROFESIONALES
+   BENEFICIOS
    ============================================ */
 .beneficios-grid {
     display: grid;
@@ -1813,19 +1716,75 @@ body {
 }
 
 /* ============================================
-   RESPONSIVE - DROPDOWN Y BENEFICIOS
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-input); }
+::-webkit-scrollbar-thumb {
+    background: var(--gray-400);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--gray-500); }
+
+/* ============================================
+   RESPONSIVE
    ============================================ */
 @media (max-width: 1024px) {
-    .nav-dropdown {
-        display: none; /* En mobile se oculta el dropdown, se usa el menú lateral */
+    .nav-pills { display: none; }
+    
+    .header-container { padding: 0 1rem; }
+    
+    .user-info { display: none; }
+    
+    .main-content { padding: 1.5rem; }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
     
-    .dropdown-menu-convenios {
-        grid-template-columns: 1fr;
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .nav-dropdown {
+        display: none;
     }
 }
 
 @media (max-width: 768px) {
+    :root { --header-height: 60px; }
+    
+    .header-container { padding: 0 0.75rem; }
+    
+    .brand-text span { display: none; }
+    
+    .main-content { padding: 1rem; }
+    
+    .stats-grid { grid-template-columns: 1fr; }
+    
+    .cards-grid { grid-template-columns: 1fr; }
+    
+    .page-header h1 { font-size: 1.5rem; }
+    
+    .section { padding: 1.25rem; }
+    
+    .chat-window {
+        width: calc(100vw - 2rem);
+        right: -0.5rem;
+    }
+    
+    .activity-hero { height: 200px; }
+    .activity-hero-content h1 { font-size: 1.5rem; }
+    
+    .content-search-bar {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .content-search-bar input {
+        flex: 1 1 100%;
+    }
+    
     .beneficios-grid {
         grid-template-columns: 1fr;
     }
@@ -1838,9 +1797,45 @@ body {
     .beneficio-badge {
         align-self: flex-start;
     }
+    
+    .capacitacion-content .modulo {
+        padding: 1.25rem;
+    }
+    
+    .capacitacion-content .modulo-intro {
+        padding: 1.5rem;
+    }
+    
+    .capacitacion-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .capacitacion-content h3 {
+        font-size: 1.125rem;
+    }
+    
+    .capacitacion-content p,
+    .capacitacion-content ul li {
+        font-size: 1rem;
+    }
+    
+    .capacitacion-content blockquote {
+        padding: 1rem 1.25rem;
+    }
 }
 
 @media (max-width: 480px) {
+    .header-right .icon-btn:not(#themeBtn) {
+        display: none;
+    }
+    
+    .chat-widget {
+        bottom: 1rem;
+        right: 1rem;
+    }
+    
+    .mobile-menu { max-width: 100%; }
+    
     .beneficio-body {
         padding: 1rem;
     }
