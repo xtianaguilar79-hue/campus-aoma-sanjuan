@@ -51,11 +51,50 @@ const DATA = {
     },
 
     // ==========================================
-    // 2. CONVENIOS COLECTIVOS (ARRAY PLANO)
+    // 2. EMPRESAS MINERAS (Convenios por empresa)
     // ==========================================
-    // Cada convenio tiene: numero, titulo, subtitulo, actividad, contenido
-    // El contenido se carga desde archivos separados (js/content/convenios/)
-    // Si no existe el archivo separado, se muestra un mensaje placeholder
+    empresas: {
+        'veladero': {
+            id: 'veladero',
+            nombre: 'Mina Veladero',
+            empresa: 'Barrick Gold / Shandong Gold',
+            icono: 'fa-building',
+            color: '#0891b2',
+            imagen: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&q=80',
+            ubicacion: 'Iglesia, San Juan',
+            descripcion: 'Mina de oro y plata a cielo abierto ubicada en alta cordillera',
+            actividad: 'mineria-extractiva',
+            ctt: 'Convenio específico Veladero'
+        },
+        'gualcamayo': {
+            id: 'gualcamayo',
+            nombre: 'Mina Gualcamayo',
+            empresa: 'Minas Argentinas S.A. (Yamana Gold)',
+            icono: 'fa-building',
+            color: '#0891b2',
+            imagen: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&q=80',
+            ubicacion: 'Jáchal, San Juan',
+            descripcion: 'Mina de oro a cielo abierto',
+            actividad: 'mineria-extractiva',
+            ctt: 'Convenio específico Gualcamayo'
+        },
+        'vicuña': {
+            id: 'vicuña',
+            nombre: 'Mina Vicuña',
+            empresa: 'Vicuña Corp (Pan American Silver)',
+            icono: 'fa-building',
+            color: '#0891b2',
+            imagen: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&q=80',
+            ubicacion: 'Iglesia, San Juan',
+            descripcion: 'Proyecto de cobre, oro y plata en alta cordillera',
+            actividad: 'mineria-extractiva',
+            ctt: 'Convenio específico Vicuña'
+        }
+    },
+
+    // ==========================================
+    // 3. CONVENIOS COLECTIVOS (ARRAY PLANO)
+    // ==========================================
     convenios: [
         {
             numero: 'CCT 36/89',
@@ -64,7 +103,7 @@ const DATA = {
             actividad: 'cal-piedra',
             variable: 'CTT_36_89',
             resumen: 'Convenio colectivo para trabajadores de cal, piedra y actividades afines',
-            contenido: null // Se carga desde js/content/convenios/ctt-36-89.js
+            contenido: null
         },
         {
             numero: 'CCT 37/89',
@@ -102,13 +141,15 @@ const DATA = {
             resumen: 'Convenio para personal obrero de la industria del cemento',
             contenido: null
         },
+        // Convenios por empresa (agrupados bajo actividad 'mineria-extractiva' y empresa específica)
         {
             numero: 'CCT Veladero',
             titulo: 'Convenio Colectivo - Mina Veladero',
             subtitulo: 'Convenio por empresa - Mina Veladero',
             actividad: 'mineria-extractiva',
+            empresa: 'veladero',
             variable: 'CTT_VELADERO',
-            resumen: 'Convenio colectivo específico de la Mina Veladero',
+            resumen: 'Convenio colectivo específico de la Mina Veladero (Barrick Gold / Shandong Gold)',
             contenido: null
         },
         {
@@ -116,8 +157,9 @@ const DATA = {
             titulo: 'Convenio Colectivo - Mina Gualcamayo',
             subtitulo: 'Convenio por empresa - Mina Gualcamayo',
             actividad: 'mineria-extractiva',
+            empresa: 'gualcamayo',
             variable: 'CTT_GUALCAMAYO',
-            resumen: 'Convenio colectivo específico de la Mina Gualcamayo',
+            resumen: 'Convenio colectivo específico de la Mina Gualcamayo (Yamana Gold)',
             contenido: null
         },
         {
@@ -125,14 +167,200 @@ const DATA = {
             titulo: 'Convenio Colectivo - Mina Vicuña',
             subtitulo: 'Convenio por empresa - Mina Vicuña',
             actividad: 'mineria-extractiva',
+            empresa: 'vicuña',
             variable: 'CTT_VICUNA',
-            resumen: 'Convenio colectivo específico de la Mina Vicuña',
+            resumen: 'Convenio colectivo específico de la Mina Vicuña (Pan American Silver)',
             contenido: null
         }
     ],
 
     // ==========================================
-    // 3. ESCALAS SALARIALES
+    // 4. BENEFICIOS SOCIALES (Julio 2026)
+    // Fuente: AOMA - Beneficios JULIO 2026
+    // ==========================================
+    beneficios: {
+        reintegros: {
+            titulo: 'Reintegros',
+            icono: 'fa-receipt',
+            color: '#10b981',
+            items: [
+                {
+                    titulo: 'Medicamentos',
+                    porcentaje: '30%',
+                    montoMax: null,
+                    descripcion: 'Reintegro del 30% del valor total indicado en comprobante.',
+                    exclusiones: 'Quedan excluidos medicamentos de venta libre, preparados magistrales, perfumería, etc.',
+                    documentacion: 'Ticket o factura avalada por ARCA, copia receta médica, carnet de afiliado y último recibo de sueldo.'
+                },
+                {
+                    titulo: 'Ortopedia y Ortodoncia',
+                    porcentaje: '30%',
+                    montoMax: '$250.000',
+                    descripcion: 'Ortopedia temporaria-definitiva y ortodoncia fija-removible-funcional.',
+                    exclusiones: 'Quedan excluidos los productos estéticos.',
+                    documentacion: 'Ticket o factura avalada por ARCA, copia receta médica, carnet de afiliado y último recibo de sueldo.'
+                },
+                {
+                    titulo: 'Anteojos y Lentes de Contacto',
+                    porcentaje: '40%',
+                    montoMax: '$250.000',
+                    descripcion: 'Anteojos y lentes de contacto recetados.',
+                    exclusiones: 'Quedan excluidos los productos estéticos.',
+                    documentacion: 'Ticket o factura avalada por ARCA, copia receta médica, carnet de afiliado y último recibo de sueldo.'
+                },
+                {
+                    titulo: 'Hotel por Enfermedad o Fuerza Mayor',
+                    porcentaje: '20%',
+                    montoMax: null,
+                    descripcion: 'Para afiliados que por motivos de enfermedad o fuerza mayor (demostrable) deban permanecer en San Juan Capital.',
+                    exclusiones: null,
+                    documentacion: 'Ticket o factura avalada por ARCA, documentación respaldatoria del motivo, carnet de afiliado y último recibo de sueldo.'
+                },
+                {
+                    titulo: 'Pasajes de Colectivos de Larga Distancia',
+                    porcentaje: '20%',
+                    montoMax: null,
+                    descripcion: 'Reintegro para pasajes fuera de la provincia de San Juan.',
+                    exclusiones: null,
+                    documentacion: 'Pasajes originales, carnet de afiliado y último recibo de sueldo.'
+                },
+                {
+                    titulo: 'Salones de Eventos Familiares',
+                    porcentaje: 'Monto Fijo',
+                    montoMax: '$100.000',
+                    descripcion: 'Beneficio exclusivo para el afiliado titular y su grupo familiar primario en Capital San Juan.',
+                    exclusiones: null,
+                    documentacion: 'Ticket o factura avalada por ARCA, documentación respaldatoria del evento, carnet de afiliado y último recibo de sueldo.'
+                }
+            ]
+        },
+        hoteles: {
+            titulo: 'Estadías y Hoteles AOMA/OSAM',
+            icono: 'fa-hotel',
+            color: '#3b82f6',
+            items: [
+                {
+                    titulo: 'Matrimonio / Unión Civil o Convivencial',
+                    porcentaje: null,
+                    montoMax: '7 días + 100 litros de nafta',
+                    descripcion: '7 días de estadía y media pensión (desayuno y cena, sin bebidas) en hoteles AOMA: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo. Incluye valor de 100 litros de nafta súper a cancelar al regreso.',
+                    exclusiones: 'No aplica para temporada alta ni fines de semana largo.',
+                    documentacion: 'Copia libreta de matrimonio o certificación de turno, carnet de afiliado y último recibo de sueldo.'
+                },
+                {
+                    titulo: '30 Años de Afiliado',
+                    porcentaje: null,
+                    montoMax: '7 días + 100 litros de nafta',
+                    descripcion: '7 días de estadía y media pensión (desayuno y cena, sin bebidas) en hoteles AOMA. Incluye valor de 100 litros de nafta súper.',
+                    exclusiones: 'No aplica para temporada alta ni fines de semana largo.',
+                    documentacion: 'Documentación que acredite 30 años de afiliación, carnet de afiliado y último recibo de sueldo.'
+                }
+            ]
+        },
+        familia: {
+            titulo: 'Familia',
+            icono: 'fa-users',
+            color: '#ec4899',
+            items: [
+                {
+                    titulo: 'Nacimiento',
+                    porcentaje: null,
+                    montoMax: 'Leche por 12 meses + ajuar',
+                    descripcion: 'Entrega de 2 unidades por 800grs de leche por 12 meses (1 año). Por única vez, 1 ajuar completo.',
+                    exclusiones: null,
+                    documentacion: 'Copia partida de nacimiento o DNI del bebé, carnet de afiliado y último recibo de sueldo.'
+                },
+                {
+                    titulo: 'Kits Escolares',
+                    porcentaje: null,
+                    montoMax: null,
+                    descripcion: 'Útiles escolares y guardapolvos para estudiantes primarios. Útiles escolares para estudiantes secundarios. Una vez al año.',
+                    exclusiones: null,
+                    documentacion: 'Documentación correspondiente según solicitud.'
+                },
+                {
+                    titulo: 'Campings',
+                    porcentaje: null,
+                    montoMax: null,
+                    descripcion: 'En temporada estival, uso de campings e instalaciones contratadas.',
+                    exclusiones: null,
+                    documentacion: 'Consultar en sedes de AOMA San Juan con documentación correspondiente.'
+                },
+                {
+                    titulo: 'Becas Educativas',
+                    porcentaje: null,
+                    montoMax: null,
+                    descripcion: 'Para estudiantes de niveles terciarios y universitarios avalados por el Ministerio de Educación.',
+                    exclusiones: null,
+                    documentacion: 'Documentación correspondiente según solicitud.'
+                }
+            ]
+        },
+        salones: {
+            titulo: 'Salones de Eventos Familiares',
+            icono: 'fa-glass-cheers',
+            color: '#8b5cf6',
+            items: [
+                {
+                    titulo: 'Salón Albardón',
+                    porcentaje: null,
+                    montoMax: null,
+                    descripcion: 'Salón Sede AOMA ubicado en Calle La Laja s/n, Las Lomitas (Albardón).',
+                    exclusiones: 'Beneficio exclusivo para afiliado titular y grupo familiar primario.',
+                    documentacion: 'Reservas y condiciones: consultar en AOMA Albardón o AOMA Capital. Presentar documentación del evento, carnet de afiliado y último recibo de sueldo.'
+                },
+                {
+                    titulo: 'Salón Los Berros',
+                    porcentaje: null,
+                    montoMax: null,
+                    descripcion: 'Salón Sede AOMA ubicado en callejón Díaz s/n.',
+                    exclusiones: 'Beneficio exclusivo para afiliado titular y grupo familiar primario.',
+                    documentacion: 'Reservas y condiciones: consultar en AOMA Los Berros.'
+                }
+            ]
+        },
+        hoteles_tarifa: {
+            titulo: 'Hoteles AOMA-OSAM (Tarifa Promocional)',
+            icono: 'fa-bed',
+            color: '#06b6d4',
+            items: [
+                {
+                    titulo: 'Tarifa Promocional todo el año',
+                    porcentaje: null,
+                    montoMax: null,
+                    descripcion: 'Durante todo el año, tarifa promocional para los hoteles ubicados en: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo, Villa Gesell, Tierra Mora.',
+                    exclusiones: 'Aplica para titular y grupo familiar directo.',
+                    documentacion: 'Reservas en sedes de AOMA Capital, Albardón, Jáchal. Presentar documentación correspondiente.'
+                }
+            ]
+        },
+        subsidios: {
+            titulo: 'Subsidios',
+            icono: 'fa-hand-holding-heart',
+            color: '#ef4444',
+            items: [
+                {
+                    titulo: 'Fallecimiento - Afiliado AOMA San Juan',
+                    porcentaje: null,
+                    montoMax: '$100.000',
+                    descripcion: 'Subsidio por fallecimiento del afiliado y grupo familiar primario.',
+                    exclusiones: null,
+                    documentacion: 'Documentación correspondiente según solicitud.'
+                },
+                {
+                    titulo: 'Fallecimiento - Afiliado OSAM',
+                    porcentaje: null,
+                    montoMax: 'Consultar',
+                    descripcion: 'Subsidio por fallecimiento para afiliado y grupo familiar primario.',
+                    exclusiones: null,
+                    documentacion: 'Consultar en oficinas habilitadas.'
+                }
+            ]
+        }
+    },
+
+    // ==========================================
+    // 5. ESCALAS SALARIALES
     // ==========================================
     escalas: {
         'mineria-extractiva': [
@@ -167,99 +395,12 @@ const DATA = {
     },
 
     // ==========================================
-    // 4. CURSOS / CAPACITACIONES (BASE)
+    // 6. CURSOS / CAPACITACIONES (BASE)
     // ==========================================
-    // Los cursos con contenido extenso se cargan desde archivos separados
-    // en js/content/capacitaciones/ (ej: negociacion-colectiva.js)
-    cursos: [
-        {
-            id: 1,
-            titulo: 'Seguridad Minera Básica',
-            categoria: 'Seguridad',
-            actividad: 'mineria-extractiva',
-            instructor: 'Ing. Roberto Sánchez',
-            duracion: '8 horas',
-            nivel: 'Básico',
-            imagen: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=80',
-            descripcion: 'Curso obligatorio sobre normas de seguridad en minería según Ley 19587.',
-            modulos: 5,
-            contenido: '<h3>Módulo 1: Introducción a la seguridad minera</h3><p>La seguridad en minería es fundamental para prevenir accidentes.</p><h3>Módulo 2: EPP obligatorio</h3><p>Elementos de Protección Personal: casco, botas, linterna, etc.</p>',
-            archivoSeparado: false
-        },
-        {
-            id: 2,
-            titulo: 'Liderazgo Sindical',
-            categoria: 'Gremial',
-            actividad: 'general',
-            instructor: 'Lic. Ana Martínez',
-            duracion: '12 horas',
-            nivel: 'Intermedio',
-            imagen: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80',
-            descripcion: 'Herramientas de negociación y representación gremial para delegados.',
-            modulos: 6,
-            contenido: '<h3>El rol del delegado</h3><p>Funciones, derechos y obligaciones del delegado sindical según la Ley 23.551.</p>',
-            archivoSeparado: false
-        },
-        {
-            id: 3,
-            titulo: 'Proceso de Producción de Cemento',
-            categoria: 'Técnico',
-            actividad: 'cemento',
-            instructor: 'Ing. Luis Fernández',
-            duracion: '10 horas',
-            nivel: 'Intermedio',
-            imagen: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&q=80',
-            descripcion: 'Conocimiento del proceso productivo del cemento desde la cantera hasta el producto final.',
-            modulos: 5,
-            contenido: '<h3>Proceso completo</h3><p>Extracción, trituración, molienda de crudo, calcinación en horno rotativo, molienda de clínker y ensacado.</p>',
-            archivoSeparado: false
-        },
-        {
-            id: 4,
-            titulo: 'Operación de Caleras',
-            categoria: 'Técnico',
-            actividad: 'cal-piedra',
-            instructor: 'Téc. Carlos Gómez',
-            duracion: '8 horas',
-            nivel: 'Básico',
-            imagen: 'https://images.unsplash.com/photo-1565008447742-97f6f38c9858?w=600&q=80',
-            descripcion: 'Operación segura de hornos de cal y canteras.',
-            modulos: 4,
-            contenido: '<h3>Operación de hornos</h3><p>Técnicas de operación segura de hornos de cal.</p>',
-            archivoSeparado: false
-        },
-        {
-            id: 5,
-            titulo: 'Molienda de Minerales',
-            categoria: 'Técnico',
-            actividad: 'molienda',
-            instructor: 'Ing. María López',
-            duracion: '12 horas',
-            nivel: 'Avanzado',
-            imagen: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&q=80',
-            descripcion: 'Procesos de molienda SAG y de bolas.',
-            modulos: 6,
-            contenido: '<h3>Molinos SAG</h3><p>Operación y mantenimiento de molinos SAG y de bolas.</p>',
-            archivoSeparado: false
-        },
-        {
-            id: 6,
-            titulo: 'Legislación Laboral Minera',
-            categoria: 'Legal',
-            actividad: 'general',
-            instructor: 'Dr. Pedro Rodríguez',
-            duracion: '6 horas',
-            nivel: 'Básico',
-            imagen: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80',
-            descripcion: 'Marco legal y convenios colectivos del sector minero.',
-            modulos: 4,
-            contenido: '<h3>Marco normativo</h3><p>Ley de Contrato de Trabajo, Convenios Colectivos, Ley de Riesgos del Trabajo.</p>',
-            archivoSeparado: false
-        }
-    ],
+    cursos: [],
 
     // ==========================================
-    // 5. VIDEOS DE YOUTUBE
+    // 7. VIDEOS DE YOUTUBE
     // ==========================================
     videos: [
         {
@@ -272,51 +413,26 @@ const DATA = {
             descripcion: 'Charla completa sobre seguridad en minería subterránea.',
             vistas: 1234,
             fecha: '2024-01-15'
-        },
-        {
-            id: 2,
-            titulo: 'Proceso de Producción de Cemento',
-            categoria: 'cemento',
-            youtubeId: 'dQw4w9WgXcQ',
-            duracion: '28:40',
-            thumbnail: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&q=80',
-            descripcion: 'Recorrido por una planta cementera.',
-            vistas: 412,
-            fecha: '2024-03-25'
-        },
-        {
-            id: 3,
-            titulo: 'Operación de Hornos de Cal',
-            categoria: 'cal-piedra',
-            youtubeId: 'dQw4w9WgXcQ',
-            duracion: '38:25',
-            thumbnail: 'https://images.unsplash.com/photo-1565008447742-97f6f38c9858?w=600&q=80',
-            descripcion: 'Operación y mantenimiento de hornos de cal.',
-            vistas: 267,
-            fecha: '2024-05-02'
-        },
-        {
-            id: 4,
-            titulo: 'Molienda SAG',
-            categoria: 'molienda',
-            youtubeId: 'dQw4w9WgXcQ',
-            duracion: '32:15',
-            thumbnail: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=600&q=80',
-            descripcion: 'Capacitación sobre operación de molinos SAG.',
-            vistas: 543,
-            fecha: '2024-03-10'
         }
     ],
 
     // ==========================================
-    // 6. PREGUNTAS FRECUENTES
+    // 8. PREGUNTAS FRECUENTES
     // ==========================================
     faqs: {
         general: [
             { pregunta: '¿Cómo me inscribo a una capacitación?', respuesta: 'Ingresá a la sección "Capacitaciones", seleccioná el curso deseado y hacé clic en "Inscribirme".' },
             { pregunta: '¿Los cursos tienen certificación?', respuesta: 'Sí, al completar la capacitación y aprobar la evaluación, recibirás un certificado digital con validez gremial.' },
             { pregunta: '¿Cómo recupero mi contraseña?', respuesta: 'Contactá al administrador al email campus@aomasanjuan.org.ar indicando tu DNI y legajo.' },
+            { pregunta: '¿Qué beneficios tengo como afiliado?', respuesta: 'Como afiliado tenés acceso a: reintegros de medicamentos (30%), anteojos (40%), estadías en hoteles AOMA, kits escolares, becas educativas, subsidio por fallecimiento y mucho más. Consultá la sección "Beneficios".' },
             { pregunta: '¿Qué beneficios tengo como delegado?', respuesta: 'Como delegado tenés acceso a: capacitaciones gratuitas, escalas salariales actualizadas, asesoramiento legal, horas gremiales y representación ante la empresa.' }
+        ],
+        beneficios: [
+            { pregunta: '¿Qué requisitos necesito para solicitar un reintegro?', respuesta: 'Generalmente necesitás: ticket o factura avalada por ARCA (ex AFIP), carnet de afiliado, último recibo de sueldo, y documentación específica del beneficio (receta médica, partida de nacimiento, etc.).' },
+            { pregunta: '¿Qué es un ticket o factura avalada por ARCA?', respuesta: 'Es un comprobante digital o físico electrónico (factura A, B, C o tickets factura) autorizado con CAE/CAI. Se emite vía web (Comprobantes en Línea), el facturador para monotributistas, o controladores fiscales. La validez se verifica mediante el código de barras o en Mis Comprobantes.' },
+            { pregunta: '¿A qué hoteles de AOMA puedo acceder?', respuesta: 'AOMA tiene hoteles en: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo, Villa Gesell y Tierra Mora. Todos con tarifa promocional todo el año para afiliados.' },
+            { pregunta: '¿El beneficio de hoteles aplica en temporada alta?', respuesta: 'Los beneficios de estadía por matrimonio y por 30 años de afiliado NO aplican para temporada alta ni fines de semana largo. Pero las tarifas promocionales están disponibles todo el año.' },
+            { pregunta: '¿Dónde puedo solicitar los beneficios?', respuesta: 'Dirigite o llamá a AOMA Seccional San Juan de lunes a viernes de 08:00 a 17:00 hs. Dirección: Entre Ríos 468 (S) - San Juan. Tel: 0264-4220191. Email: accionsocialyturismo@aomaosamsanjuan.com.ar' }
         ],
         'cal-piedra': [
             { pregunta: '¿Qué diferencia salarial hay entre cal y piedra?', respuesta: 'Ambas actividades comparten el CCT 36/89 con escalas similares. Ver tabla en Escalas.' },
@@ -336,7 +452,7 @@ const DATA = {
     },
 
     // ==========================================
-    // 7. NOTICIAS
+    // 9. NOTICIAS
     // ==========================================
     noticias: [
         {
@@ -354,7 +470,7 @@ const DATA = {
             id: 2,
             titulo: 'Nuevas capacitaciones disponibles',
             categoria: 'Capacitaciones',
-            resumen: 'Se incorporaron 6 nuevos cursos al campus virtual.',
+            resumen: 'Se incorporaron nuevos cursos al campus virtual.',
             contenido: 'Contenido completo...',
             imagen: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80',
             autor: 'Secretaría de Formación',
@@ -375,7 +491,7 @@ const DATA = {
     ],
 
     // ==========================================
-    // 8. USUARIOS POR DEFECTO
+    // 10. USUARIOS POR DEFECTO
     // ==========================================
     usuarios: [
         {
@@ -410,7 +526,7 @@ const DATA = {
     ],
 
     // ==========================================
-    // 9. RESPUESTAS DEL CHAT
+    // 11. RESPUESTAS DEL CHAT
     // ==========================================
     chatResponses: {
         'hola|buenas|buenos días': '¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte hoy?',
@@ -420,13 +536,12 @@ const DATA = {
         'convenio|ctt': '📋 Tenemos 8 convenios colectivos organizados por actividad:\n\n• Cal y Piedra: CCT 36/89\n• Molienda: CCT 37/89\n• Cemento: CCT 53/89 y 54/89\n• Extractiva: CCT 38/89 + convenios por empresa (Veladero, Gualcamayo, Vicuña)\n\nConsultalos en "Convenios CCT".',
         'ley|legislación|legislacion': '⚖️ Tenemos 5 leyes laborales cargadas: LCT 20.744, Ley 19.587, Ley 24.557, Ley 24.013 y Ley 23.551. Consultalas en "Legislación".',
         'curso|capacitacion|capacitación': '🎓 Tenemos cursos disponibles organizados por actividad. Ver en "Capacitaciones".',
-        'video|charla': '🎥 Tenemos videos en la biblioteca. Podés verlos en la sección de videos.',
+        'beneficio|reintegro|medicamento|hotel|subsidio': '🎁 AOMA San Juan ofrece múltiples beneficios: reintegros de medicamentos (30%), anteojos (40%), estadías en hoteles, kits escolares, becas y subsidios. Consultalos en "Beneficios".',
+        'hotel|hoteles|estadía|vacaciones': '🏨 AOMA tiene hoteles en: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo, Villa Gesell y Tierra Mora. Consultá los beneficios en la sección "Beneficios".',
         'contraseña|clave|password': '🔑 Para recuperar tu contraseña, contactá al administrador al email campus@aomasanjuan.org.ar indicando tu DNI y legajo.',
-        'horario|atiende|dirección': '🕐 La Seccional San Juan atiende de lunes a viernes de 8:00 a 16:00 hs. Dirección: Rivadavia 345 Oeste, San Juan Capital. Tel: (0264) 422-XXXX',
-        'beneficio|delegado': '👤 Como delegado tenés acceso a: capacitaciones gratuitas, escalas salariales actualizadas, asesoramiento legal, horas gremiales y representación ante la empresa.',
-        'certificado': '🎓 Al completar un curso y aprobar la evaluación, obtenés un certificado digital con validez gremial.',
-        'veladero|gualcamayo|vicuña': '🏭 Estas son las empresas de minería extractiva en San Juan. Cada una tiene su convenio colectivo específico. Consultalos en "Convenios CCT" → "Extractiva".',
-        'default': 'No encontré información específica sobre eso. Te recomiendo revisar las secciones del menú lateral o contactar a la Seccional al (0264) 422-XXXX.'
+        'horario|atiende|dirección': '🕐 La Seccional San Juan atiende de lunes a viernes de 8:00 a 17:00 hs. Dirección: Entre Ríos 468 (S), San Juan Capital. Tel: (0264) 422-0191. Email: accionsocialyturismo@aomaosamsanjuan.com.ar',
+        'veladero|gualcamayo|vicuña': '🏭 Estas son las empresas de minería extractiva en San Juan. Cada una tiene su convenio colectivo específico. Consultalos en "Convenios CCT" → "Convenios por Empresa".',
+        'default': 'No encontré información específica sobre eso. Te recomiendo revisar las secciones del menú o contactar a la Seccional al (0264) 422-0191.'
     }
 };
 
@@ -460,7 +575,9 @@ if (typeof window !== 'undefined') {
 
 console.log('✅ Base de datos AOMA cargada');
 console.log('📋 ' + Object.keys(DATA.actividades).length + ' actividades');
+console.log('🏢 ' + Object.keys(DATA.empresas).length + ' empresas');
 console.log('📜 ' + DATA.convenios.length + ' convenios colectivos');
+console.log('🎁 ' + Object.keys(DATA.beneficios).length + ' categorías de beneficios');
 console.log('🎓 ' + DATA.cursos.length + ' cursos base');
 console.log('🎥 ' + DATA.videos.length + ' videos');
 console.log('📰 ' + DATA.noticias.length + ' noticias');

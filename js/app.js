@@ -1,6 +1,5 @@
 // ============================================
 // APLICACIÓN PRINCIPAL - CAMPUS VIRTUAL AOMA
-// Archivo: js/app.js
 // ============================================
 
 let currentUser = null;
@@ -44,7 +43,8 @@ function showLogin() {
             <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 20px 25px rgba(0,0,0,0.15); width: 100%; max-width: 420px;">
                 <div style="text-align: center; margin-bottom: 2rem;">
                     <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #dc2626, #ef4444); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; margin: 0 auto 1rem;">
-                        <i class="fas fa-mountain"></i>
+                        <img src="assets/logo-aoma.png" style="width: 60px; height: 60px; object-fit: contain;"
+                             onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-mountain\'></i>';">
                     </div>
                     <h1 style="font-size: 1.5rem; color: #1e3a8a; margin-bottom: 0.5rem;">Campus Virtual AOMA</h1>
                     <p style="color: #6b7280; font-size: 0.875rem;">Asociación Obrera Minera Argentina<br>Seccional San Juan</p>
@@ -124,10 +124,12 @@ function toggleTheme() {
 function navigateTo(page) {
     currentPage = page;
     
+    // Actualizar pills desktop
     document.querySelectorAll('.nav-pill').forEach(pill => {
         pill.classList.toggle('active', pill.dataset.page === page);
     });
     
+    // Actualizar pills mobile
     document.querySelectorAll('.mobile-nav-pill').forEach(pill => {
         pill.classList.toggle('active', pill.dataset.page === page);
     });
@@ -152,8 +154,32 @@ function renderPage(page, container) {
         case 'cursos':
             renderCursos(container);
             break;
+        case 'beneficios':
+            renderBeneficios(container);
+            break;
         case 'convenios':
-            renderConvenios(container);
+            renderConveniosGeneral(container);
+            break;
+        case 'convenios-mineria':
+            renderConveniosPorActividad(container, 'mineria-extractiva', false);
+            break;
+        case 'convenios-cemento':
+            renderConveniosPorActividad(container, 'cemento', false);
+            break;
+        case 'convenios-cal':
+            renderConveniosPorActividad(container, 'cal-piedra', false);
+            break;
+        case 'convenios-molienda':
+            renderConveniosPorActividad(container, 'molienda', false);
+            break;
+        case 'empresa-veladero':
+            renderEmpresa(container, 'veladero');
+            break;
+        case 'empresa-gualcamayo':
+            renderEmpresa(container, 'gualcamayo');
+            break;
+        case 'empresa-vicuña':
+            renderEmpresa(container, 'vicuña');
             break;
         case 'escalas':
             renderEscalas(container);
@@ -225,7 +251,6 @@ function getCapacitaciones() {
 // EVENTOS
 // ============================================
 function setupEvents() {
-    // Menú móvil
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -246,27 +271,28 @@ function setupEvents() {
         mobileMenuOverlay.addEventListener('click', closeMobileMenu);
     }
     
-    // Navegación desktop
     document.querySelectorAll('.nav-pill').forEach(pill => {
-        pill.addEventListener('click', () => {
-            navigateTo(pill.dataset.page);
+        pill.addEventListener('click', (e) => {
+            // No navegar si es un dropdown (tiene hijos)
+            if (!pill.closest('.nav-dropdown')) {
+                navigateTo(pill.dataset.page);
+            } else if (pill.dataset.page) {
+                navigateTo(pill.dataset.page);
+            }
         });
     });
     
-    // Navegación móvil
     document.querySelectorAll('.mobile-nav-pill').forEach(pill => {
         pill.addEventListener('click', () => {
             navigateTo(pill.dataset.page);
         });
     });
     
-    // Tema oscuro
     const themeBtn = document.getElementById('themeBtn');
     if (themeBtn) {
         themeBtn.addEventListener('click', toggleTheme);
     }
     
-    // Menú usuario
     const userMenu = document.getElementById('userMenu');
     if (userMenu) {
         userMenu.addEventListener('click', (e) => {
@@ -281,8 +307,7 @@ function setupEvents() {
         if (dropdown) dropdown.classList.remove('active');
     });
     
-    // Chat - SOLO botones de abrir/cerrar
-    // El formulario lo maneja chat-ia.js con initChatIA()
+    // Chat - SOLO botones de abrir/cerrar (chat-ia.js maneja el formulario)
     const chatBtn = document.getElementById('chatBtn');
     const chatClose = document.getElementById('chatClose');
     const chatWindow = document.getElementById('chatWindow');
@@ -298,9 +323,6 @@ function setupEvents() {
             if (chatWindow) chatWindow.classList.add('hidden');
         });
     }
-    
-    // ⚠️ NO agregar listener para chatForm aquí
-    // chat-ia.js ya lo maneja con la API de Groq
 }
 
 function closeMobileMenu() {
@@ -348,14 +370,8 @@ function setupContentSearch(contentSelector) {
         }
     });
     
-    if (btnPrev) {
-        btnPrev.addEventListener('click', () => navigateHighlight(-1));
-    }
-    
-    if (btnNext) {
-        btnNext.addEventListener('click', () => navigateHighlight(1));
-    }
-    
+    if (btnPrev) btnPrev.addEventListener('click', () => navigateHighlight(-1));
+    if (btnNext) btnNext.addEventListener('click', () => navigateHighlight(1));
     if (btnClear) {
         btnClear.addEventListener('click', () => {
             searchInput.value = '';
@@ -373,23 +389,19 @@ function performContentSearch(query, contentSelector, countEl, btnPrev, btnNext)
     const contentEl = document.querySelector(contentSelector);
     if (!contentEl) return;
     
-    const walker = document.createTreeWalker(
-        contentEl,
-        NodeFilter.SHOW_TEXT,
-        {
-            acceptNode: (node) => {
-                if (node.parentElement.tagName === 'SCRIPT' || 
-                    node.parentElement.tagName === 'STYLE' ||
-                    node.parentElement.classList.contains('search-highlight')) {
-                    return NodeFilter.FILTER_REJECT;
-                }
-                if (node.textContent.toLowerCase().includes(query.toLowerCase())) {
-                    return NodeFilter.FILTER_ACCEPT;
-                }
+    const walker = document.createTreeWalker(contentEl, NodeFilter.SHOW_TEXT, {
+        acceptNode: (node) => {
+            if (node.parentElement.tagName === 'SCRIPT' || 
+                node.parentElement.tagName === 'STYLE' ||
+                node.parentElement.classList.contains('search-highlight')) {
                 return NodeFilter.FILTER_REJECT;
             }
+            if (node.textContent.toLowerCase().includes(query.toLowerCase())) {
+                return NodeFilter.FILTER_ACCEPT;
+            }
+            return NodeFilter.FILTER_REJECT;
         }
-    );
+    });
     
     const textNodes = [];
     let currentNode;
@@ -454,12 +466,14 @@ function escapeRegExp(string) {
 // ============================================
 function renderDashboard(container) {
     const actCount = Object.keys(DATA.actividades).length;
+    const empresasCount = Object.keys(DATA.empresas).length;
     const convenios = getConvenios();
     const convCount = convenios.length;
     const cursos = getCapacitaciones();
     const cursoCount = cursos.length;
     const leyes = getLeyes();
     const leyCount = leyes.length;
+    const benefCount = Object.keys(DATA.beneficios).length;
     
     container.innerHTML = `
         <div class="page-header">
@@ -473,10 +487,10 @@ function renderDashboard(container) {
                 <div class="stat-value">${convCount}</div>
                 <div class="stat-label">Convenios CCT</div>
             </div>
-            <div class="stat-card accent" onclick="navigateTo('actividad-mineria-extractiva')">
-                <div class="stat-icon">🏭</div>
-                <div class="stat-value">${actCount}</div>
-                <div class="stat-label">Actividades</div>
+            <div class="stat-card accent" onclick="navigateTo('beneficios')">
+                <div class="stat-icon">🎁</div>
+                <div class="stat-value">${benefCount}</div>
+                <div class="stat-label">Categorías de Beneficios</div>
             </div>
             <div class="stat-card success" onclick="navigateTo('cursos')">
                 <div class="stat-icon">🎓</div>
@@ -487,6 +501,45 @@ function renderDashboard(container) {
                 <div class="stat-icon">⚖️</div>
                 <div class="stat-value">${leyCount}</div>
                 <div class="stat-label">Leyes laborales</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Accesos Rápidos</h2>
+            </div>
+            <div class="cards-grid">
+                <div class="card" onclick="navigateTo('beneficios')" style="cursor: pointer;">
+                    <div class="card-header" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="fas fa-gift"></i>
+                        <span class="card-badge">Nuevo</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-category">Beneficios</div>
+                        <h3 class="card-title">Beneficios Sociales</h3>
+                        <p class="card-description">Reintegros de medicamentos, estadías en hoteles, kits escolares, becas y más.</p>
+                    </div>
+                </div>
+                <div class="card" onclick="navigateTo('convenios')" style="cursor: pointer;">
+                    <div class="card-header" style="background: var(--gradient-primary);">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-category">Convenios</div>
+                        <h3 class="card-title">Convenios CCT</h3>
+                        <p class="card-description">Por actividad y por empresa. Consultá tu convenio colectivo.</p>
+                    </div>
+                </div>
+                <div class="card" onclick="navigateTo('legislacion')" style="cursor: pointer;">
+                    <div class="card-header" style="background: var(--gradient-accent);">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-category">Legal</div>
+                        <h3 class="card-title">Legislación Laboral</h3>
+                        <p class="card-description">LCT, Ley de Higiene, Asociaciones Sindicales y más.</p>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -533,6 +586,133 @@ function renderDashboard(container) {
                         </div>
                     </div>
                 `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+// ============================================
+// RENDERIZADO - BENEFICIOS (NUEVO)
+// ============================================
+function renderBeneficios(container) {
+    const beneficios = DATA.beneficios;
+    const totalItems = Object.values(beneficios).reduce((sum, cat) => sum + cat.items.length, 0);
+    
+    container.innerHTML = `
+        <div class="page-header">
+            <h1>Beneficios Sociales 🎁</h1>
+            <p>Beneficios exclusivos para afiliados titulares y grupo familiar primario (Revisión Julio 2026)</p>
+        </div>
+        
+        <div class="section" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; border: none;">
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                <i class="fas fa-info-circle" style="font-size: 2rem;"></i>
+                <div>
+                    <h3 style="color: white; margin-bottom: 0.25rem; font-size: 1.125rem;">Importante</h3>
+                    <p style="color: rgba(255,255,255,0.9); font-size: 0.9375rem; margin: 0;">
+                        Los beneficios aplican para el afiliado titular y grupo familiar primario declarado en CODEM de ANSES.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-grid" style="margin-bottom: 2rem;">
+            <div class="stat-card">
+                <div class="stat-icon">💊</div>
+                <div class="stat-value">30-40%</div>
+                <div class="stat-label">Reintegros de Medicamentos y Anteojos</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">🏨</div>
+                <div class="stat-value">8</div>
+                <div class="stat-label">Hoteles AOMA/OSAM</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-icon">🎓</div>
+                <div class="stat-value">Becas</div>
+                <div class="stat-label">Terciarios y Universitarios</div>
+            </div>
+            <div class="stat-card accent">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value">$100K</div>
+                <div class="stat-label">Subsidio por Fallecimiento</div>
+            </div>
+        </div>
+        
+        ${Object.entries(beneficios).map(([catId, categoria]) => `
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title" style="display: flex; align-items: center; gap: 0.75rem;">
+                        <i class="fas ${categoria.icono}" style="color: ${categoria.color};"></i>
+                        ${categoria.titulo}
+                        <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400; background: var(--bg-input); padding: 0.25rem 0.75rem; border-radius: var(--radius-full);">
+                            ${categoria.items.length} beneficio${categoria.items.length !== 1 ? 's' : ''}
+                        </span>
+                    </h2>
+                </div>
+                <div class="beneficios-grid">
+                    ${categoria.items.map((item, idx) => `
+                        <div class="beneficio-card">
+                            <div class="beneficio-header" style="background: ${categoria.color};">
+                                <div class="beneficio-titulo">${item.titulo}</div>
+                                ${item.porcentaje ? `<div class="beneficio-badge">${item.porcentaje}</div>` : ''}
+                            </div>
+                            <div class="beneficio-body">
+                                <p class="beneficio-descripcion">${item.descripcion}</p>
+                                
+                                ${item.montoMax ? `
+                                    <div class="beneficio-info">
+                                        <i class="fas fa-dollar-sign" style="color: ${categoria.color};"></i>
+                                        <div>
+                                            <strong>Monto / Beneficio:</strong><br>
+                                            <span>${item.montoMax}</span>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                
+                                ${item.exclusiones ? `
+                                    <div class="beneficio-info warning">
+                                        <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                                        <div>
+                                            <strong>Exclusiones:</strong><br>
+                                            <span>${item.exclusiones}</span>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                
+                                <div class="beneficio-info documentacion">
+                                    <i class="fas fa-file-alt" style="color: #3b82f6;"></i>
+                                    <div>
+                                        <strong>Documentación a presentar:</strong><br>
+                                        <span>${item.documentacion}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('')}
+        
+        <div class="section" style="background: var(--gradient-accent); color: white; border: none;">
+            <h2 style="color: white; border: none; margin-bottom: 1rem;">📞 Contacto y Solicitudes</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; color: white;">
+                <div>
+                    <h3 style="color: white; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt"></i> Dirección</h3>
+                    <p style="color: rgba(255,255,255,0.95);">Entre Ríos 468 (S)<br>San Juan Capital</p>
+                </div>
+                <div>
+                    <h3 style="color: white; margin-bottom: 0.5rem;"><i class="fas fa-clock"></i> Horarios</h3>
+                    <p style="color: rgba(255,255,255,0.95);">Lunes a Viernes<br>08:00 a 17:00 hs</p>
+                </div>
+                <div>
+                    <h3 style="color: white; margin-bottom: 0.5rem;"><i class="fas fa-phone"></i> Teléfono</h3>
+                    <p style="color: rgba(255,255,255,0.95);">0264-4220191</p>
+                </div>
+                <div>
+                    <h3 style="color: white; margin-bottom: 0.5rem;"><i class="fas fa-envelope"></i> Email</h3>
+                    <p style="color: rgba(255,255,255,0.95); font-size: 0.875rem; word-break: break-all;">accionsocialyturismo@<br>aomaosamsanjuan.com.ar</p>
+                </div>
             </div>
         </div>
     `;
@@ -615,7 +795,7 @@ function showCursoDetalle(cursoId) {
         
         <div class="content-search-bar">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" id="contentSearchInput" placeholder="Buscar en este curso... (ej: EPP, seguridad, salario)">
+            <input type="text" id="contentSearchInput" placeholder="Buscar en este curso...">
             <span class="search-count" id="contentSearchCount">0 resultados</span>
             <button class="btn-search-nav" id="contentSearchPrev" title="Anterior" disabled>
                 <i class="fas fa-chevron-up"></i>
@@ -642,13 +822,16 @@ function showCursoDetalle(cursoId) {
 }
 
 // ============================================
-// RENDERIZADO - CONVENIOS
+// RENDERIZADO - CONVENIOS GENERAL (Overview)
 // ============================================
-function renderConvenios(container) {
+function renderConveniosGeneral(container) {
     const convenios = getConvenios();
     
+    const conveniosActividad = convenios.filter(c => !c.empresa);
+    const conveniosEmpresa = convenios.filter(c => c.empresa);
+    
     const conveniosPorActividad = {};
-    convenios.forEach(conv => {
+    conveniosActividad.forEach(conv => {
         if (!conveniosPorActividad[conv.actividad]) {
             conveniosPorActividad[conv.actividad] = [];
         }
@@ -658,42 +841,233 @@ function renderConvenios(container) {
     container.innerHTML = `
         <div class="page-header">
             <h1>Convenios Colectivos de Trabajo 📋</h1>
-            <p>Normativas vigentes organizadas por actividad</p>
+            <p>Normativas vigentes organizadas por actividad y por empresa</p>
         </div>
         
-        ${Object.entries(conveniosPorActividad).map(([actId, conveniosAct]) => {
-            const act = DATA.actividades[actId];
-            if (!act) return '';
-            
-            return `
-                <div class="section">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas ${act.icono}" style="color: ${act.color};"></i>
-                            ${act.nombre}
-                        </h2>
-                    </div>
-                    <div class="cards-grid">
-                        ${conveniosAct.map(conv => `
-                            <div class="card" onclick="showConvenioDetalle('${conv.numero}')">
-                                <div class="card-header" style="background: linear-gradient(135deg, ${act.color}, ${act.color}dd);">
-                                    <i class="fas fa-file-contract"></i>
-                                    <span class="card-badge">${conv.numero}</span>
-                                </div>
-                                <div class="card-body">
-                                    <div class="card-category">${conv.subtitulo || conv.actividad}</div>
-                                    <h3 class="card-title">${conv.titulo}</h3>
-                                    <p class="card-description">${conv.resumen}</p>
+        <div class="stats-grid" style="margin-bottom: 2rem;">
+            <div class="stat-card" onclick="navigateTo('convenios-mineria')">
+                <div class="stat-icon" style="color: #f59e0b;">⛏️</div>
+                <div class="stat-value">${(conveniosPorActividad['mineria-extractiva'] || []).length}</div>
+                <div class="stat-label">Minería Extractiva</div>
+            </div>
+            <div class="stat-card" onclick="navigateTo('convenios-cemento')">
+                <div class="stat-icon" style="color: #64748b;">🏭</div>
+                <div class="stat-value">${(conveniosPorActividad['cemento'] || []).length}</div>
+                <div class="stat-label">Cemento</div>
+            </div>
+            <div class="stat-card" onclick="navigateTo('convenios-cal')">
+                <div class="stat-icon" style="color: #78716c;">⛰️</div>
+                <div class="stat-value">${(conveniosPorActividad['cal-piedra'] || []).length}</div>
+                <div class="stat-label">Cal y Piedra</div>
+            </div>
+            <div class="stat-card" onclick="navigateTo('convenios-molienda')">
+                <div class="stat-icon" style="color: #475569;">⚙️</div>
+                <div class="stat-value">${(conveniosPorActividad['molienda'] || []).length}</div>
+                <div class="stat-label">Molienda</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-building" style="color: #0891b2;"></i>
+                    Convenios por Empresa
+                </h2>
+            </div>
+            <div class="cards-grid">
+                ${Object.values(DATA.empresas).map(emp => {
+                    const convEmp = conveniosEmpresa.find(c => c.empresa === emp.id);
+                    return `
+                        <div class="card" onclick="navigateTo('empresa-${emp.id}')" style="cursor: pointer;">
+                            <div class="card-header" style="background: linear-gradient(135deg, ${emp.color}, ${emp.color}dd);">
+                                <i class="fas ${emp.icono}"></i>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-category">${emp.empresa}</div>
+                                <h3 class="card-title">${emp.nombre}</h3>
+                                <p class="card-description">${emp.descripcion}</p>
+                                <div class="card-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> ${emp.ubicacion}</span>
                                 </div>
                             </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }).join('')}
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
     `;
 }
 
+// ============================================
+// RENDERIZADO - CONVENIOS POR ACTIVIDAD
+// ============================================
+function renderConveniosPorActividad(container, actividadId, mostrarEmpresas = true) {
+    const act = DATA.actividades[actividadId];
+    if (!act) {
+        container.innerHTML = '<div class="empty-state"><h3>Actividad no encontrada</h3></div>';
+        return;
+    }
+    
+    const convenios = getConvenios();
+    // Filtrar solo convenios por actividad (sin empresa específica)
+    const conveniosAct = convenios.filter(c => c.actividad === actividadId && !c.empresa);
+    const escalasAct = DATA.escalas[actividadId] || [];
+    
+    container.innerHTML = `
+        <div class="page-header">
+            <button class="btn btn-ghost" onclick="navigateTo('convenios')">
+                <i class="fas fa-arrow-left"></i> Volver a Convenios
+            </button>
+        </div>
+        
+        <div class="activity-hero">
+            <img src="${act.imagen}" alt="${act.nombre}" onerror="this.style.display='none'">
+            <div class="activity-hero-content">
+                <h1><i class="fas ${act.icono}"></i> ${act.nombre}</h1>
+                <p>${act.descripcion}</p>
+                <p style="margin-top: 0.5rem;"><strong>Convenio principal:</strong> ${act.ctt}</p>
+            </div>
+        </div>
+        
+        ${conveniosAct.length > 0 ? `
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Convenios Colectivos</h2>
+                </div>
+                <div class="cards-grid">
+                    ${conveniosAct.map(c => `
+                        <div class="card" onclick="showConvenioDetalle('${c.numero}')" style="cursor: pointer;">
+                            <div class="card-header" style="background: linear-gradient(135deg, ${act.color}, ${act.color}dd);">
+                                <i class="fas fa-file-contract"></i>
+                                <span class="card-badge">${c.numero}</span>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">${c.subtitulo || c.titulo}</h3>
+                                <p class="card-description">${c.resumen}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        ` : `
+            <div class="section">
+                <div class="empty-state">
+                    <i class="fas fa-file-contract"></i>
+                    <h3>Convenios en carga</h3>
+                    <p>Los convenios colectivos de esta actividad se cargarán próximamente.</p>
+                </div>
+            </div>
+        `}
+        
+        ${escalasAct.length > 0 ? `
+            <div class="section">
+                <h2 class="section-title" style="margin-bottom: 1rem;">Escalas Salariales</h2>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Nivel</th>
+                                <th>Haber Básico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${escalasAct.map(e => `
+                                <tr>
+                                    <td><b>${e.categoria}</b></td>
+                                    <td>${e.nivel}</td>
+                                    <td><strong>${DATA.formatCurrency(e.salario)}</strong></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        ` : ''}
+    `;
+}
+
+// ============================================
+// RENDERIZADO - EMPRESA ESPECÍFICA
+// ============================================
+function renderEmpresa(container, empresaId) {
+    const empresa = DATA.empresas[empresaId];
+    if (!empresa) {
+        container.innerHTML = '<div class="empty-state"><h3>Empresa no encontrada</h3></div>';
+        return;
+    }
+    
+    const convenios = getConvenios();
+    const convEmp = convenios.find(c => c.empresa === empresaId);
+    
+    container.innerHTML = `
+        <div class="page-header">
+            <button class="btn btn-ghost" onclick="navigateTo('convenios')">
+                <i class="fas fa-arrow-left"></i> Volver a Convenios
+            </button>
+        </div>
+        
+        <div class="activity-hero">
+            <img src="${empresa.imagen}" alt="${empresa.nombre}" onerror="this.style.display='none'">
+            <div class="activity-hero-content">
+                <h1><i class="fas ${empresa.icono}"></i> ${empresa.nombre}</h1>
+                <p>${empresa.descripcion}</p>
+                <div style="margin-top: 0.75rem; display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.875rem;">
+                    <span><i class="fas fa-building"></i> ${empresa.empresa}</span>
+                    <span><i class="fas fa-map-marker-alt"></i> ${empresa.ubicacion}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Convenio Colectivo</h2>
+            </div>
+            ${convEmp ? `
+                <div class="cards-grid">
+                    <div class="card" onclick="showConvenioDetalle('${convEmp.numero}')" style="cursor: pointer;">
+                        <div class="card-header" style="background: linear-gradient(135deg, ${empresa.color}, ${empresa.color}dd);">
+                            <i class="fas fa-file-contract"></i>
+                            <span class="card-badge">${convEmp.numero}</span>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">${convEmp.subtitulo || convEmp.titulo}</h3>
+                            <p class="card-description">${convEmp.resumen}</p>
+                        </div>
+                    </div>
+                </div>
+            ` : `
+                <div class="empty-state">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Convenio en carga</h3>
+                    <p>El convenio colectivo específico de ${empresa.nombre} se cargará próximamente.</p>
+                </div>
+            `}
+        </div>
+        
+        <div class="section" style="background: var(--bg-input);">
+            <h2 class="section-title">Información de la Empresa</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                <div>
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-building"></i> Operador</h4>
+                    <p style="color: var(--text-secondary);">${empresa.empresa}</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt"></i> Ubicación</h4>
+                    <p style="color: var(--text-secondary);">${empresa.ubicacion}</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-gem"></i> Actividad</h4>
+                    <p style="color: var(--text-secondary);">${DATA.actividades[empresa.actividad]?.nombre || empresa.actividad}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// ============================================
+// RENDERIZADO - CONVENIO DETALLE
+// ============================================
 function showConvenioDetalle(numero) {
     const convenios = getConvenios();
     const conv = convenios.find(c => c.numero === numero);
@@ -710,6 +1084,8 @@ function showConvenioDetalle(numero) {
             <p style="margin-top: 1rem; font-size: 0.875rem;"><strong>Resumen:</strong> ${conv.resumen}</p>
         </div>
     `;
+    
+    const volverPage = conv.empresa ? `empresa-${conv.empresa}` : `convenios-${conv.actividad === 'mineria-extractiva' ? 'mineria' : conv.actividad === 'cal-piedra' ? 'cal' : conv.actividad}`;
     
     container.innerHTML = `
         <div class="page-header">
@@ -863,7 +1239,7 @@ function showLeyDetalle(numero) {
         
         <div class="content-search-bar">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" id="contentSearchInput" placeholder="Buscar en esta ley... (ej: vacaciones, despido, salario)">
+            <input type="text" id="contentSearchInput" placeholder="Buscar en esta ley...">
             <span class="search-count" id="contentSearchCount">0 resultados</span>
             <button class="btn-search-nav" id="contentSearchPrev" title="Anterior" disabled>
                 <i class="fas fa-chevron-up"></i>
@@ -900,7 +1276,7 @@ function renderFAQ(container) {
         </div>
         ${Object.entries(DATA.faqs).map(([catId, items]) => {
             const act = DATA.actividades[catId];
-            const catName = act ? act.nombre : 'General';
+            const catName = act ? act.nombre : (catId === 'general' ? 'General' : catId === 'beneficios' ? 'Beneficios Sociales' : catId);
             return `
                 <div class="section">
                     <h2 class="section-title" style="margin-bottom: 1rem;">${catName}</h2>
@@ -1053,42 +1429,4 @@ function addChatMessage(type, text) {
     
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
-}
-
-// ⚠️ Esta función getBotResponse queda como FALLBACK
-// Pero el chat principal usa getBotResponseGroq de chat-ia.js
-function getBotResponse(userMessage) {
-    const q = userMessage.toLowerCase().trim();
-    
-    for (const [patterns, response] of Object.entries(DATA.chatResponses)) {
-        if (patterns === 'default') continue;
-        const patternList = patterns.split('|');
-        if (patternList.some(p => q.includes(p))) {
-            return response;
-        }
-    }
-    
-    for (const [cat, faqs] of Object.entries(DATA.faqs)) {
-        for (const faq of faqs) {
-            if (faq.pregunta.toLowerCase().includes(q) || faq.respuesta.toLowerCase().includes(q)) {
-                return `📋 <strong>${faq.pregunta}</strong><br><br>${faq.respuesta}`;
-            }
-        }
-    }
-    
-    const convenios = getConvenios();
-    for (const conv of convenios) {
-        if (conv.titulo.toLowerCase().includes(q) || conv.subtitulo.toLowerCase().includes(q) || conv.resumen.toLowerCase().includes(q)) {
-            return `📋 Encontré: <strong>${conv.numero} - ${conv.subtitulo}</strong><br><br>${conv.resumen}<br><br>Consultalo completo en "Convenios CCT".`;
-        }
-    }
-    
-    const cursos = getCapacitaciones();
-    for (const curso of cursos) {
-        if (curso.titulo.toLowerCase().includes(q) || curso.descripcion.toLowerCase().includes(q)) {
-            return `🎓 Encontré el curso: <strong>${curso.titulo}</strong><br><br>${curso.descripcion}<br><br>Duración: ${curso.duracion} | Nivel: ${curso.nivel}`;
-        }
-    }
-    
-    return DATA.chatResponses.default;
 }
