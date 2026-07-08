@@ -101,7 +101,7 @@ const DATA = {
             titulo: 'Convenio Colectivo de Trabajo N° 36/89',
             subtitulo: 'Cal, Piedra y Afines',
             actividad: 'cal-piedra',
-            variable: 'CTT_36_89',
+            variable: null,
             resumen: 'Convenio colectivo para trabajadores de cal, piedra y actividades afines',
             contenido: null
         },
@@ -110,7 +110,7 @@ const DATA = {
             titulo: 'Convenio Colectivo de Trabajo N° 37/89',
             subtitulo: 'Molienda de Minerales',
             actividad: 'molienda',
-            variable: 'CTT_37_89',
+            variable: null,
             resumen: 'Convenio colectivo para trabajadores de molienda de minerales',
             contenido: null
         },
@@ -119,7 +119,7 @@ const DATA = {
             titulo: 'Convenio Colectivo de Trabajo N° 38/89',
             subtitulo: 'Minería Extractiva',
             actividad: 'mineria-extractiva',
-            variable: 'CTT_38_89',
+            variable: null,
             resumen: 'Convenio colectivo para trabajadores de minería extractiva',
             contenido: null
         },
@@ -128,7 +128,7 @@ const DATA = {
             titulo: 'Convenio Colectivo de Trabajo N° 53/89',
             subtitulo: 'Personal Administrativo del Cemento Portland',
             actividad: 'cemento',
-            variable: 'CTT_53_89',
+            variable: null,
             resumen: 'Convenio para personal administrativo de la industria del cemento',
             contenido: null
         },
@@ -137,44 +137,34 @@ const DATA = {
             titulo: 'Convenio Colectivo de Trabajo N° 54/89',
             subtitulo: 'Personal Obrero del Cemento Portland',
             actividad: 'cemento',
-            variable: 'CTT_54_89',
+            variable: null,
             resumen: 'Convenio para personal obrero de la industria del cemento',
             contenido: null
         },
         {
-            numero: 'CCT Veladero',
-    titulo: 'Convenio Colectivo - Mina Veladero',
-    subtitulo: 'Convenio por empresa - Mina Veladero',
-    actividad: 'mineria-extractiva',
-    empresa: 'veladero',
-    variable: 'CCT_VELADERO',
-    resumen: 'Convenio colectivo específico de la Mina Veladero (Barrick Gold / Shandong Gold)',
-    contenido: null
-        },
-        {
-            numero: 'CCT Gualcamayo',
-            titulo: 'Convenio Colectivo - Mina Gualcamayo',
-            subtitulo: 'Convenio por empresa - Mina Gualcamayo',
+            numero: 'CCT 673/04',
+            titulo: 'Convenio Colectivo de Trabajo N° 673/04',
+            subtitulo: 'Barrick - AOMA',
             actividad: 'mineria-extractiva',
-            empresa: 'gualcamayo',
-            variable: 'CTT_GUALCAMAYO',
-            resumen: 'Convenio colectivo específico de la Mina Gualcamayo',
+            empresa: 'veladero',
+            variable: 'CCT_VELADERO',
+            resumen: 'Convenio colectivo específico de la Mina Veladero (Barrick Gold / Shandong Gold)',
             contenido: null
         },
         {
-             numero: 'CCT Vicuña',
-    titulo: 'Convenio Colectivo - Mina Vicuña',
-    subtitulo: 'Convenio por empresa - Mina Vicuña (Deprominsa)',
-    actividad: 'mineria-extractiva',
-    empresa: 'vicuna',
-    variable: 'CCT_VICUNA',
-    resumen: 'Convenio colectivo específico del Proyecto Josemaría/Vicuña (Deprominsa)',
-    contenido: null
+            numero: 'CCT Vicuña',
+            titulo: 'Convenio Colectivo - AOMA - DEPROMINSA',
+            subtitulo: 'Proyecto Josemaría/Vicuña',
+            actividad: 'mineria-extractiva',
+            empresa: 'vicuna',
+            variable: 'CCT_VICUNA',
+            resumen: 'Convenio colectivo específico del Proyecto Josemaría/Vicuña (Deprominsa)',
+            contenido: null
         }
     ],
 
     // ==========================================
-    // 4. ESCALAS SALARIALES (solo dentro de actividades)
+    // 4. ESCALAS SALARIALES
     // ==========================================
     escalas: {
         'mineria-extractiva': [
@@ -209,7 +199,7 @@ const DATA = {
     },
 
     // ==========================================
-    // 5. CAPACITACIONES (ARRAY VACÍO - solo las que cargues)
+    // 5. CAPACITACIONES (se cargan desde módulos)
     // ==========================================
     cursos: [],
 
@@ -486,7 +476,7 @@ const DATA = {
     ],
 
     // ==========================================
-    // 10. RESPUESTAS DEL CHAT
+    // 10. RESPUESTAS DEL CHAT (fallback)
     // ==========================================
     chatResponses: {
         'hola|buenas|buenos días': '¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte hoy?',

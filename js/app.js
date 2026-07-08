@@ -43,8 +43,7 @@ function showLogin() {
             <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 20px 25px rgba(0,0,0,0.15); width: 100%; max-width: 420px;">
                 <div style="text-align: center; margin-bottom: 2rem;">
                     <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #dc2626, #ef4444); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; margin: 0 auto 1rem;">
-                        <img src="assets/logo-aoma.png" style="width: 60px; height: 60px; object-fit: contain;"
-                             onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-mountain\'></i>';">
+                        <i class="fas fa-mountain"></i>
                     </div>
                     <h1 style="font-size: 1.5rem; color: #1e3a8a; margin-bottom: 0.5rem;">Campus Virtual AOMA</h1>
                     <p style="color: #6b7280; font-size: 0.875rem;">Asociación Obrera Minera Argentina<br>Seccional San Juan</p>
@@ -124,12 +123,10 @@ function toggleTheme() {
 function navigateTo(page) {
     currentPage = page;
     
-    // Actualizar pills desktop
     document.querySelectorAll('.nav-pill').forEach(pill => {
         pill.classList.toggle('active', pill.dataset.page === page);
     });
     
-    // Actualizar pills mobile
     document.querySelectorAll('.mobile-nav-pill').forEach(pill => {
         pill.classList.toggle('active', pill.dataset.page === page);
     });
@@ -161,16 +158,16 @@ function renderPage(page, container) {
             renderConveniosGeneral(container);
             break;
         case 'convenios-mineria':
-            renderConveniosPorActividad(container, 'mineria-extractiva', false);
+            renderConveniosPorActividad(container, 'mineria-extractiva');
             break;
         case 'convenios-cemento':
-            renderConveniosPorActividad(container, 'cemento', false);
+            renderConveniosPorActividad(container, 'cemento');
             break;
         case 'convenios-cal':
-            renderConveniosPorActividad(container, 'cal-piedra', false);
+            renderConveniosPorActividad(container, 'cal-piedra');
             break;
         case 'convenios-molienda':
-            renderConveniosPorActividad(container, 'molienda', false);
+            renderConveniosPorActividad(container, 'molienda');
             break;
         case 'empresa-veladero':
             renderEmpresa(container, 'veladero');
@@ -178,11 +175,8 @@ function renderPage(page, container) {
         case 'empresa-gualcamayo':
             renderEmpresa(container, 'gualcamayo');
             break;
-        case 'empresa-vicuña':
-            renderEmpresa(container, 'vicuña');
-            break;
-        case 'escalas':
-            renderEscalas(container);
+        case 'empresa-vicuna':
+            renderEmpresa(container, 'vicuna');
             break;
         case 'legislacion':
             renderLegislacion(container);
@@ -191,12 +185,7 @@ function renderPage(page, container) {
             renderFAQ(container);
             break;
         default:
-            if (page.startsWith('actividad-')) {
-                const activityId = page.replace('actividad-', '');
-                renderActividad(container, activityId);
-            } else {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Página no encontrada</h3></div>';
-            }
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Página no encontrada</h3></div>';
     }
 }
 
@@ -227,24 +216,39 @@ function getConvenios() {
 }
 
 function getCapacitaciones() {
-    const capacitacionesSeparadas = [];
+    const cursos = [];
     
-    if (typeof CAPACITACION_NEGOCIACION_COLECTIVA !== 'undefined') {
-        capacitacionesSeparadas.push(CAPACITACION_NEGOCIACION_COLECTIVA);
+    // 1. Cargar desde DATA.cursos (capacitaciones en data.js)
+    if (DATA.cursos && DATA.cursos.length > 0) {
+        cursos.push(...DATA.cursos);
     }
     
-    const cursosCombinados = [...DATA.cursos];
+    // 2. Cargar desde CAPACITACIONES_REGISTRO (capacitaciones modulares)
+    if (typeof window !== 'undefined' && window.CAPACITACIONES_REGISTRO) {
+        Object.values(window.CAPACITACIONES_REGISTRO).forEach(cap => {
+            const existe = cursos.some(c => c.id === cap.id);
+            if (!existe) {
+                cursos.push(cap);
+            }
+        });
+    }
     
-    capacitacionesSeparadas.forEach(cap => {
-        const index = cursosCombinados.findIndex(c => c.id === cap.id);
-        if (index !== -1) {
-            cursosCombinados[index] = cap;
-        } else {
-            cursosCombinados.push(cap);
+    // 3. Fallback: variables globales sueltas (por si no se registraron)
+    if (typeof window !== 'undefined') {
+        for (const key in window) {
+            if (key.startsWith('CAPACITACION_') && key !== 'CAPACITACIONES_REGISTRO') {
+                const cap = window[key];
+                if (cap && cap.id && cap.titulo && cap.modulosData) {
+                    const existe = cursos.some(c => c.id === cap.id);
+                    if (!existe) {
+                        cursos.push(cap);
+                    }
+                }
+            }
         }
-    });
+    }
     
-    return cursosCombinados;
+    return cursos;
 }
 
 // ============================================
@@ -273,7 +277,6 @@ function setupEvents() {
     
     document.querySelectorAll('.nav-pill').forEach(pill => {
         pill.addEventListener('click', (e) => {
-            // No navegar si es un dropdown (tiene hijos)
             if (!pill.closest('.nav-dropdown')) {
                 navigateTo(pill.dataset.page);
             } else if (pill.dataset.page) {
@@ -307,7 +310,6 @@ function setupEvents() {
         if (dropdown) dropdown.classList.remove('active');
     });
     
-    // Chat - SOLO botones de abrir/cerrar (chat-ia.js maneja el formulario)
     const chatBtn = document.getElementById('chatBtn');
     const chatClose = document.getElementById('chatClose');
     const chatWindow = document.getElementById('chatWindow');
@@ -549,7 +551,7 @@ function renderDashboard(container) {
             </div>
             <div class="cards-grid">
                 ${Object.values(DATA.actividades).map(act => `
-                    <div class="card" onclick="navigateTo('actividad-${act.id}')">
+                    <div class="card" onclick="navigateTo('convenios-${act.id === 'mineria-extractiva' ? 'mineria' : act.id === 'cal-piedra' ? 'cal' : act.id}')" style="cursor: pointer;">
                         <div class="card-header" style="background: linear-gradient(135deg, ${act.color}, ${act.color}dd);">
                             <i class="fas ${act.icono}"></i>
                             <span class="card-badge">${act.ctt}</span>
@@ -592,11 +594,10 @@ function renderDashboard(container) {
 }
 
 // ============================================
-// RENDERIZADO - BENEFICIOS (NUEVO)
+// RENDERIZADO - BENEFICIOS
 // ============================================
 function renderBeneficios(container) {
     const beneficios = DATA.beneficios;
-    const totalItems = Object.values(beneficios).reduce((sum, cat) => sum + cat.items.length, 0);
     
     container.innerHTML = `
         <div class="page-header">
@@ -719,7 +720,7 @@ function renderBeneficios(container) {
 }
 
 // ============================================
-// RENDERIZADO - CURSOS
+// RENDERIZADO - CURSOS (CON SOPORTE MODULAR)
 // ============================================
 function renderCursos(container) {
     const cursos = getCapacitaciones();
@@ -743,18 +744,18 @@ function renderCursos(container) {
                 ${cursos.map(c => {
                     const act = DATA.actividades[c.actividad];
                     return `
-                        <div class="card" onclick="showCursoDetalle(${c.id})">
-                            <div class="card-header" style="background-image: url('${c.imagen}'); background-size: cover; background-position: center;">
-                                <span class="card-badge">${c.categoria}</span>
+                        <div class="card" onclick="showCursoDetalle(${typeof c.id === 'string' ? `'${c.id}'` : c.id})">
+                            <div class="card-header" style="background-image: url('${c.imagen || 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80'}'); background-size: cover; background-position: center;">
+                                <span class="card-badge">${c.categoria || 'General'}</span>
                             </div>
                             <div class="card-body">
                                 <div class="card-category">${act ? act.nombre : 'General'}</div>
                                 <h3 class="card-title">${c.titulo}</h3>
-                                <p class="card-description">${c.descripcion}</p>
+                                <p class="card-description">${c.descripcion || c.subtitulo || ''}</p>
                                 <div class="card-meta">
-                                    <span><i class="far fa-clock"></i> ${c.duracion}</span>
-                                    <span><i class="fas fa-signal"></i> ${c.nivel}</span>
-                                    <span><i class="fas fa-book"></i> ${c.modulos} módulos</span>
+                                    <span><i class="far fa-clock"></i> ${c.duracion || 'Varía'}</span>
+                                    <span><i class="fas fa-signal"></i> ${c.nivel || 'General'}</span>
+                                    ${c.modulosData ? `<span><i class="fas fa-book"></i> ${c.modulosData.length} módulos</span>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -768,10 +769,65 @@ function renderCursos(container) {
 function showCursoDetalle(cursoId) {
     const cursos = getCapacitaciones();
     const curso = cursos.find(c => c.id === cursoId);
-    if (!curso) return;
+    if (!curso) {
+        toast('error', 'Error', 'Curso no encontrado');
+        return;
+    }
     
-    const act = DATA.actividades[curso.actividad];
     const container = document.getElementById('pageContent');
+    
+    // Determinar si es una capacitación modular (tiene modulosData)
+    const esModular = curso.modulosData && curso.modulosData.length > 0;
+    
+    let contenidoHTML = '';
+    
+    if (esModular) {
+        // Generar índice de módulos
+        contenidoHTML = `
+            <div class="modulo-indice">
+                <h3>📚 Módulos del curso (${curso.modulosData.length})</h3>
+                <div class="modulos-list">
+                    ${curso.modulosData.map((mod, idx) => {
+                        const progreso = obtenerProgresoModulo(curso.id, idx);
+                        return `
+                            <div class="modulo-item" onclick="mostrarModulo('${curso.id}', ${idx})">
+                                <div class="modulo-numero">${idx + 1}</div>
+                                <div class="modulo-info">
+                                    <div class="modulo-titulo">${mod.titulo}</div>
+                                    <div class="modulo-duracion">⏱️ ${mod.duracion}</div>
+                                </div>
+                                <div class="modulo-estado">
+                                    ${progreso ? '<i class="fas fa-check-circle" style="color: #10b981;"></i>' : '<i class="fas fa-circle" style="color: #d1d5db;"></i>'}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                <div class="progreso-total">
+                    <span>Progreso: <strong id="progresoPorcentaje">${calcularProgresoCurso(curso.id)}%</strong></span>
+                    <div class="progress-bar-total">
+                        <div class="progress-fill-total" style="width: ${calcularProgresoCurso(curso.id)}%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="modulo-contenido-container">
+                <div class="empty-state">
+                    <i class="fas fa-hand-pointer"></i>
+                    <h3>Seleccioná un módulo para comenzar</h3>
+                    <p>Hacé clic en cualquiera de los módulos de arriba para ver su contenido.</p>
+                </div>
+            </div>
+        `;
+    } else {
+        // Curso tradicional (contenido directo)
+        contenidoHTML = curso.contenido || `
+            <div class="empty-state">
+                <i class="fas fa-file-alt"></i>
+                <h3>Contenido en carga</h3>
+                <p>El contenido de este curso se cargará próximamente.</p>
+            </div>
+        `;
+    }
     
     container.innerHTML = `
         <div class="page-header">
@@ -779,50 +835,208 @@ function showCursoDetalle(cursoId) {
                 <i class="fas fa-arrow-left"></i> Volver a cursos
             </button>
         </div>
+        
         <div class="activity-hero">
-            <img src="${curso.imagen}" alt="${curso.titulo}" onerror="this.style.display='none'">
+            <img src="${curso.imagen || 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80'}" alt="${curso.titulo}" onerror="this.style.display='none'">
             <div class="activity-hero-content">
-                <h1><i class="fas ${act ? act.icono : 'fa-graduation-cap'}"></i> ${curso.titulo}</h1>
-                <p>${curso.descripcion}</p>
+                <h1><i class="fas fa-graduation-cap"></i> ${curso.titulo}</h1>
+                <p>${curso.descripcion || curso.subtitulo || ''}</p>
                 <div style="margin-top: 1rem; display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.875rem;">
-                    <span><i class="fas fa-user"></i> ${curso.instructor}</span>
-                    <span><i class="fas fa-clock"></i> ${curso.duracion}</span>
-                    <span><i class="fas fa-signal"></i> ${curso.nivel}</span>
-                    <span><i class="fas fa-book"></i> ${curso.modulos} módulos</span>
+                    <span><i class="fas fa-user"></i> ${curso.instructor || 'Equipo AOMA'}</span>
+                    <span><i class="fas fa-clock"></i> ${curso.duracion || 'Varía según módulo'}</span>
+                    <span><i class="fas fa-signal"></i> ${curso.nivel || 'General'}</span>
+                    ${esModular ? `<span><i class="fas fa-book"></i> ${curso.modulosData.length} módulos</span>` : ''}
                 </div>
             </div>
         </div>
         
-        <div class="content-search-bar">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="contentSearchInput" placeholder="Buscar en este curso...">
-            <span class="search-count" id="contentSearchCount">0 resultados</span>
-            <button class="btn-search-nav" id="contentSearchPrev" title="Anterior" disabled>
-                <i class="fas fa-chevron-up"></i>
-            </button>
-            <button class="btn-search-nav" id="contentSearchNext" title="Siguiente" disabled>
-                <i class="fas fa-chevron-down"></i>
-            </button>
-            <button class="btn-search-nav" id="contentSearchClear" title="Limpiar búsqueda">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
         <div class="section">
             <h2 class="section-title">Contenido del curso</h2>
-            <div class="ley-content" id="cursoContent" style="line-height: 1.8; color: var(--text-secondary); margin-top: 1rem;">
-                ${curso.contenido}
+            <div id="cursoContent" style="line-height: 1.8; color: var(--text-secondary); margin-top: 1rem;">
+                ${contenidoHTML}
             </div>
         </div>
     `;
     
+    // Inicializar búsqueda si hay contenido
     setTimeout(() => {
         setupContentSearch('#cursoContent');
     }, 100);
 }
 
 // ============================================
-// RENDERIZADO - CONVENIOS GENERAL (Overview)
+// FUNCIONES PARA PROGRESO DE MÓDULOS
+// ============================================
+function obtenerProgresoModulo(cursoId, moduloIndex) {
+    const key = `aoma_progreso_${cursoId}`;
+    const progreso = JSON.parse(localStorage.getItem(key) || '{}');
+    return !!progreso[moduloIndex];
+}
+
+function guardarProgresoModulo(cursoId, moduloIndex) {
+    const key = `aoma_progreso_${cursoId}`;
+    const progreso = JSON.parse(localStorage.getItem(key) || '{}');
+    progreso[moduloIndex] = true;
+    localStorage.setItem(key, JSON.stringify(progreso));
+}
+
+function calcularProgresoCurso(cursoId) {
+    const cursos = getCapacitaciones();
+    const curso = cursos.find(c => c.id === cursoId);
+    if (!curso || !curso.modulosData) return 0;
+    const key = `aoma_progreso_${cursoId}`;
+    const progreso = JSON.parse(localStorage.getItem(key) || '{}');
+    const completados = Object.keys(progreso).filter(k => progreso[k]).length;
+    return Math.round((completados / curso.modulosData.length) * 100);
+}
+
+// ============================================
+// MOSTRAR MÓDULO
+// ============================================
+function mostrarModulo(cursoId, moduloIndex) {
+    const cursos = getCapacitaciones();
+    const curso = cursos.find(c => c.id === cursoId);
+    if (!curso || !curso.modulosData) return;
+    
+    const modulo = curso.modulosData[moduloIndex];
+    if (!modulo) return;
+    
+    const container = document.getElementById('modulo-contenido-container');
+    if (!container) return;
+    
+    // Buscar contenido detallado en variable global
+    let contenidoDetallado = modulo.contenido || '';
+    if (modulo.variable && typeof window[modulo.variable] !== 'undefined') {
+        const moduloData = window[modulo.variable];
+        if (moduloData && moduloData.contenido) {
+            contenidoDetallado = moduloData.contenido;
+        }
+    }
+    
+    // Marcar módulo como visto
+    guardarProgresoModulo(curso.id, moduloIndex);
+    
+    container.innerHTML = `
+        <div class="modulo-contenido-wrapper">
+            <div class="modulo-header">
+                <h3>Módulo ${moduloIndex + 1}: ${modulo.titulo}</h3>
+                <div class="modulo-meta">
+                    <span><i class="fas fa-clock"></i> ${modulo.duracion}</span>
+                    ${modulo.videoUrl ? `<span><i class="fas fa-video"></i> Video incluido</span>` : ''}
+                    ${modulo.evaluacion ? `<span><i class="fas fa-check-circle"></i> ${modulo.evaluacion}</span>` : ''}
+                </div>
+            </div>
+            
+            ${modulo.videoUrl ? `
+                <div class="modulo-video">
+                    <div class="video-container">
+                        <iframe src="${modulo.videoUrl}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            ` : ''}
+            
+            <div class="modulo-contenido-texto">
+                ${contenidoDetallado || '<p>Contenido del módulo en carga.</p>'}
+            </div>
+            
+            ${modulo.evaluacion ? `
+                <div class="modulo-evaluacion">
+                    <h4>📝 Evaluación del módulo</h4>
+                    <p>${modulo.evaluacion}</p>
+                    <button class="btn btn-primary" onclick="iniciarEvaluacion('${curso.id}', ${moduloIndex})">
+                        <i class="fas fa-play"></i> Iniciar Evaluación
+                    </button>
+                </div>
+            ` : ''}
+            
+            <div class="modulo-navegacion">
+                ${moduloIndex > 0 ? `
+                    <button class="btn btn-secondary" onclick="mostrarModulo('${curso.id}', ${moduloIndex - 1})">
+                        <i class="fas fa-arrow-left"></i> Anterior
+                    </button>
+                ` : ''}
+                ${moduloIndex < (curso.modulosData.length - 1) ? `
+                    <button class="btn btn-primary" onclick="mostrarModulo('${curso.id}', ${moduloIndex + 1})">
+                        Siguiente <i class="fas fa-arrow-right"></i>
+                    </button>
+                ` : `
+                    <button class="btn btn-success" onclick="completarCurso('${curso.id}')">
+                        <i class="fas fa-trophy"></i> Completar Curso
+                    </button>
+                `}
+            </div>
+        </div>
+    `;
+    
+    // Actualizar el índice de módulos con el progreso
+    actualizarIndiceModulos(curso.id);
+    
+    // Scroll al inicio del módulo
+    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function actualizarIndiceModulos(cursoId) {
+    const items = document.querySelectorAll('.modulo-item');
+    const progreso = JSON.parse(localStorage.getItem(`aoma_progreso_${cursoId}`) || '{}');
+    items.forEach((item, idx) => {
+        const estado = item.querySelector('.modulo-estado i');
+        if (estado) {
+            if (progreso[idx]) {
+                estado.className = 'fas fa-check-circle';
+                estado.style.color = '#10b981';
+            } else {
+                estado.className = 'fas fa-circle';
+                estado.style.color = '#d1d5db';
+            }
+        }
+    });
+    // Actualizar porcentaje total
+    const porcentaje = calcularProgresoCurso(cursoId);
+    const span = document.getElementById('progresoPorcentaje');
+    if (span) span.textContent = porcentaje + '%';
+    const barra = document.querySelector('.progress-fill-total');
+    if (barra) barra.style.width = porcentaje + '%';
+}
+
+// ============================================
+// COMPLETAR CURSO (GENERAR CERTIFICADO)
+// ============================================
+function completarCurso(cursoId) {
+    const cursos = getCapacitaciones();
+    const curso = cursos.find(c => c.id === cursoId);
+    if (!curso) return;
+    
+    const key = `aoma_progreso_${cursoId}`;
+    const progreso = JSON.parse(localStorage.getItem(key) || '{}');
+    const totalModulos = curso.modulosData ? curso.modulosData.length : 0;
+    const completados = Object.keys(progreso).filter(k => progreso[k]).length;
+    
+    if (completados < totalModulos) {
+        toast('warning', 'Curso incompleto', 
+            `Completaste ${completados} de ${totalModulos} módulos. Finalizá todos para obtener tu certificado.`);
+        return;
+    }
+    
+    // Generar certificado
+    generarCertificado(curso.titulo, curso.id);
+}
+
+function generarCertificado(nombreCurso, cursoId) {
+    // Implementación simple: mostrar mensaje de éxito
+    toast('success', '🎓 ¡Curso completado!', 
+        `Felicidades, completaste "${nombreCurso}". Tu certificado se generará próximamente.`);
+    // Aquí se puede integrar html2canvas + jsPDF para generar PDF real
+}
+
+// ============================================
+// EVALUACIÓN (placeholder)
+// ============================================
+function iniciarEvaluacion(cursoId, moduloIndex) {
+    toast('info', '📝 Evaluación', 'La evaluación del módulo se abrirá en breve.');
+}
+
+// ============================================
+// RENDERIZADO - CONVENIOS GENERAL
 // ============================================
 function renderConveniosGeneral(container) {
     const convenios = getConvenios();
@@ -875,24 +1089,21 @@ function renderConveniosGeneral(container) {
                 </h2>
             </div>
             <div class="cards-grid">
-                ${Object.values(DATA.empresas).map(emp => {
-                    const convEmp = conveniosEmpresa.find(c => c.empresa === emp.id);
-                    return `
-                        <div class="card" onclick="navigateTo('empresa-${emp.id}')" style="cursor: pointer;">
-                            <div class="card-header" style="background: linear-gradient(135deg, ${emp.color}, ${emp.color}dd);">
-                                <i class="fas ${emp.icono}"></i>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-category">${emp.empresa}</div>
-                                <h3 class="card-title">${emp.nombre}</h3>
-                                <p class="card-description">${emp.descripcion}</p>
-                                <div class="card-meta">
-                                    <span><i class="fas fa-map-marker-alt"></i> ${emp.ubicacion}</span>
-                                </div>
+                ${Object.values(DATA.empresas).map(emp => `
+                    <div class="card" onclick="navigateTo('empresa-${emp.id}')" style="cursor: pointer;">
+                        <div class="card-header" style="background: linear-gradient(135deg, ${emp.color}, ${emp.color}dd);">
+                            <i class="fas ${emp.icono}"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-category">${emp.empresa}</div>
+                            <h3 class="card-title">${emp.nombre}</h3>
+                            <p class="card-description">${emp.descripcion}</p>
+                            <div class="card-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> ${emp.ubicacion}</span>
                             </div>
                         </div>
-                    `;
-                }).join('')}
+                    </div>
+                `).join('')}
             </div>
         </div>
     `;
@@ -901,7 +1112,7 @@ function renderConveniosGeneral(container) {
 // ============================================
 // RENDERIZADO - CONVENIOS POR ACTIVIDAD
 // ============================================
-function renderConveniosPorActividad(container, actividadId, mostrarEmpresas = true) {
+function renderConveniosPorActividad(container, actividadId) {
     const act = DATA.actividades[actividadId];
     if (!act) {
         container.innerHTML = '<div class="empty-state"><h3>Actividad no encontrada</h3></div>';
@@ -909,7 +1120,6 @@ function renderConveniosPorActividad(container, actividadId, mostrarEmpresas = t
     }
     
     const convenios = getConvenios();
-    // Filtrar solo convenios por actividad (sin empresa específica)
     const conveniosAct = convenios.filter(c => c.actividad === actividadId && !c.empresa);
     const escalasAct = DATA.escalas[actividadId] || [];
     
@@ -1085,8 +1295,6 @@ function showConvenioDetalle(numero) {
         </div>
     `;
     
-    const volverPage = conv.empresa ? `empresa-${conv.empresa}` : `convenios-${conv.actividad === 'mineria-extractiva' ? 'mineria' : conv.actividad === 'cal-piedra' ? 'cal' : conv.actividad}`;
-    
     container.innerHTML = `
         <div class="page-header">
             <button class="btn btn-ghost" onclick="navigateTo('convenios')">
@@ -1104,7 +1312,7 @@ function showConvenioDetalle(numero) {
         
         <div class="content-search-bar">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" id="contentSearchInput" placeholder="Buscar en este convenio... (ej: vacaciones, salario, jornada)">
+            <input type="text" id="contentSearchInput" placeholder="Buscar en este convenio...">
             <span class="search-count" id="contentSearchCount">0 resultados</span>
             <button class="btn-search-nav" id="contentSearchPrev" title="Anterior" disabled>
                 <i class="fas fa-chevron-up"></i>
@@ -1128,52 +1336,6 @@ function showConvenioDetalle(numero) {
     setTimeout(() => {
         setupContentSearch('#convenioContent');
     }, 100);
-}
-
-// ============================================
-// RENDERIZADO - ESCALAS
-// ============================================
-function renderEscalas(container) {
-    container.innerHTML = `
-        <div class="page-header">
-            <h1>Escalas Salariales 💰</h1>
-            <p>Tablas salariales vigentes - Actualizadas Julio 2026</p>
-        </div>
-        ${Object.entries(DATA.escalas).map(([actId, escalas]) => {
-            const act = DATA.actividades[actId];
-            return `
-                <div class="section">
-                    <h2 class="section-title" style="margin-bottom: 1rem;">
-                        <i class="fas ${act ? act.icono : 'fa-money-bill-wave'}" style="color: ${act ? act.color : 'var(--primary)'};"></i>
-                        ${act ? act.nombre : actId}
-                        <span style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400; margin-left: 0.5rem;">
-                            (${act ? act.ctt : ''})
-                        </span>
-                    </h2>
-                    <div class="table-container">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Categoría</th>
-                                    <th>Nivel</th>
-                                    <th>Haber Básico</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${escalas.map(e => `
-                                    <tr>
-                                        <td><b>${e.categoria}</b></td>
-                                        <td>${e.nivel}</td>
-                                        <td><strong>${DATA.formatCurrency(e.salario)}</strong></td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-        }).join('')}
-    `;
 }
 
 // ============================================
@@ -1305,103 +1467,30 @@ function toggleFaq(id) {
 }
 
 // ============================================
-// RENDERIZADO - ACTIVIDAD
+// TOAST NOTIFICATIONS
 // ============================================
-function renderActividad(container, activityId) {
-    const act = DATA.actividades[activityId];
-    if (!act) {
-        container.innerHTML = '<div class="empty-state"><h3>Actividad no encontrada</h3></div>';
-        return;
-    }
+function toast(type, title, message) {
+    const container = document.querySelector('.toast-container') || (() => {
+        const div = document.createElement('div');
+        div.className = 'toast-container';
+        document.body.appendChild(div);
+        return div;
+    })();
     
-    const cursos = getCapacitaciones();
-    const cursosAct = cursos.filter(c => c.actividad === activityId);
-    const conveniosAct = getConvenios().filter(c => c.actividad === activityId);
-    const escalasAct = DATA.escalas[activityId] || [];
-    
-    container.innerHTML = `
-        <div class="activity-hero">
-            <img src="${act.imagen}" alt="${act.nombre}" onerror="this.style.display='none'">
-            <div class="activity-hero-content">
-                <h1><i class="fas ${act.icono}"></i> ${act.nombre}</h1>
-                <p>${act.descripcion}</p>
-                ${act.empresas && act.empresas.length > 0 ? `
-                    <p style="margin-top: 0.5rem;"><strong>Empresas:</strong> ${act.empresas.join(', ')}</p>
-                ` : ''}
-                <p style="margin-top: 0.5rem;"><strong>Convenio:</strong> ${act.ctt}</p>
-            </div>
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <div class="toast-icon"><i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'}"></i></div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
         </div>
-        
-        ${conveniosAct.length > 0 ? `
-            <div class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Convenios Colectivos</h2>
-                </div>
-                <div class="cards-grid">
-                    ${conveniosAct.map(c => `
-                        <div class="card" onclick="showConvenioDetalle('${c.numero}')" style="cursor: pointer;">
-                            <div class="card-body">
-                                <div class="card-category">${c.numero}</div>
-                                <h3 class="card-title">${c.subtitulo || c.titulo}</h3>
-                                <p class="card-description">${c.resumen}</p>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        ` : ''}
-        
-        ${escalasAct.length > 0 ? `
-            <div class="section">
-                <h2 class="section-title" style="margin-bottom: 1rem;">Escalas Salariales</h2>
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Categoría</th>
-                                <th>Nivel</th>
-                                <th>Haber Básico</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${escalasAct.map(e => `
-                                <tr>
-                                    <td><b>${e.categoria}</b></td>
-                                    <td>${e.nivel}</td>
-                                    <td><strong>${DATA.formatCurrency(e.salario)}</strong></td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        ` : ''}
-        
-        ${cursosAct.length > 0 ? `
-            <div class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Cursos de ${act.nombre}</h2>
-                </div>
-                <div class="cards-grid">
-                    ${cursosAct.map(c => `
-                        <div class="card" onclick="showCursoDetalle(${c.id})">
-                            <div class="card-header" style="background-image: url('${c.imagen}'); background-size: cover; background-position: center;">
-                                <span class="card-badge">${c.categoria}</span>
-                            </div>
-                            <div class="card-body">
-                                <h3 class="card-title">${c.titulo}</h3>
-                                <p class="card-description">${c.descripcion}</p>
-                                <div class="card-meta">
-                                    <span><i class="far fa-clock"></i> ${c.duracion}</span>
-                                    <span><i class="fas fa-signal"></i> ${c.nivel}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        ` : ''}
+        <button class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
     `;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.remove();
+    }, 5000);
 }
 
 // ============================================
