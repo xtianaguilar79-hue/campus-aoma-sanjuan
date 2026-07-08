@@ -1,192 +1,222 @@
 // ============================================
 // MÓDULO 5: EL CONVENIO COLECTIVO DE TRABAJO (CCT)
-// Fuente: MTEySS - Programa de Apoyo a la Formación Sindical
 // ============================================
 
 const MODULO_NEGOCIACION_5 = {
     id: 'negociacion-colectiva-modulo-5',
-    titulo: 'El Convenio Colectivo de Trabajo (CCT)',
-    duracion: '2 horas',
+    titulo: 'El Convenio Colectivo de Trabajo (CCT) en Profundidad',
+    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `
         <div class="modulo-contenido">
-            <h2>El Convenio Colectivo de Trabajo (CCT)</h2>
-            
-            <div class="modulo-intro">
-                <p>El CCT es una fuente autónoma del derecho del trabajo, que además establece una de las particularidades de esta rama del derecho: la posibilidad de que las partes creen sus propias normas.</p>
-            </div>
-            
-            <h3>¿Qué es el Convenio Colectivo de Trabajo?</h3>
-            
-            <p>El CCT surge a partir de un acuerdo tendiente a establecer condiciones laborales entre una asociación sindical de trabajadores (con personería gremial) y un empleador, un grupo de empleadores o una organización representativa de los empleadores de una misma actividad (cámaras o federaciones).</p>
-            
-            <h3>Tipos de acuerdos</h3>
-            
-            <table class="tabla-tipos">
-                <thead>
-                    <tr>
-                        <th>Tipo</th>
-                        <th>Descripción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Acuerdos Colectivos</strong></td>
-                        <td>Se remiten exclusivamente a la determinación de cláusulas salariales y eventualmente sindicales (generalmente relacionadas con cuestiones particulares de las empresas).</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Convenios Colectivos</strong></td>
-                        <td>Tratan sobre temas más amplios, como la jornada de trabajo y los descansos, el establecimiento de nuevas categorías en una actividad o sobre problemáticas.</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <h3>Contenido obligatorio del CCT (Ley 14.250)</h3>
-            
-            <p>La Ley 14.250 establece que las convenciones colectivas de trabajo obligatoriamente se deben celebrar por escrito y deben consignar:</p>
-            
-            <ul>
-                <li><strong>a)</strong> Lugar y fecha de su celebración.</li>
-                <li><strong>b)</strong> El nombre de los intervinientes y acreditación de sus personerías.</li>
-                <li><strong>c)</strong> Las actividades y las categorías de trabajadores a que se refieren.</li>
-                <li><strong>d)</strong> La zona de aplicación.</li>
-                <li><strong>e)</strong> El período de vigencia.</li>
-                <li><strong>f)</strong> Las materias objeto de la negociación.</li>
-            </ul>
-            
-            <h3>Proceso de homologación</h3>
-            
-            <div class="proceso-homologacion">
-                <div class="paso">
-                    <div class="paso-numero">1</div>
-                    <div class="paso-contenido">
-                        <h4>Celebración del acuerdo</h4>
-                        <p>Las partes llegan a un acuerdo y firman el convenio.</p>
-                    </div>
+            <header class="modulo-header-academico">
+                <div class="modulo-badge">Módulo 5</div>
+                <h1>El Convenio Colectivo de Trabajo (CCT) en Profundidad</h1>
+                <p class="modulo-subtitulo">La norma creada por el diálogo social</p>
+                <div class="modulo-meta-academico">
+                    <span><i class="fas fa-file-signature"></i> Estructura y contenido</span>
+                    <span><i class="fas fa-check-double"></i> Homologación y registro</span>
+                    <span><i class="fas fa-building"></i> Casos: Veladero y Vicuña</span>
                 </div>
-                <div class="paso">
-                    <div class="paso-numero">2</div>
-                    <div class="paso-contenido">
-                        <h4>Presentación al MTEySS</h4>
-                        <p>El convenio es presentado ante el Ministerio de Trabajo para su homologación.</p>
-                    </div>
+            </header>
+
+            <section class="modulo-intro-academico">
+                <h2>Introducción</h2>
+                <p>El Convenio Colectivo de Trabajo (CCT) es la manifestación más acabada de la negociación colectiva. Es un acuerdo normativo que, una vez homologado, adquiere fuerza de ley para las partes y para todos los trabajadores y empleadores comprendidos en su ámbito de aplicación. Su estudio es esencial para comprender cómo se regulan las condiciones de trabajo en el sector minero y en el resto de la economía.</p>
+            </section>
+
+            <section class="modulo-objetivos">
+                <h2>Objetivos de Aprendizaje</h2>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Definir qué es un CCT y cuáles son sus elementos esenciales.</li>
+                    <li><i class="fas fa-check-circle"></i> Conocer la estructura típica de un CCT (partes, cláusulas, anexos).</li>
+                    <li><i class="fas fa-check-circle"></i> Comprender el proceso de homologación y registro.</li>
+                    <li><i class="fas fa-check-circle"></i> Analizar casos concretos: CCT 673/04 (Veladero) y CCT Vicuña (Deprominsa).</li>
+                </ul>
+            </section>
+
+            <section class="modulo-desarrollo">
+                <h2>1. Definición y Naturaleza Jurídica</h2>
+                <p>El CCT es un <strong>contrato normativo</strong> (también llamado "norma autónoma") que establece condiciones de trabajo para una actividad, categoría o empresa. Tiene las siguientes características:</p>
+                <ul>
+                    <li><strong>Es bilateral:</strong> Acordado entre sindicatos y empleadores.</li>
+                    <li><strong>Es de cumplimiento obligatorio:</strong> Para las partes y para los terceros comprendidos en su ámbito.</li>
+                    <li><strong>Es de naturaleza normativa:</strong> Crea reglas de conducta con fuerza vinculante.</li>
+                    <li><strong>Es un contrato colectivo:</strong> No es un contrato individual, sino un acuerdo de alcance colectivo.</li>
+                </ul>
+
+                <h2>2. Estructura del CCT</h2>
+                <p>Un CCT típico incluye las siguientes partes:</p>
+                <ul>
+                    <li><strong>Partes intervinientes:</strong> Identificación del sindicato y del empleador o cámara empresaria.</li>
+                    <li><strong>Ámbito de aplicación:</strong> Personal (categorías de trabajadores) y territorial (zonas geográficas).</li>
+                    <li><strong>Cláusulas generales:</strong> Objeto, vigencia, condiciones de trabajo, remuneraciones.</li>
+                    <li><strong>Cláusulas específicas:</strong> Jornada, descansos, horas extras, vacaciones, licencias.</li>
+                    <li><strong>Cláusulas de seguridad social:</strong> Aportes, contribuciones, cobertura de salud.</li>
+                    <li><strong>Cláusulas sindicales:</strong> Crédito de horas, comisiones paritarias, estabilidad gremial.</li>
+                    <li><strong>Disposiciones finales:</strong> Duración, forma de renovación, procedimiento de denuncia.</li>
+                    <li><strong>Anexos:</strong> Escalas salariales, tablas de categorías, beneficios adicionales.</li>
+                </ul>
+
+                <h2>3. El Proceso de Homologación</h2>
+                <p>La homologación es el acto administrativo mediante el cual el Ministerio de Trabajo, Empleo y Seguridad Social otorga validez al CCT. El proceso es el siguiente:</p>
+                <ol>
+                    <li><strong>Negociación:</strong> Las partes alcanzan un acuerdo y redactan el texto del convenio.</li>
+                    <li><strong>Presentación:</strong> El convenio es presentado ante el MTEySS para su homologación.</li>
+                    <li><strong>Control:</strong> El Ministerio realiza tres controles: legalidad, formalidad y oportunidad.</li>
+                    <li><strong>Homologación:</strong> Si todo es correcto, el Ministerio homologa el convenio mediante resolución.</li>
+                    <li><strong>Registro:</strong> El convenio se inscribe en el Registro de Convenios Colectivos de Trabajo.</li>
+                    <li><strong>Publicación:</strong> El convenio se publica en el Boletín Oficial.</li>
+                </ol>
+                <p>La homologación da al CCT la fuerza de ley y lo hace oponible a terceros.</p>
+
+                <h2>4. Caso Práctico: CCT 673/04 (Barrick-Veladero)</h2>
+                <p>El CCT 673/04 es un ejemplo de convenio de empresa que ha sido pionero en la minería argentina. Sus características principales son:</p>
+                <ul>
+                    <li><strong>Categorías profesionales:</strong> Clasificación detallada por áreas (Operaciones, Mantenimiento, Procesos, Servicios Técnicos, Almacenes, Medio Ambiente).</li>
+                    <li><strong>Remuneraciones:</strong> Básico por categoría, adicional presentismo (15%), asignación por zona (20%), bonos de producción (8%).</li>
+                    <li><strong>Jornada:</strong> Régimen 14x14 (14 días de trabajo y 14 de descanso).</li>
+                    <li><strong>Beneficios sociales:</strong> Ayuda escolar, viáticos, becas, servicio de transporte gratuito.</li>
+                    <li><strong>Comisiones paritarias:</strong> Para interpretar y actualizar el convenio.</li>
+                </ul>
+                <p>Este convenio ha sido referente para el sector y ha servido de base para otras negociaciones en la provincia de San Juan.</p>
+
+                <h2>5. Caso Práctico: CCT Vicuña (Deprominsa)</h2>
+                <p>El convenio de Vicuña, negociado con Deprominsa, comparte muchas similitudes con el de Veladero, pero también tiene particularidades:</p>
+                <ul>
+                    <li><strong>Ámbito:</strong> Proyecto Josemaría/Vicuña, en la misma zona cordillerana.</li>
+                    <li><strong>Categorías:</strong> A, 1, 2 y 3 con niveles Inicial, Medio y Avanzado.</li>
+                    <li><strong>Escalas salariales:</strong> Detalladas desde marzo 2025, con incrementos del 3% y 5%.</li>
+                    <li><strong>Adicionales:</strong> Presentismo (17%), zona desfavorable (15%), compensación especial (15%).</li>
+                    <li><strong>Jornada:</strong> También 14x14, con descansos compensatorios.</li>
+                </ul>
+                <p>Ambos convenios demuestran la capacidad de los sindicatos mineros para negociar condiciones de alto nivel.</p>
+
+                <h2>6. Reflexión Crítica: ¿Cómo mejorar los convenios mineros?</h2>
+                <p>A pesar de los avances, los convenios mineros enfrentan desafíos: adaptación a las nuevas tecnologías, inclusión de cláusulas de género, protección frente a la automatización, y mejora de las condiciones de seguridad y salud laboral.</p>
+                <div class="nota-modificacion">
+                    <strong>💡 Propuesta de debate:</strong>
+                    <p>¿Qué cláusulas innovadoras podrían incluirse en un futuro convenio para la minería 4.0 (automatización, inteligencia artificial, teletrabajo)?</p>
                 </div>
-                <div class="paso">
-                    <div class="paso-numero">3</div>
-                    <div class="paso-contenido">
-                        <h4>Controles</h4>
-                        <p>El MTEySS realiza tres controles: Legalidad, Formalidad y Oportunidad.</p>
-                    </div>
+
+                <h2>Glosario</h2>
+                <div class="glosario">
+                    <div class="termino"><strong>Homologación:</strong> Control estatal sobre el CCT.</div>
+                    <div class="termino"><strong>Ultraactividad:</strong> Vigencia hasta nuevo reemplazo.</div>
+                    <div class="termino"><strong>Bono de Producción:</strong> Incentivo económico por cumplimiento de metas.</div>
+                    <div class="termino"><strong>Comisiones Paritarias:</strong> Órganos de interpretación y control del CCT.</div>
                 </div>
-                <div class="paso">
-                    <div class="paso-numero">4</div>
-                    <div class="paso-contenido">
-                        <h4>Homologación</h4>
-                        <p>El Ministerio homologa el convenio mediante acto administrativo.</p>
-                    </div>
+
+                <h2>Recursos Complementarios</h2>
+                <ul>
+                    <li><a href="assets/pdf/cct-673-04-veladero.pdf" target="_blank">Texto completo del CCT 673/04</a></li>
+                    <li><a href="assets/pdf/cct-vicuna-deprominsa.pdf" target="_blank">Texto completo del CCT Vicuña</a></li>
+                    <li><a href="https://www.boletinoficial.gob.ar/" target="_blank">Boletín Oficial (publicación de convenios)</a></li>
+                </ul>
+            </section>
+
+            <section class="modulo-evaluacion-academica">
+                <h2>Autoevaluación</h2>
+                <div class="pregunta">
+                    <p><strong>1. ¿Qué es un Convenio Colectivo de Trabajo?</strong></p>
+                    <details>
+                        <summary>Ver respuesta</summary>
+                        <p>Es un acuerdo normativo entre sindicatos y empleadores que establece condiciones de trabajo.</p>
+                    </details>
                 </div>
-                <div class="paso">
-                    <div class="paso-numero">5</div>
-                    <div class="paso-contenido">
-                        <h4>Publicación</h4>
-                        <p>El convenio es publicado en el Boletín Oficial.</p>
-                    </div>
+                <div class="pregunta">
+                    <p><strong>2. ¿Cuáles son las partes de un CCT?</strong></p>
+                    <details>
+                        <summary>Ver respuesta</summary>
+                        <p>Partes intervinientes, ámbito de aplicación, cláusulas generales y específicas, cláusulas de seguridad social, cláusulas sindicales, disposiciones finales y anexos.</p>
+                    </details>
                 </div>
-            </div>
-            
-            <h3>Obligatoriedad del acuerdo</h3>
-            
-            <p>Una vez homologado, el CCT es de cumplimiento obligatorio para las partes y para todos los trabajadores y empleadores comprendidos en su ámbito de aplicación.</p>
-            
-            <div class="nota-modificacion">
-                <strong>💡 Importante</strong>
-                <p>El CCT es una norma autónoma creada por los propios actores sociales, pero que una vez homologada adquiere fuerza de ley para el sector o actividad que regula.</p>
-            </div>
-            
-            <h3>Ámbitos del Convenio Colectivo</h3>
-            
-            <ul>
-                <li><strong>Convenio nacional, regional o de otro ámbito territorial.</strong></li>
-                <li><strong>Convenio intersectorial o marco.</strong></li>
-                <li><strong>Convenio de actividad.</strong></li>
-                <li><strong>Convenio de profesión, oficio o categoría.</strong></li>
-                <li><strong>Convenio de empresa o grupo de empresas.</strong></li>
-            </ul>
+                <div class="pregunta">
+                    <p><strong>3. ¿Qué es la homologación de un CCT?</strong></p>
+                    <details>
+                        <summary>Ver respuesta</summary>
+                        <p>Es el acto administrativo del Ministerio de Trabajo que otorga validez al convenio.</p>
+                    </details>
+                </div>
+                <div class="pregunta">
+                    <p><strong>4. ¿Qué régimen de turnos establece el CCT 673/04?</strong></p>
+                    <details>
+                        <summary>Ver respuesta</summary>
+                        <p>El régimen 14x14 (14 días de trabajo y 14 de descanso).</p>
+                    </details>
+                </div>
+            </section>
         </div>
     `,
     
     recursos: [
-        {
-            titulo: 'Modelo de Convenio Colectivo de Trabajo',
-            url: 'assets/pdf/modelo-cct.pdf'
-        }
+        { titulo: 'Texto completo del CCT 673/04', url: 'assets/pdf/cct-673-04-veladero.pdf' }
     ],
     
     evaluacion: {
         preguntas: [
             {
                 id: 1,
-                pregunta: '¿Qué es un Convenio Colectivo de Trabajo (CCT)?',
+                pregunta: '¿Qué es un Convenio Colectivo de Trabajo?',
                 opciones: [
-                    'Un acuerdo unilateral del empleador',
-                    'Un acuerdo entre una asociación sindical y un empleador para establecer condiciones laborales',
-                    'Una ley dictada por el Congreso',
+                    'Un acuerdo individual entre trabajador y empleador',
+                    'Un contrato normativo de alcance colectivo',
+                    'Una ley del Congreso de la Nación',
                     'Un decreto del Poder Ejecutivo'
                 ],
-                correcta: 1
+                correcta: 1,
+                retroalimentacion: 'El CCT es una norma autónoma de alcance colectivo.'
             },
             {
                 id: 2,
-                pregunta: '¿Qué diferencia a un "Acuerdo Colectivo" de un "Convenio Colectivo"?',
-                opciones: [
-                    'No hay diferencia, son lo mismo',
-                    'El Acuerdo es solo salarial, el Convenio abarca temas más amplios',
-                    'El Convenio es solo salarial, el Acuerdo abarca temas más amplios',
-                    'El Acuerdo es más importante que el Convenio'
-                ],
-                correcta: 1
+                pregunta: '¿Qué ministerio homológa los CCT en Argentina?',
+                opciones: ['Ministerio de Economía', 'Ministerio de Trabajo', 'Ministerio de Justicia', 'Ministerio de Salud'],
+                correcta: 1,
+                retroalimentacion: 'El Ministerio de Trabajo, Empleo y Seguridad Social es el encargado de la homologación.'
             },
             {
                 id: 3,
-                pregunta: '¿Quién realiza la homologación del CCT?',
+                pregunta: '¿Qué es el régimen 14x14 en la minería?',
                 opciones: [
-                    'El Poder Judicial',
-                    'El Ministerio de Trabajo, Empleo y Seguridad Social',
-                    'El Congreso de la Nación',
-                    'La Corte Suprema'
+                    '14 horas de trabajo y 14 de descanso al día',
+                    '14 días de trabajo y 14 de descanso',
+                    '14 meses de trabajo y 14 de vacaciones',
+                    '14 años de antigüedad'
                 ],
-                correcta: 1
+                correcta: 1,
+                retroalimentacion: 'Es un sistema de turnos de 14 días de trabajo y 14 de descanso.'
             },
             {
                 id: 4,
-                pregunta: '¿Cuáles son los controles que realiza el MTEySS antes de homologar un CCT?',
+                pregunta: '¿Qué establece el CCT 673/04 sobre los bonos de producción?',
                 opciones: [
-                    'Solo control de legalidad',
-                    'Legalidad, Formalidad y Oportunidad',
-                    'Solo control de oportunidad',
-                    'Control de constitucionalidad'
+                    'No existen bonos',
+                    'Pagos mensuales y anuales por cumplimiento de metas',
+                    'Solo bonos anuales',
+                    'Bonos exclusivos para ingenieros'
                 ],
-                correcta: 1
+                correcta: 1,
+                retroalimentacion: 'El CCT establece bonos mensuales (8% del básico) y anuales por producción.'
             },
             {
                 id: 5,
-                pregunta: '¿Qué ocurre una vez que un CCT es homologado?',
+                pregunta: '¿Qué función cumplen las comisiones paritarias?',
                 opciones: [
-                    'Pierde vigencia inmediatamente',
-                    'Es de cumplimiento obligatorio para las partes y se publica en el Boletín Oficial',
-                    'Solo es obligatorio para los trabajadores',
-                    'Debe ser aprobado por el Congreso'
+                    'Reemplazar a los sindicatos',
+                    'Interpretar y controlar el cumplimiento del CCT',
+                    'Fijar los salarios por decreto',
+                    'Administrar las empresas mineras'
                 ],
-                correcta: 1
+                correcta: 1,
+                retroalimentacion: 'Las comisiones paritarias son órganos de interpretación y seguimiento del convenio.'
             }
         ]
     }
 };
 
-// Exportar para uso global
 if (typeof window !== 'undefined') {
     window.MODULO_NEGOCIACION_5 = MODULO_NEGOCIACION_5;
 }
 
-console.log('✅ Módulo 5 cargado: El Convenio Colectivo de Trabajo (CCT)');
+console.log('✅ Módulo 5 (Académico) cargado: El CCT en Profundidad');
