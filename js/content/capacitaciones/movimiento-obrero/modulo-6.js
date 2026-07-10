@@ -15,7 +15,7 @@ const MODULO_OBRERO_6 = {
                 <h1>Democracia, Neoliberalismo y el Sindicalismo del Siglo XXI</h1>
                 <p class="modulo-subtitulo">De Alfonsín a Kirchner, la transformación del movimiento obrero</p>
                 <div class="modulo-meta-academico">
-                    <span><i class="fas fa-clock"></i> Duración: 3 horas</span>
+                    
                     <span><i class="fas fa-dollar-sign"></i> Neoliberalismo 1989-2001</span>
                     <span><i class="fas fa-hand-holding-heart"></i> Kirchnerismo y recomposición</span>
                 </div>
