@@ -16,7 +16,7 @@ const MODULO_NEGOCIACION_1 = {
                 <h1>Fundamentos de la Negociación Colectiva</h1>
                 <p class="modulo-subtitulo">Un pilar esencial de la democracia social y la justicia laboral</p>
                 <div class="modulo-meta-academico">
-                    <span><i class="fas fa-clock"></i> Duración: 3 horas</span>
+                    
                     <span><i class="fas fa-graduation-cap"></i> Nivel: Intermedio-Avanzado</span>
                     <span><i class="fas fa-file-alt"></i> Lectura obligatoria: Convenio 154 OIT</span>
                 </div>

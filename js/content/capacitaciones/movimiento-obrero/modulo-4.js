@@ -15,7 +15,7 @@ const MODULO_OBRERO_4 = {
                 <h1>Resistencia, Proscripción y el Cordobazo</h1>
                 <p class="modulo-subtitulo">La lucha contra la dictadura y el surgimiento de la nueva izquierda sindical</p>
                 <div class="modulo-meta-academico">
-                    <span><i class="fas fa-clock"></i> Duración: 3 horas</span>
+                    
                     <span><i class="fas fa-user"></i> Vandor, Ongaro, Tosco</span>
                     <span><i class="fas fa-calendar-alt"></i> Cordobazo: 1969</span>
                 </div>

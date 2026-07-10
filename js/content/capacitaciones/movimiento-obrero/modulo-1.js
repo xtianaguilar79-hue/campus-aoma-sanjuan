@@ -15,7 +15,7 @@ const MODULO_OBRERO_1 = {
                 <h1>Los Orígenes del Movimiento Obrero Argentino</h1>
                 <p class="modulo-subtitulo">De las mutuales a las primeras centrales sindicales (1850-1915)</p>
                 <div class="modulo-meta-academico">
-                    <span><i class="fas fa-clock"></i> Duración: 3 horas</span>
+                    
                     <span><i class="fas fa-flag"></i> Período: 1850-1915</span>
                     <span><i class="fas fa-users"></i> Protagonistas: Artesanos, inmigrantes, anarquistas, socialistas</span>
                 </div>

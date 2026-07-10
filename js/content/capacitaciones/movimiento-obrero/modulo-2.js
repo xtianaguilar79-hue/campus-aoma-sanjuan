@@ -15,7 +15,7 @@ const MODULO_OBRERO_2 = {
                 <h1>Conflictos Sociales y la Fundación de la CGT</h1>
                 <p class="modulo-subtitulo">Semana Trágica, Patagonia Rebelde y la unidad sindical (1915-1930)</p>
                 <div class="modulo-meta-academico">
-                    <span><i class="fas fa-clock"></i> Duración: 3 horas</span>
+                    
                     <span><i class="fas fa-bolt"></i> Eventos: 1919, 1920-21</span>
                     <span><i class="fas fa-flag"></i> CGT fundada en 1930</span>
                 </div>

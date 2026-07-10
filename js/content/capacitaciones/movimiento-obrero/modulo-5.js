@@ -15,7 +15,7 @@ const MODULO_OBRERO_5 = {
                 <h1>Terrorismo de Estado y Resistencia Sindical</h1>
                 <p class="modulo-subtitulo">Del regreso de Perón a la dictadura del Proceso de Reorganización Nacional</p>
                 <div class="modulo-meta-academico">
-                    <span><i class="fas fa-clock"></i> Duración: 3 horas</span>
+                    
                     <span><i class="fas fa-skull"></i> Dictadura: 1976-1983</span>
                     <span><i class="fas fa-user"></i> Ubaldini, Triaca</span>
                 </div>

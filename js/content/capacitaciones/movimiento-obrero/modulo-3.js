@@ -15,7 +15,7 @@ const MODULO_OBRERO_3 = {
                 <h1>La Década Infame y el Nacimiento del Peronismo</h1>
                 <p class="modulo-subtitulo">Del golpe de 1930 a la 'Edad de Oro' de los derechos laborales</p>
                 <div class="modulo-meta-academico">
-                    <span><i class="fas fa-clock"></i> Duración: 3 horas</span>
+                    
                     <span><i class="fas fa-user-tie"></i> Perón y la Secretaría de Trabajo</span>
                     <span><i class="fas fa-percent"></i> Salarios: 61% del PBI (1952)</span>
                 </div>

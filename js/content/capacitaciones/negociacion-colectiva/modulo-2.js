@@ -14,7 +14,7 @@ const MODULO_NEGOCIACION_2 = {
                 <h1>Supuestos y Contexto de la Negociación Colectiva</h1>
                 <p class="modulo-subtitulo">Los cimientos del diálogo social en el mundo del trabajo</p>
                 <div class="modulo-meta-academico">
-                    <span><i class="fas fa-clock"></i> Duración: 3 horas</span>
+                    
                     <span><i class="fas fa-globe"></i> Contexto: Globalización y tecnología</span>
                     <span><i class="fas fa-industry"></i> Sector minero de San Juan</span>
                 </div>
