@@ -39,33 +39,33 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 function showLogin() {
     const html = `
-        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+        <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);">
             <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 20px 25px rgba(0,0,0,0.15); width: 100%; max-width: 420px;">
                 <div style="text-align: center; margin-bottom: 2rem;">
-                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #dc2626, #ef4444); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; margin: 0 auto 1rem;">
+                    <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #f47b20, #f69b4c); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; margin: 0 auto 1rem;">
                         <i class="fas fa-mountain"></i>
                     </div>
-                    <h1 style="font-size: 1.5rem; color: #1e3a8a; margin-bottom: 0.5rem;">Campus Virtual AOMA</h1>
+                    <h1 style="font-size: 1.5rem; color: #1a1a1a; margin-bottom: 0.5rem;">Campus Virtual AOMA</h1>
                     <p style="color: #6b7280; font-size: 0.875rem;">Asociación Obrera Minera Argentina<br>Seccional San Juan</p>
                 </div>
                 <form id="loginForm">
                     <div style="margin-bottom: 1.25rem;">
-                        <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #1a2238;">
-                            <i class="fas fa-user" style="color: #dc2626;"></i> Usuario
+                        <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #1a1a1a;">
+                            <i class="fas fa-user" style="color: #f47b20;"></i> Usuario
                         </label>
                         <input type="text" id="username" style="width: 100%; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;" placeholder="admin o delegado" required>
                     </div>
                     <div style="margin-bottom: 1.5rem;">
-                        <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #1a2238;">
-                            <i class="fas fa-lock" style="color: #dc2626;"></i> Contraseña
+                        <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #1a1a1a;">
+                            <i class="fas fa-lock" style="color: #f47b20;"></i> Contraseña
                         </label>
                         <input type="password" id="password" style="width: 100%; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;" placeholder="admin o 1234" required>
                     </div>
-                    <button type="submit" style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, #dc2626, #ef4444); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">Ingresar al Campus</button>
+                    <button type="submit" style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, #f47b20, #f69b4c); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">Ingresar al Campus</button>
                 </form>
                 <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; font-size: 0.75rem; color: #6b7280; line-height: 1.8;">
-                    <p><strong>Demo:</strong> usuario: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #dc2626;">admin</code> | pass: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #dc2626;">admin</code></p>
-                    <p><strong>Delegado:</strong> usuario: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #dc2626;">delegado</code> | pass: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #dc2626;">1234</code></p>
+                    <p><strong>Demo:</strong> usuario: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">admin</code> | pass: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">admin</code></p>
+                    <p><strong>Delegado:</strong> usuario: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">delegado</code> | pass: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">1234</code></p>
                 </div>
             </div>
         </div>
@@ -218,12 +218,10 @@ function getConvenios() {
 function getCapacitaciones() {
     const cursos = [];
     
-    // 1. Cargar desde DATA.cursos (capacitaciones en data.js)
     if (DATA.cursos && DATA.cursos.length > 0) {
         cursos.push(...DATA.cursos);
     }
     
-    // 2. Cargar desde CAPACITACIONES_REGISTRO (capacitaciones modulares)
     if (typeof window !== 'undefined' && window.CAPACITACIONES_REGISTRO) {
         Object.values(window.CAPACITACIONES_REGISTRO).forEach(cap => {
             const existe = cursos.some(c => c.id === cap.id);
@@ -233,7 +231,6 @@ function getCapacitaciones() {
         });
     }
     
-    // 3. Fallback: variables globales sueltas (por si no se registraron)
     if (typeof window !== 'undefined') {
         for (const key in window) {
             if (key.startsWith('CAPACITACION_') && key !== 'CAPACITACIONES_REGISTRO') {
@@ -464,11 +461,9 @@ function escapeRegExp(string) {
 }
 
 // ============================================
-// RENDERIZADO - DASHBOARD
+// RENDERIZADO - DASHBOARD (MEJORADO)
 // ============================================
 function renderDashboard(container) {
-    const actCount = Object.keys(DATA.actividades).length;
-    const empresasCount = Object.keys(DATA.empresas).length;
     const convenios = getConvenios();
     const convCount = convenios.length;
     const cursos = getCapacitaciones();
@@ -480,32 +475,57 @@ function renderDashboard(container) {
     container.innerHTML = `
         <div class="page-header">
             <h1>¡Bienvenido, ${currentUser.name.split(' ')[0]}! 👋</h1>
-            <p>Aquí está tu resumen de actividad del Campus Virtual AOMA</p>
+            <p>Panel de control del Campus Virtual AOMA San Juan</p>
         </div>
         
+        <!-- TARJETAS DE ESTADÍSTICAS PROFESIONALES -->
         <div class="stats-grid">
-            <div class="stat-card" onclick="navigateTo('convenios')">
-                <div class="stat-icon">📋</div>
-                <div class="stat-value">${convCount}</div>
-                <div class="stat-label">Convenios CCT</div>
+            <div class="stat-card accent" onclick="navigateTo('convenios')">
+                <div class="stat-icon-wrapper">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">${convCount}</div>
+                    <div class="stat-label">Convenios CCT</div>
+                </div>
+                <div class="stat-arrow"><i class="fas fa-chevron-right"></i></div>
             </div>
-            <div class="stat-card accent" onclick="navigateTo('beneficios')">
-                <div class="stat-icon">🎁</div>
-                <div class="stat-value">${benefCount}</div>
-                <div class="stat-label">Categorías de Beneficios</div>
+            
+            <div class="stat-card success" onclick="navigateTo('beneficios')">
+                <div class="stat-icon-wrapper">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">${benefCount}</div>
+                    <div class="stat-label">Categorías de Beneficios</div>
+                </div>
+                <div class="stat-arrow"><i class="fas fa-chevron-right"></i></div>
             </div>
-            <div class="stat-card success" onclick="navigateTo('cursos')">
-                <div class="stat-icon">🎓</div>
-                <div class="stat-value">${cursoCount}</div>
-                <div class="stat-label">Cursos disponibles</div>
+            
+            <div class="stat-card warning" onclick="navigateTo('cursos')">
+                <div class="stat-icon-wrapper">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">${cursoCount}</div>
+                    <div class="stat-label">Cursos disponibles</div>
+                </div>
+                <div class="stat-arrow"><i class="fas fa-chevron-right"></i></div>
             </div>
-            <div class="stat-card warning" onclick="navigateTo('legislacion')">
-                <div class="stat-icon">⚖️</div>
-                <div class="stat-value">${leyCount}</div>
-                <div class="stat-label">Leyes laborales</div>
+            
+            <div class="stat-card" onclick="navigateTo('legislacion')" style="--stat-color: #6b7280;">
+                <div class="stat-icon-wrapper" style="background: linear-gradient(135deg, #6b7280, #4b5563); box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">${leyCount}</div>
+                    <div class="stat-label">Leyes laborales</div>
+                </div>
+                <div class="stat-arrow"><i class="fas fa-chevron-right"></i></div>
             </div>
         </div>
         
+        <!-- SECCIÓN ACCESOS RÁPIDOS -->
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">Accesos Rápidos</h2>
@@ -545,6 +565,7 @@ function renderDashboard(container) {
             </div>
         </div>
         
+        <!-- ESTRUCTURA DE AOMA -->
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">Estructura de AOMA San Juan</h2>
@@ -568,6 +589,7 @@ function renderDashboard(container) {
             </div>
         </div>
         
+        <!-- ÚLTIMAS NOTICIAS -->
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">Últimas Noticias</h2>
@@ -605,7 +627,7 @@ function renderBeneficios(container) {
             <p>Beneficios exclusivos para afiliados titulares y grupo familiar primario (Revisión Julio 2026)</p>
         </div>
         
-        <div class="section" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; border: none;">
+        <div class="section" style="background: var(--gradient-primary); color: white; border: none;">
             <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                 <i class="fas fa-info-circle" style="font-size: 2rem;"></i>
                 <div>
@@ -775,14 +797,11 @@ function showCursoDetalle(cursoId) {
     }
     
     const container = document.getElementById('pageContent');
-    
-    // Determinar si es una capacitación modular (tiene modulosData)
     const esModular = curso.modulosData && curso.modulosData.length > 0;
     
     let contenidoHTML = '';
     
     if (esModular) {
-        // Generar índice de módulos
         contenidoHTML = `
             <div class="modulo-indice">
                 <h3>📚 Módulos del curso (${curso.modulosData.length})</h3>
@@ -819,7 +838,6 @@ function showCursoDetalle(cursoId) {
             </div>
         `;
     } else {
-        // Curso tradicional (contenido directo)
         contenidoHTML = curso.contenido || `
             <div class="empty-state">
                 <i class="fas fa-file-alt"></i>
@@ -858,7 +876,6 @@ function showCursoDetalle(cursoId) {
         </div>
     `;
     
-    // Inicializar búsqueda si hay contenido
     setTimeout(() => {
         setupContentSearch('#cursoContent');
     }, 100);
@@ -904,7 +921,6 @@ function mostrarModulo(cursoId, moduloIndex) {
     const container = document.getElementById('modulo-contenido-container');
     if (!container) return;
     
-    // Buscar contenido detallado en variable global
     let contenidoDetallado = modulo.contenido || '';
     if (modulo.variable && typeof window[modulo.variable] !== 'undefined') {
         const moduloData = window[modulo.variable];
@@ -913,7 +929,6 @@ function mostrarModulo(cursoId, moduloIndex) {
         }
     }
     
-    // Marcar módulo como visto
     guardarProgresoModulo(curso.id, moduloIndex);
     
     container.innerHTML = `
@@ -968,10 +983,7 @@ function mostrarModulo(cursoId, moduloIndex) {
         </div>
     `;
     
-    // Actualizar el índice de módulos con el progreso
     actualizarIndiceModulos(curso.id);
-    
-    // Scroll al inicio del módulo
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -990,7 +1002,6 @@ function actualizarIndiceModulos(cursoId) {
             }
         }
     });
-    // Actualizar porcentaje total
     const porcentaje = calcularProgresoCurso(cursoId);
     const span = document.getElementById('progresoPorcentaje');
     if (span) span.textContent = porcentaje + '%';
@@ -1017,15 +1028,12 @@ function completarCurso(cursoId) {
         return;
     }
     
-    // Generar certificado
     generarCertificado(curso.titulo, curso.id);
 }
 
 function generarCertificado(nombreCurso, cursoId) {
-    // Implementación simple: mostrar mensaje de éxito
     toast('success', '🎓 ¡Curso completado!', 
         `Felicidades, completaste "${nombreCurso}". Tu certificado se generará próximamente.`);
-    // Aquí se puede integrar html2canvas + jsPDF para generar PDF real
 }
 
 // ============================================
@@ -1040,7 +1048,6 @@ function iniciarEvaluacion(cursoId, moduloIndex) {
 // ============================================
 function renderConveniosGeneral(container) {
     const convenios = getConvenios();
-    
     const conveniosActividad = convenios.filter(c => !c.empresa);
     const conveniosEmpresa = convenios.filter(c => c.empresa);
     
@@ -1518,4 +1525,4 @@ function addChatMessage(type, text) {
     
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
-}
+        }
