@@ -6,7 +6,6 @@
 const MODULO_OBRERO_4 = {
     id: 'movimiento-obrero-modulo-4',
     titulo: 'Resistencia, Proscripción y el Cordobazo (1955-1973)',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

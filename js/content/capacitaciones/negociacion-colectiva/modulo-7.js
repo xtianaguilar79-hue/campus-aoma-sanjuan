@@ -5,7 +5,6 @@
 const MODULO_NEGOCIACION_7 = {
     id: 'negociacion-colectiva-modulo-7',
     titulo: 'Buena Fe, Desarrollo y Comisiones Paritarias',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

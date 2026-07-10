@@ -6,7 +6,6 @@
 const MODULO_NEGOCIACION_1 = {
     id: 'negociacion-colectiva-modulo-1',
     titulo: '¿Qué es la Negociación Colectiva? Fundamentos y Evolución',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

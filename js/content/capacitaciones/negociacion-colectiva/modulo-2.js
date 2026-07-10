@@ -5,7 +5,6 @@
 const MODULO_NEGOCIACION_2 = {
     id: 'negociacion-colectiva-modulo-2',
     titulo: 'Supuestos, Elementos Condicionantes y Contexto Actual',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

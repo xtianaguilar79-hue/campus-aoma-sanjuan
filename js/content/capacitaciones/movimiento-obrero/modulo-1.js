@@ -6,7 +6,6 @@
 const MODULO_OBRERO_1 = {
     id: 'movimiento-obrero-modulo-1',
     titulo: 'Los Orígenes del Movimiento Obrero (1850-1915)',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

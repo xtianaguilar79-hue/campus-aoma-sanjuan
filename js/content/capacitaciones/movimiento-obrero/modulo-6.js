@@ -6,7 +6,6 @@
 const MODULO_OBRERO_6 = {
     id: 'movimiento-obrero-modulo-6',
     titulo: 'Democracia, Neoliberalismo y el Sindicalismo del Siglo XXI (1983-2010)',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

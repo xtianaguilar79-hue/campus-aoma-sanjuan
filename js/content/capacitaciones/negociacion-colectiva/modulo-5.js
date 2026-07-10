@@ -5,7 +5,6 @@
 const MODULO_NEGOCIACION_5 = {
     id: 'negociacion-colectiva-modulo-5',
     titulo: 'El Convenio Colectivo de Trabajo (CCT) en Profundidad',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

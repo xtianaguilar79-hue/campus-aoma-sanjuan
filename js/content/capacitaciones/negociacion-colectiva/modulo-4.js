@@ -5,7 +5,6 @@
 const MODULO_NEGOCIACION_4 = {
     id: 'negociacion-colectiva-modulo-4',
     titulo: 'Marco Normativo Avanzado de la Negociación Colectiva',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

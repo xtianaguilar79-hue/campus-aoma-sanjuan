@@ -9,7 +9,6 @@ const CAPACITACION_MOVIMIENTO_OBRERO = {
     subtitulo: 'De las mutuales al sindicalismo del siglo XXI',
     categoria: 'Historia Sindical',
     nivel: 'Avanzado',
-    duracion: '18 horas (6 módulos)',
     modulos: 6,
     instructor: 'Equipo de Formación AOMA San Juan',
     actividad: 'general',
@@ -26,12 +25,12 @@ const CAPACITACION_MOVIMIENTO_OBRERO = {
     fuente: 'Ministerio de Trabajo, Empleo y Seguridad Social - Marzo 2023',
     
     modulosData: [
-        { id: 1, titulo: 'Los Orígenes del Movimiento Obrero (1850-1915)', duracion: '3 horas', variable: 'MODULO_OBRERO_1', evaluacion: 'Cuestionario de 8 preguntas' },
-        { id: 2, titulo: 'Conflictos Sociales y la Fundación de la CGT (1915-1930)', duracion: '3 horas', variable: 'MODULO_OBRERO_2', evaluacion: 'Cuestionario de 8 preguntas' },
-        { id: 3, titulo: 'La Década Infame y el Nacimiento del Peronismo (1930-1955)', duracion: '3 horas', variable: 'MODULO_OBRERO_3', evaluacion: 'Cuestionario de 8 preguntas' },
-        { id: 4, titulo: 'Resistencia, Proscripción y el Cordobazo (1955-1973)', duracion: '3 horas', variable: 'MODULO_OBRERO_4', evaluacion: 'Cuestionario de 8 preguntas' },
-        { id: 5, titulo: 'Terrorismo de Estado y Resistencia Sindical (1973-1983)', duracion: '3 horas', variable: 'MODULO_OBRERO_5', evaluacion: 'Cuestionario de 8 preguntas' },
-        { id: 6, titulo: 'Democracia, Neoliberalismo y el Sindicalismo del Siglo XXI (1983-2010)', duracion: '3 horas', variable: 'MODULO_OBRERO_6', evaluacion: 'Evaluación integradora' }
+        { id: 1, titulo: 'Los Orígenes del Movimiento Obrero (1850-1915)', variable: 'MODULO_OBRERO_1', evaluacion: 'Cuestionario de 8 preguntas' },
+        { id: 2, titulo: 'Conflictos Sociales y la Fundación de la CGT (1915-1930)', variable: 'MODULO_OBRERO_2', evaluacion: 'Cuestionario de 8 preguntas' },
+        { id: 3, titulo: 'La Década Infame y el Nacimiento del Peronismo (1930-1955)', variable: 'MODULO_OBRERO_3', evaluacion: 'Cuestionario de 8 preguntas' },
+        { id: 4, titulo: 'Resistencia, Proscripción y el Cordobazo (1955-1973)', variable: 'MODULO_OBRERO_4', evaluacion: 'Cuestionario de 8 preguntas' },
+        { id: 5, titulo: 'Terrorismo de Estado y Resistencia Sindical (1973-1983)', variable: 'MODULO_OBRERO_5', evaluacion: 'Cuestionario de 8 preguntas' },
+        { id: 6, titulo: 'Democracia, Neoliberalismo y el Sindicalismo del Siglo XXI (1983-2010)', variable: 'MODULO_OBRERO_6', evaluacion: 'Evaluación integradora' }
     ]
 };
 

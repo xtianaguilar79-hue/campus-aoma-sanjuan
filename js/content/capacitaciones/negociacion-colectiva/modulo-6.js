@@ -5,7 +5,6 @@
 const MODULO_NEGOCIACION_6 = {
     id: 'negociacion-colectiva-modulo-6',
     titulo: 'Proceso de Negociación: Estrategias y Técnicas',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

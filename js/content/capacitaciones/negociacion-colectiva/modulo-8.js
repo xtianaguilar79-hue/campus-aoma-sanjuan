@@ -5,7 +5,6 @@
 const MODULO_NEGOCIACION_8 = {
     id: 'negociacion-colectiva-modulo-8',
     titulo: 'Rol del Sindicato, Tendencias Futuras y Conclusiones',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

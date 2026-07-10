@@ -6,7 +6,6 @@
 const MODULO_OBRERO_3 = {
     id: 'movimiento-obrero-modulo-3',
     titulo: 'La Década Infame y el Nacimiento del Peronismo (1930-1955)',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

@@ -5,7 +5,6 @@
 const MODULO_NEGOCIACION_3 = {
     id: 'negociacion-colectiva-modulo-3',
     titulo: 'Actores, Instrumentos y Formas de Negociación',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

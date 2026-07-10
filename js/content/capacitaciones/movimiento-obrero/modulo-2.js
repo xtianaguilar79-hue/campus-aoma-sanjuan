@@ -6,7 +6,6 @@
 const MODULO_OBRERO_2 = {
     id: 'movimiento-obrero-modulo-2',
     titulo: 'Conflictos Sociales y la Fundación de la CGT (1915-1930)',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `

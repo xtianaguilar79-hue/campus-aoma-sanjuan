@@ -6,7 +6,6 @@
 const MODULO_OBRERO_5 = {
     id: 'movimiento-obrero-modulo-5',
     titulo: 'Terrorismo de Estado y Resistencia Sindical (1973-1983)',
-    duracion: '3 horas',
     videoUrl: null,
     
     contenido: `
