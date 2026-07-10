@@ -116,12 +116,12 @@ const DATA = {
         },
         {
             numero: 'CCT 38/89',
-            titulo: 'Convenio Colectivo de Trabajo N° 38/89',
-            subtitulo: 'Minería Extractiva',
-            actividad: 'mineria-extractiva',
-            variable: null,
-            resumen: 'Convenio colectivo para trabajadores de minería extractiva',
-            contenido: null
+    titulo: 'Convenio Colectivo de Trabajo N° 38/89',
+    subtitulo: 'Minería Extractiva',
+    actividad: 'mineria-extractiva',
+    variable: 'CCT_38_89',   // ← ANTES era null
+    resumen: 'Convenio colectivo para trabajadores de minería extractiva',
+    contenido: null
         },
         {
             numero: 'CCT 53/89',
