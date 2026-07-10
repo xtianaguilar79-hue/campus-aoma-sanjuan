@@ -98,12 +98,12 @@ const DATA = {
     convenios: [
         {
             numero: 'CCT 36/89',
-            titulo: 'Convenio Colectivo de Trabajo N° 36/89',
-            subtitulo: 'Cal, Piedra y Afines',
-            actividad: 'cal-piedra',
-            variable: null,
-            resumen: 'Convenio colectivo para trabajadores de cal, piedra y actividades afines',
-            contenido: null
+    titulo: 'Convenio Colectivo de Trabajo N° 36/89',
+    subtitulo: 'Cal, Piedra y Afines',
+    actividad: 'cal-piedra',
+    variable: 'CCT_36_89',   // ← ANTES era null
+    resumen: 'Convenio colectivo para trabajadores de cal, piedra y actividades afines',
+    contenido: null
         },
         {
             numero: 'CCT 37/89',
