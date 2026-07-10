@@ -69,7 +69,7 @@ const DATA = {
         'gualcamayo': {
             id: 'gualcamayo',
             nombre: 'Mina Gualcamayo',
-            empresa: 'Minas Argentinas S.A. (Yamana Gold)',
+            empresa: 'Minas Argentinas S.A. (Grupo AISA)',
             icono: 'fa-building',
             color: '#0891b2',
             imagen: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&q=80',
@@ -81,7 +81,7 @@ const DATA = {
         'vicuna': {
             id: 'vicuna',
             nombre: 'Mina Vicuña',
-            empresa: 'Vicuña Corp (Pan American Silver)',
+            empresa: 'Vicuña Corp (Lundin-BHP)',
             icono: 'fa-building',
             color: '#0891b2',
             imagen: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&q=80',
@@ -133,13 +133,13 @@ const DATA = {
             contenido: null
         },
         {
-            numero: 'CCT 54/89',
-            titulo: 'Convenio Colectivo de Trabajo N° 54/89',
-            subtitulo: 'Personal Obrero del Cemento Portland',
-            actividad: 'cemento',
-            variable: null,
-            resumen: 'Convenio para personal obrero de la industria del cemento',
-            contenido: null
+              numero: 'CCT 54/89',
+    titulo: 'Convenio Colectivo de Trabajo N° 54/89',
+    subtitulo: 'Personal Obrero del Cemento Portland',
+    actividad: 'cemento',
+    variable: 'CCT_54_89',   // ← ANTES era null
+    resumen: 'Convenio para personal obrero de la industria del cemento portland',
+    contenido: null
         },
         {
             numero: 'CCT 673/04',
