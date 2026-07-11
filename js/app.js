@@ -184,9 +184,113 @@ function renderPage(page, container) {
         case 'faq':
             renderFAQ(container);
             break;
+        case 'gremio':  // NUEVA PÁGINA
+            renderOrganigrama(container);
+            break;
         default:
             container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Página no encontrada</h3></div>';
     }
+}
+
+// ============================================
+// RENDERIZADO - ORGANIGRAMA (El Gremio)
+// ============================================
+function renderOrganigrama(container) {
+    const auth = DATA.autoridades;
+    if (!auth) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><h3>No hay datos de autoridades</h3></div>';
+        return;
+    }
+    
+    // Función para renderizar lista de nombres
+    const renderList = (arr) => arr.map((n, i) => `<li>${i+1}. ${n}</li>`).join('');
+    
+    container.innerHTML = `
+        <div class="page-header">
+            <h1>📋 Estructura Orgánica de AOMA</h1>
+            <p>Autoridades nacionales y de la Seccional San Juan</p>
+        </div>
+        
+        <!-- ORGANIGRAMA NACIONAL -->
+        <div class="section organigrama-section">
+            <h2 class="section-title" style="margin-bottom: 1.5rem;">🇦🇷 Consejo Directivo Nacional</h2>
+            <div class="organigrama-card">
+                <div class="organigrama-header" style="background: var(--gradient-primary);">
+                    <h3>${auth.nacional.nombre}</h3>
+                    <p>${auth.nacional.agrupacion} - ${auth.nacional.periodo}</p>
+                </div>
+                <div class="organigrama-body">
+                    <div class="organigrama-grid">
+                        <div class="organigrama-col">
+                            <h4>Comisión Directiva</h4>
+                            <ul class="organigrama-lista">
+                                ${auth.nacional.comisionDirectiva.map(m => `<li><strong>${m.cargo}:</strong> ${m.nombre}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Vocales Titulares</h4>
+                            <ul class="organigrama-lista">${renderList(auth.nacional.vocalesTitulares)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Vocales Suplentes</h4>
+                            <ul class="organigrama-lista">${renderList(auth.nacional.vocalesSuplentes)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Comisión Revisora de Cuentas</h4>
+                            <p><strong>Titulares:</strong></p>
+                            <ul class="organigrama-lista">${renderList(auth.nacional.comisionRevisora.titulares)}</ul>
+                            <p><strong>Suplentes:</strong></p>
+                            <ul class="organigrama-lista">${renderList(auth.nacional.comisionRevisora.suplentes)}</ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ORGANIGRAMA PROVINCIAL -->
+        <div class="section organigrama-section">
+            <h2 class="section-title" style="margin-bottom: 1.5rem;">🏔️ Seccional San Juan</h2>
+            <div class="organigrama-card">
+                <div class="organigrama-header" style="background: var(--gradient-accent);">
+                    <h3>${auth.provincial.nombre}</h3>
+                    <p>${auth.provincial.agrupacion} - ${auth.provincial.periodo}</p>
+                </div>
+                <div class="organigrama-body">
+                    <div class="organigrama-grid">
+                        <div class="organigrama-col">
+                            <h4>Comisión Directiva</h4>
+                            <ul class="organigrama-lista">
+                                ${auth.provincial.comisionDirectiva.map(m => `<li><strong>${m.cargo}:</strong> ${m.nombre}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Vocales Titulares</h4>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.vocalesTitulares)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Vocales Suplentes</h4>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.vocalesSuplentes)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Delegados Congresales Titulares</h4>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.delegadosCongresalesTitulares)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Delegados Congresales Suplentes</h4>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.delegadosCongresalesSuplentes)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Comisión Revisora de Cuentas</h4>
+                            <p><strong>Titulares:</strong></p>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.comisionRevisora.titulares)}</ul>
+                            <p><strong>Suplentes:</strong></p>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.comisionRevisora.suplentes)}</ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 // ============================================
@@ -1525,4 +1629,4 @@ function addChatMessage(type, text) {
     
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
-        }
+}

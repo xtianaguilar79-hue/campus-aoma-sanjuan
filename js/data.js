@@ -51,7 +51,7 @@ const DATA = {
     },
 
     // ==========================================
-    // 2. EMPRESAS MINERAS (Convenios por empresa)
+    // 2. EMPRESAS MINERAS
     // ==========================================
     empresas: {
         'veladero': {
@@ -98,12 +98,12 @@ const DATA = {
     convenios: [
         {
             numero: 'CCT 36/89',
-    titulo: 'Convenio Colectivo de Trabajo N° 36/89',
-    subtitulo: 'Cal, Piedra y Afines',
-    actividad: 'cal-piedra',
-    variable: 'CCT_36_89',   // ← ANTES era null
-    resumen: 'Convenio colectivo para trabajadores de cal, piedra y actividades afines',
-    contenido: null
+            titulo: 'Convenio Colectivo de Trabajo N° 36/89',
+            subtitulo: 'Cal, Piedra y Afines',
+            actividad: 'cal-piedra',
+            variable: 'CCT_36_89',
+            resumen: 'Convenio colectivo para trabajadores de cal, piedra y actividades afines',
+            contenido: null
         },
         {
             numero: 'CCT 37/89',
@@ -116,12 +116,12 @@ const DATA = {
         },
         {
             numero: 'CCT 38/89',
-    titulo: 'Convenio Colectivo de Trabajo N° 38/89',
-    subtitulo: 'Minería Extractiva',
-    actividad: 'mineria-extractiva',
-    variable: 'CCT_38_89',   // ← ANTES era null
-    resumen: 'Convenio colectivo para trabajadores de minería extractiva',
-    contenido: null
+            titulo: 'Convenio Colectivo de Trabajo N° 38/89',
+            subtitulo: 'Minería Extractiva',
+            actividad: 'mineria-extractiva',
+            variable: 'CCT_38_89',
+            resumen: 'Convenio colectivo para trabajadores de minería extractiva',
+            contenido: null
         },
         {
             numero: 'CCT 53/89',
@@ -133,13 +133,13 @@ const DATA = {
             contenido: null
         },
         {
-              numero: 'CCT 54/89',
-    titulo: 'Convenio Colectivo de Trabajo N° 54/89',
-    subtitulo: 'Personal Obrero del Cemento Portland',
-    actividad: 'cemento',
-    variable: 'CCT_54_89',   // ← ANTES era null
-    resumen: 'Convenio para personal obrero de la industria del cemento portland',
-    contenido: null
+            numero: 'CCT 54/89',
+            titulo: 'Convenio Colectivo de Trabajo N° 54/89',
+            subtitulo: 'Personal Obrero del Cemento Portland',
+            actividad: 'cemento',
+            variable: 'CCT_54_89',
+            resumen: 'Convenio para personal obrero de la industria del cemento portland',
+            contenido: null
         },
         {
             numero: 'CCT 673/04',
@@ -152,16 +152,16 @@ const DATA = {
             contenido: null
         },
         {
-    numero: 'CCT Gualcamayo',
-    titulo: 'Convenio Colectivo - Mina Gualcamayo',
-    subtitulo: 'Convenio por empresa - Minas Argentinas S.A.',
-    actividad: 'mineria-extractiva',
-    empresa: 'gualcamayo',
-    variable: 'CCT_GUALCAMAYO',
-    resumen: 'Convenio colectivo específico de la Mina Gualcamayo (Yamana Gold)',
-    contenido: null
-},
-{
+            numero: 'CCT Gualcamayo',
+            titulo: 'Convenio Colectivo - Mina Gualcamayo',
+            subtitulo: 'Convenio por empresa - Minas Argentinas S.A.',
+            actividad: 'mineria-extractiva',
+            empresa: 'gualcamayo',
+            variable: 'CCT_GUALCAMAYO',
+            resumen: 'Convenio colectivo específico de la Mina Gualcamayo (Grupo AISA)',
+            contenido: null
+        },
+        {
             numero: 'CCT Vicuña',
             titulo: 'Convenio Colectivo - AOMA - DEPROMINSA',
             subtitulo: 'Proyecto Josemaría/Vicuña',
@@ -214,7 +214,7 @@ const DATA = {
     cursos: [],
 
     // ==========================================
-    // 6. BENEFICIOS SOCIALES (Julio 2026)
+    // 6. BENEFICIOS SOCIALES (CORREGIDO)
     // ==========================================
     beneficios: {
         reintegros: {
@@ -233,7 +233,7 @@ const DATA = {
                 {
                     titulo: 'Ortopedia y Ortodoncia',
                     porcentaje: '30%',
-                    montoMax: '$250.000',
+                    montoMax: '$75.000', // CORREGIDO: 30% de 250.000 = 75.000
                     descripcion: 'Ortopedia temporaria-definitiva y ortodoncia fija-removible-funcional.',
                     exclusiones: 'Quedan excluidos los productos estéticos.',
                     documentacion: 'Ticket o factura avalada por ARCA, copia receta médica, carnet de afiliado y último recibo de sueldo.'
@@ -241,7 +241,7 @@ const DATA = {
                 {
                     titulo: 'Anteojos y Lentes de Contacto',
                     porcentaje: '40%',
-                    montoMax: '$250.000',
+                    montoMax: '$100.000', // CORREGIDO: 40% de 250.000 = 100.000
                     descripcion: 'Anteojos y lentes de contacto recetados.',
                     exclusiones: 'Quedan excluidos los productos estéticos.',
                     documentacion: 'Ticket o factura avalada por ARCA, copia receta médica, carnet de afiliado y último recibo de sueldo.'
@@ -461,7 +461,100 @@ const DATA = {
     ],
 
     // ==========================================
-    // 9. USUARIOS POR DEFECTO
+    // 9. AUTORIDADES DEL SINDICATO
+    // ==========================================
+    autoridades: {
+        nacional: {
+            nombre: 'ASOCIACIÓN OBRERA MINERA ARGENTINA',
+            agrupacion: 'Agrupación de Trabajadores Mineros "17 de Octubre" - Lista Blanca',
+            periodo: '2026-2030',
+            comisionDirectiva: [
+                { cargo: 'Secretario General', nombre: 'Héctor Oscar Laplace' },
+                { cargo: 'Secretario Adjunto', nombre: 'Iván Marcelo Malla' },
+                { cargo: 'Secretario Administrativo', nombre: 'Gustavo Gabriel Molina' },
+                { cargo: 'Tesorero', nombre: 'Héctor Horacio Savid' },
+                { cargo: 'Secretario Gremial e Interior', nombre: 'Alejandro José Santillán' },
+                { cargo: 'Secretario Social y Turismo', nombre: 'Emanuel Gauna' },
+                { cargo: 'Secretario Prensa y Cultura', nombre: 'Javier Omar Castro' },
+                { cargo: 'Secretario de Higiene, Seguridad y Medicina del Trabajo', nombre: 'Emanuel Maximiliano Castro' }
+            ],
+            vocalesTitulares: [
+                'Daniel Cristian Montenegro',
+                'Juan Carlos del Valle Herrera',
+                'Matías Ezequiel Bogacki Sosa',
+                'Luis Tinte',
+                'Nicolás Jorge A. Castillo',
+                'Leandro Pérez López',
+                'Alejandro Valenzuela'
+            ],
+            vocalesSuplentes: [
+                'Emmanuel Pedro Enrique',
+                'Leonela Domínguez',
+                'Walter Marcelo Marcovich',
+                'Pablo Nicolás Loto',
+                'Martín Isasmendi',
+                'Fabián Alberto Vargas',
+                'Mariela Beatriz García'
+            ],
+            comisionRevisora: {
+                titulares: ['Cristian Eugenio Aguilar', 'Enrique Verdenelli', 'César Carlos Costello'],
+                suplentes: ['Marcelo David Cervantes', 'María Silvana Aurbone', 'Lucas Muñiz']
+            }
+        },
+        provincial: {
+            nombre: 'ASOCIACIÓN OBRERA MINERA ARGENTINA - Seccional San Juan',
+            agrupacion: 'Lista Blanca',
+            periodo: '2026-2030',
+            comisionDirectiva: [
+                { cargo: 'Secretario General', nombre: 'Iván Marcelo Malla' },
+                { cargo: 'Secretario Adjunto', nombre: 'Raúl Edgardo Malla' },
+                { cargo: 'Secretario Administrativo', nombre: 'Rubén Eloy Ortiz' },
+                { cargo: 'Tesorero', nombre: 'Juan Norberto Frías' },
+                { cargo: 'Secretario Gremial e Interior', nombre: 'Cristian Daniel Soria' },
+                { cargo: 'Secretario Social y Turismo', nombre: 'Rubén Martín Arenas' },
+                { cargo: 'Secretario de Higiene, Seguridad y Medicina del Trabajo', nombre: 'Cristian Aguilar' }
+            ],
+            vocalesTitulares: [
+                'Gustavo Rolando Rodríguez',
+                'Omar Segundo Malla',
+                'Sergio Osvaldo Quiroga',
+                'Carlos Alberto Gómez',
+                'José Antonio Arbo'
+            ],
+            vocalesSuplentes: [
+                'Daniel Silvio Colombo',
+                'Ángel Ramón Funes',
+                'Víctor Segovia',
+                'Eduardo J. Benemerito',
+                'Ramón Ricardo Herrera'
+            ],
+            delegadosCongresalesTitulares: [
+                'Walter Flores',
+                'Gustavo Naranjo',
+                'María Silvana Aubone',
+                'José Luis Ávila',
+                'Martín Rolando Peñaloza',
+                'Juan Carlos Reina',
+                'Amira Loreta Esquivel'
+            ],
+            delegadosCongresalesSuplentes: [
+                'Miguel Maldonado Gonzalez',
+                'Juan Víctor Manzano',
+                'Matías Nicolás Valencia',
+                'María Estrella Alaniz',
+                'Víctor Javier Elizondo',
+                'Darío Alejandro Castillo',
+                'Adrián Mauricio Rodríguez'
+            ],
+            comisionRevisora: {
+                titulares: ['Alfredo Daniel Morales', 'Joaquín Alejandro Muñoz', 'Diego Orlando Varela'],
+                suplentes: ['Andrés Raúl Alcayaga', 'Jorge Fabián Agudo', 'Francisco Fabián Ibaceta']
+            }
+        }
+    },
+
+    // ==========================================
+    // 10. USUARIOS POR DEFECTO
     // ==========================================
     usuarios: [
         {
@@ -486,7 +579,7 @@ const DATA = {
     ],
 
     // ==========================================
-    // 10. RESPUESTAS DEL CHAT (fallback)
+    // 11. RESPUESTAS DEL CHAT (fallback)
     // ==========================================
     chatResponses: {
         'hola|buenas|buenos días': '¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte hoy?',
@@ -536,3 +629,4 @@ console.log('🏢 ' + Object.keys(DATA.empresas).length + ' empresas');
 console.log('📜 ' + DATA.convenios.length + ' convenios colectivos');
 console.log('🎁 ' + Object.keys(DATA.beneficios).length + ' categorías de beneficios');
 console.log('🎓 ' + DATA.cursos.length + ' cursos cargados');
+console.log('👥 Autoridades nacionales y provinciales cargadas');
