@@ -3,28 +3,83 @@
 // Campus Virtual AOMA San Juan
 // ============================================
 
-// Configuración del proxy interno
 const CHAT_CONFIG = {
-    endpoint: '/api/chat', // Nuestro propio servidor en Vercel
+    endpoint: '/api/chat',
     model: 'llama-3.3-70b-versatile',
     temperature: 0.3,
     maxTokens: 800
 };
 
-// Historial de conversación
 let conversationHistory = [];
 
 // ============================================
-// FUNCIÓN PARA CONSTRUIR EL CONTEXTO COMPLETO DE LA PLATAFORMA
+// FUNCIÓN PARA EXTRAER TEXTO DE HTML (SIN ETIQUETAS)
+// ============================================
+function limpiarHTML(html) {
+    if (!html) return '';
+    // Eliminar etiquetas <style>, <script>, <table> (contenido pesado)
+    let texto = html.replace(/<style[^>]*>.*?<\/style>/gs, '');
+    texto = texto.replace(/<script[^>]*>.*?<\/script>/gs, '');
+    texto = texto.replace(/<table[^>]*>.*?<\/table>/gs, '[Tabla omitida]');
+    // Quitar etiquetas restantes
+    texto = texto.replace(/<[^>]+>/g, ' ');
+    // Normalizar espacios
+    texto = texto.replace(/\s+/g, ' ').trim();
+    return texto;
+}
+
+// ============================================
+// FUNCIÓN PARA EXTRAER ARTÍCULOS RELEVANTES DE UN CONVENIO
+// ============================================
+function extraerArticulosRelevantes(contenidoHTML) {
+    if (!contenidoHTML) return '';
+    const texto = limpiarHTML(contenidoHTML);
+    // Dividir en párrafos o artículos
+    const lineas = texto.split(/\n|\.\s+/).filter(s => s.trim().length > 10);
+    const relevantes = [];
+    const palabrasClave = ['vacacion', 'licencia', 'jornada', 'salario', 'categoría', 'antigüedad', 'descanso', 'feriado', 'presentismo', 'zona', 'turno', 'horas extra', 'suspensión', 'enfermedad', 'accidente', 'seguro', 'vivienda', 'transporte', 'comedor', 'representación', 'delegado', 'paritaria', 'comisión'];
+    
+    for (const linea of lineas) {
+        const lower = linea.toLowerCase();
+        // Si la línea contiene alguna palabra clave, la guardamos
+        if (palabrasClave.some(pal => lower.includes(pal))) {
+            relevantes.push(linea.trim());
+        }
+    }
+    // Si no encontramos nada, devolvemos un resumen breve
+    if (relevantes.length === 0) {
+        const primeros = lineas.slice(0, 20).join('. ');
+        return `Contenido del convenio (resumen): ${primeros}`;
+    }
+    return relevantes.join('. ');
+}
+
+// ============================================
+// FUNCIÓN PARA EXTRAER ARTÍCULOS DE LEYES
+// ============================================
+function extraerArticulosLeyes(contenidoHTML) {
+    if (!contenidoHTML) return '';
+    const texto = limpiarHTML(contenidoHTML);
+    // Buscar artículos (Art. o Artículo)
+    const matches = texto.match(/Art(ículo)?\s*[\d]+\s*[^.]*\./gi);
+    if (!matches || matches.length === 0) return texto.substring(0, 500);
+    // Tomar los primeros 15 artículos (para no saturar)
+    return matches.slice(0, 15).join('. ');
+}
+
+// ============================================
+// CONSTRUIR CONTEXTO COMPLETO DE LA PLATAFORMA
 // ============================================
 function construirContextoPlataforma() {
     if (typeof DATA === 'undefined') {
         console.warn('⚠️ DATA no está definida.');
-        return '';
+        return 'Información de la plataforma no disponible.';
     }
     const contexto = [];
 
-    // 1. Actividades y empresas
+    // ========================================
+    // 1. ACTIVIDADES Y EMPRESAS
+    // ========================================
     contexto.push('=== ESTRUCTURA DE AOMA SAN JUAN ===');
     if (DATA.actividades) {
         Object.values(DATA.actividades).forEach(act => {
@@ -36,21 +91,68 @@ function construirContextoPlataforma() {
     }
     if (DATA.empresas) {
         Object.values(DATA.empresas).forEach(emp => {
-            contexto.push(`- Empresa: ${emp.nombre} (${emp.empresa}) - Ubicación: ${emp.ubicacion}`);
+            contexto.push(`- Empresa: ${emp.nombre} (${emp.empresa}) - Ubicación: ${emp.ubicacion} - Actividad: ${DATA.actividades[emp.actividad]?.nombre || emp.actividad}`);
         });
     }
 
-    // 2. Convenios colectivos
-    contexto.push('=== CONVENIOS COLECTIVOS ===');
+    // ========================================
+    // 2. CONVENIOS COLECTIVOS (CONTENIDO COMPLETO)
+    // ========================================
+    contexto.push('=== CONVENIOS COLECTIVOS (DETALLE) ===');
     if (DATA.convenios) {
         DATA.convenios.forEach(conv => {
-            const act = DATA.actividades[conv.actividad]?.nombre || conv.actividad;
-            contexto.push(`- ${conv.numero}: ${conv.titulo} - ${conv.subtitulo} - Actividad: ${act}`);
-            contexto.push(`  Resumen: ${conv.resumen}`);
+            contexto.push(`\n--- ${conv.numero} ---`);
+            contexto.push(`Título: ${conv.titulo}`);
+            contexto.push(`Subtítulo: ${conv.subtitulo}`);
+            contexto.push(`Actividad: ${DATA.actividades[conv.actividad]?.nombre || conv.actividad}`);
+            if (conv.empresa) contexto.push(`Empresa: ${conv.empresa}`);
+            contexto.push(`Resumen: ${conv.resumen}`);
+            
+            // Extraer contenido detallado del convenio
+            let contenidoCompleto = '';
+            if (conv.contenido) {
+                // Si el convenio ya tiene contenido (los que cargamos con archivos JS)
+                contenidoCompleto = extraerArticulosRelevantes(conv.contenido);
+            } else if (conv.variable && typeof window[conv.variable] !== 'undefined') {
+                // Si está en una variable global (ej: CCT_VELADERO)
+                const global = window[conv.variable];
+                if (global && global.contenido) {
+                    contenidoCompleto = extraerArticulosRelevantes(global.contenido);
+                }
+            }
+            if (contenidoCompleto) {
+                contexto.push(`Artículos relevantes: ${contenidoCompleto}`);
+            } else {
+                contexto.push('(Contenido detallado no disponible en este momento)');
+            }
         });
     }
 
-    // 3. Beneficios sociales
+    // ========================================
+    // 3. LEYES LABORALES (CONTENIDO COMPLETO)
+    // ========================================
+    contexto.push('=== LEYES LABORALES ===');
+    const leyes = [];
+    if (typeof LEY_LCT_20744 !== 'undefined') leyes.push({ ...LEY_LCT_20744, key: 'LCT_20744' });
+    if (typeof LEY_19587 !== 'undefined') leyes.push({ ...LEY_19587, key: 'LEY_19587' });
+    if (typeof LEY_23551 !== 'undefined') leyes.push({ ...LEY_23551, key: 'LEY_23551' });
+    if (typeof LEY_24557 !== 'undefined') leyes.push({ ...LEY_24557, key: 'LEY_24557' });
+    if (typeof LEY_24013 !== 'undefined') leyes.push({ ...LEY_24013, key: 'LEY_24013' });
+    
+    leyes.forEach(ley => {
+        contexto.push(`\n--- ${ley.numero}: ${ley.titulo} ---`);
+        contexto.push(`Resumen: ${ley.resumen}`);
+        if (ley.contenido) {
+            const articulos = extraerArticulosLeyes(ley.contenido);
+            contexto.push(`Artículos relevantes: ${articulos}`);
+        } else {
+            contexto.push('(Contenido detallado no disponible en este momento)');
+        }
+    });
+
+    // ========================================
+    // 4. BENEFICIOS SOCIALES
+    // ========================================
     contexto.push('=== BENEFICIOS SOCIALES ===');
     if (DATA.beneficios) {
         Object.values(DATA.beneficios).forEach(cat => {
@@ -63,7 +165,9 @@ function construirContextoPlataforma() {
         });
     }
 
-    // 4. Preguntas frecuentes
+    // ========================================
+    // 5. PREGUNTAS FRECUENTES
+    // ========================================
     contexto.push('=== PREGUNTAS FRECUENTES ===');
     if (DATA.faqs) {
         Object.entries(DATA.faqs).forEach(([cat, items]) => {
@@ -75,7 +179,9 @@ function construirContextoPlataforma() {
         });
     }
 
-    // 5. Escalas salariales
+    // ========================================
+    // 6. ESCALAS SALARIALES
+    // ========================================
     contexto.push('=== ESCALAS SALARIALES ===');
     if (DATA.escalas) {
         Object.entries(DATA.escalas).forEach(([act, escalas]) => {
@@ -86,44 +192,89 @@ function construirContextoPlataforma() {
         });
     }
 
-    // 6. Leyes laborales
-    contexto.push('=== LEYES LABORALES ===');
-    const leyes = [];
-    if (typeof LEY_LCT_20744 !== 'undefined') leyes.push(LEY_LCT_20744);
-    if (typeof LEY_19587 !== 'undefined') leyes.push(LEY_19587);
-    if (typeof LEY_23551 !== 'undefined') leyes.push(LEY_23551);
-    if (typeof LEY_24557 !== 'undefined') leyes.push(LEY_24557);
-    if (typeof LEY_24013 !== 'undefined') leyes.push(LEY_24013);
-    leyes.forEach(ley => {
-        contexto.push(`- ${ley.numero}: ${ley.titulo} - ${ley.resumen}`);
-    });
-
-    // 7. Capacitaciones
+    // ========================================
+    // 7. CAPACITACIONES (TODAS)
+    // ========================================
     contexto.push('=== CAPACITACIONES ===');
     const cursos = [];
     if (typeof window !== 'undefined' && window.CAPACITACIONES_REGISTRO) {
         Object.values(window.CAPACITACIONES_REGISTRO).forEach(cap => cursos.push(cap));
     }
-    cursos.forEach(curso => {
-        contexto.push(`- ${curso.titulo}: ${curso.descripcion || curso.subtitulo || ''} - Nivel: ${curso.nivel || 'General'} - Módulos: ${curso.modulosData ? curso.modulosData.length : 0}`);
-    });
-
-    // 8. Autoridades
-    contexto.push('=== AUTORIDADES ===');
-    if (DATA.autoridades) {
-        const nacional = DATA.autoridades.nacional;
-        contexto.push(`Nacional: ${nacional.nombre} - ${nacional.agrupacion} (${nacional.periodo})`);
-        nacional.comisionDirectiva.forEach(m => {
-            contexto.push(`  ${m.cargo}: ${m.nombre}`);
-        });
-        const provincial = DATA.autoridades.provincial;
-        contexto.push(`Seccional San Juan: ${provincial.nombre} - ${provincial.agrupacion} (${provincial.periodo})`);
-        provincial.comisionDirectiva.forEach(m => {
-            contexto.push(`  ${m.cargo}: ${m.nombre}`);
+    if (DATA.cursos && DATA.cursos.length) {
+        DATA.cursos.forEach(c => {
+            if (!cursos.some(cap => cap.id === c.id)) cursos.push(c);
         });
     }
+    cursos.forEach(curso => {
+        contexto.push(`\n--- ${curso.titulo} ---`);
+        contexto.push(`Descripción: ${curso.descripcion || curso.subtitulo || ''}`);
+        contexto.push(`Nivel: ${curso.nivel || 'General'}`);
+        contexto.push(`Categoría: ${curso.categoria || 'General'}`);
+        if (curso.modulosData && curso.modulosData.length) {
+            contexto.push(`Módulos (${curso.modulosData.length}):`);
+            curso.modulosData.forEach((mod, idx) => {
+                contexto.push(`  ${idx+1}. ${mod.titulo} - ${mod.duracion || ''}`);
+                if (mod.evaluacion) contexto.push(`    Evaluación: ${mod.evaluacion}`);
+            });
+        }
+        if (curso.objetivos && curso.objetivos.length) {
+            contexto.push(`Objetivos: ${curso.objetivos.join('. ')}`);
+        }
+    });
 
-    // 9. Contacto
+    // ========================================
+    // 8. AUTORIDADES (ORGANIGRAMA COMPLETO)
+    // ========================================
+    contexto.push('=== AUTORIDADES (ORGANIGRAMA) ===');
+    if (DATA.autoridades) {
+        const nacional = DATA.autoridades.nacional;
+        contexto.push(`\n--- NACIONAL ---`);
+        contexto.push(`${nacional.nombre} - ${nacional.agrupacion} (${nacional.periodo})`);
+        contexto.push('Comisión Directiva:');
+        nacional.comisionDirectiva.forEach(m => {
+            const func = nacional.funciones ? nacional.funciones[m.cargo] || '' : '';
+            contexto.push(`  - ${m.cargo}: ${m.nombre}${func ? ' (Función: '+func+')' : ''}`);
+        });
+        if (nacional.vocalesTitulares && nacional.vocalesTitulares.length) {
+            contexto.push(`Vocales Titulares: ${nacional.vocalesTitulares.join(', ')}`);
+        }
+        if (nacional.vocalesSuplentes && nacional.vocalesSuplentes.length) {
+            contexto.push(`Vocales Suplentes: ${nacional.vocalesSuplentes.join(', ')}`);
+        }
+        if (nacional.comisionRevisora) {
+            contexto.push(`Comisión Revisora de Cuentas - Titulares: ${nacional.comisionRevisora.titulares?.join(', ') || ''}`);
+            contexto.push(`Comisión Revisora de Cuentas - Suplentes: ${nacional.comisionRevisora.suplentes?.join(', ') || ''}`);
+        }
+
+        const provincial = DATA.autoridades.provincial;
+        contexto.push(`\n--- PROVINCIAL (San Juan) ---`);
+        contexto.push(`${provincial.nombre} - ${provincial.agrupacion} (${provincial.periodo})`);
+        contexto.push('Comisión Directiva:');
+        provincial.comisionDirectiva.forEach(m => {
+            const func = provincial.funciones ? provincial.funciones[m.cargo] || '' : '';
+            contexto.push(`  - ${m.cargo}: ${m.nombre}${func ? ' (Función: '+func+')' : ''}`);
+        });
+        if (provincial.vocalesTitulares && provincial.vocalesTitulares.length) {
+            contexto.push(`Vocales Titulares: ${provincial.vocalesTitulares.join(', ')}`);
+        }
+        if (provincial.vocalesSuplentes && provincial.vocalesSuplentes.length) {
+            contexto.push(`Vocales Suplentes: ${provincial.vocalesSuplentes.join(', ')}`);
+        }
+        if (provincial.delegadosCongresalesTitulares && provincial.delegadosCongresalesTitulares.length) {
+            contexto.push(`Delegados Congresales Titulares: ${provincial.delegadosCongresalesTitulares.join(', ')}`);
+        }
+        if (provincial.delegadosCongresalesSuplentes && provincial.delegadosCongresalesSuplentes.length) {
+            contexto.push(`Delegados Congresales Suplentes: ${provincial.delegadosCongresalesSuplentes.join(', ')}`);
+        }
+        if (provincial.comisionRevisora) {
+            contexto.push(`Comisión Revisora de Cuentas - Titulares: ${provincial.comisionRevisora.titulares?.join(', ') || ''}`);
+            contexto.push(`Comisión Revisora de Cuentas - Suplentes: ${provincial.comisionRevisora.suplentes?.join(', ') || ''}`);
+        }
+    }
+
+    // ========================================
+    // 9. CONTACTO Y DATOS DE LA SECCIONAL
+    // ========================================
     contexto.push('=== CONTACTO ===');
     contexto.push('Dirección: Entre Ríos 468 (S), San Juan Capital');
     contexto.push('Horarios: Lunes a Viernes 08:00 a 17:00 hs');
@@ -142,9 +293,11 @@ function getSystemPrompt() {
     return `Eres el asistente virtual del Campus Virtual AOMA San Juan.
 
     === INSTRUCCIONES ===
-    1. SOLO respondé usando la información del contexto.
-    2. Si no tenés respuesta, decí: "No tengo información sobre eso. Contactá a la Seccional al (0264) 422-0191."
-    3. NO inventes información ni uses conocimiento externo.
+    1. SOLO respondé usando la información del contexto que se te proporciona a continuación.
+    2. Si la pregunta del usuario NO tiene respuesta en el contexto, DEBÉS responder: "Lo siento, no tengo información sobre eso en mi base de conocimiento. Te sugiero contactar a la Seccional San Juan al (0264) 422-0191 o escribir a campus@aomasanjuan.org.ar para más detalles."
+    3. NO inventes información, NO uses conocimiento externo, NO des opiniones personales.
+    4. Si te preguntan por un tema fuera del ámbito sindical o minero, redirigí amablemente al tema.
+    5. Tus respuestas deben ser claras, concisas y útiles.
 
     === CONTEXTO ===
     ${contexto}
@@ -163,12 +316,9 @@ async function getBotResponseGroq(userMessage) {
             ...conversationHistory
         ];
 
-        // Llamamos a nuestro propio servidor (proxy), no a Groq directamente
         const response = await fetch(CHAT_CONFIG.endpoint, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ messages })
         });
 
@@ -195,7 +345,7 @@ async function getBotResponseGroq(userMessage) {
 // INICIALIZACIÓN DEL CHAT
 // ============================================
 function initChatIA() {
-    console.log('🤖 Chat IA: Iniciando con proxy seguro...');
+    console.log('🤖 Chat IA: Iniciando con proxy seguro y contexto completo...');
     
     const chatForm = document.getElementById('chatForm');
     const chatInput = document.getElementById('chatInput');
@@ -285,7 +435,7 @@ function removeTypingIndicator(container, typingId) {
 }
 
 // ============================================
-// ESTILOS (sin cambios)
+// ESTILOS
 // ============================================
 if (!document.getElementById('chat-ia-styles')) {
     const style = document.createElement('style');
