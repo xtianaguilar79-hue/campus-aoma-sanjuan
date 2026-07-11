@@ -152,6 +152,16 @@ const DATA = {
             contenido: null
         },
         {
+    numero: 'CCT Gualcamayo',
+    titulo: 'Convenio Colectivo - Mina Gualcamayo',
+    subtitulo: 'Convenio por empresa - Minas Argentinas S.A.',
+    actividad: 'mineria-extractiva',
+    empresa: 'gualcamayo',
+    variable: 'CCT_GUALCAMAYO',
+    resumen: 'Convenio colectivo específico de la Mina Gualcamayo (Yamana Gold)',
+    contenido: null
+},
+{
             numero: 'CCT Vicuña',
             titulo: 'Convenio Colectivo - AOMA - DEPROMINSA',
             subtitulo: 'Proyecto Josemaría/Vicuña',
