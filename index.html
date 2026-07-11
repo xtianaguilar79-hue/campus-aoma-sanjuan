@@ -185,14 +185,14 @@
     <!-- Chat Widget -->
     <div class="chat-widget">
         <button class="chat-btn" id="chatBtn">
-            <!-- Imagen personalizada en el botón del chat -->
-            <img src="assets/chat-avatar.png" alt="Chat AOMA" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+            <!-- Imagen con fallback: si no carga, muestra el ícono de robot -->
+            <img src="assets/chat-avatar.png" alt="Chat AOMA" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-robot\\' style=\\'font-size:2rem; color:white;\\'></i>';">
         </button>
         <div class="chat-window hidden" id="chatWindow">
             <div class="chat-header">
                 <div class="chat-header-info">
                     <div class="chat-avatar">
-                        <img src="assets/chat-avatar.png" alt="AOMA" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                        <img src="assets/chat-avatar.png" alt="AOMA" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-robot\\' style=\\'font-size:1.5rem; color:white;\\'></i>';">
                     </div>
                     <div>
                         <h3>Asistente AOMA</h3>

@@ -2704,6 +2704,7 @@ body {
     font-size: 0.9rem;
     border-bottom: 1px dashed var(--border-light);
     color: var(--text-secondary);
+    position: relative;
 }
 
 .organigrama-lista li:last-child {
@@ -2738,6 +2739,7 @@ body {
     color: white;
 }
 
+/* Detalle de función - oculto por defecto, se muestra con clase 'visible' */
 .funcion-detalle {
     display: none;
     padding: 0.5rem;
@@ -2753,13 +2755,12 @@ body {
     display: block;
 }
 
-/* Estilo para la imagen del chat (avatar) */
+/* Ajuste de la imagen del chat */
 .chat-avatar img {
     border-radius: 50%;
     object-fit: cover;
 }
 
-/* Ajuste del botón de chat para que muestre la imagen */
 .chat-btn {
     padding: 0 !important;
     overflow: hidden;
