@@ -205,7 +205,7 @@ function renderOrganigrama(container) {
     // Función para renderizar lista de nombres
     const renderList = (arr) => arr.map((n, i) => `<li>${i+1}. ${n}</li>`).join('');
     
-    // Función para renderizar comisión directiva con funciones desplegables
+    // Función para renderizar comisión directiva con funciones desplegables (CORREGIDA)
     const renderComision = (comision, funciones) => {
         return comision.map(m => {
             const funcDesc = funciones[m.cargo] || 'Sin descripción de funciones.';
@@ -215,7 +215,7 @@ function renderOrganigrama(container) {
                     <button class="btn-funcion" onclick="this.nextElementSibling.classList.toggle('visible')">
                         <i class="fas fa-info-circle"></i> Ver función
                     </button>
-                    <div class="funcion-detalle" style="display:none; padding: 0.5rem; margin-top: 0.25rem; background: var(--bg-input); border-radius: var(--radius); font-size: 0.85rem; color: var(--text-secondary);">
+                    <div class="funcion-detalle">
                         ${funcDesc}
                     </div>
                 </li>
@@ -1623,7 +1623,7 @@ function toast(type, title, message) {
 }
 
 // ============================================
-// CHAT - Funciones auxiliares (con imagen personalizada en el mensaje)
+// CHAT - Funciones auxiliares (con fallback de imagen)
 // ============================================
 function addChatMessage(type, text) {
     const messages = document.getElementById('chatMessages');
@@ -1633,10 +1633,10 @@ function addChatMessage(type, text) {
     div.className = 'chat-message ' + type;
     
     const time = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute:'2-digit' });
-    // Para el avatar usamos imagen personalizada en el bot, y las iniciales para el usuario
+    // Avatar con fallback: si la imagen no carga, muestra el ícono de robot
     const avatar = type === 'user' 
         ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
-        : '<img src="assets/chat-avatar.png" alt="AOMA" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">';
+        : `<img src="assets/chat-avatar.png" alt="AOMA" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-robot\\'></i>';">`;
     
     div.innerHTML = `
         <div class="chat-message-avatar">${avatar}</div>
