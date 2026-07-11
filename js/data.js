@@ -233,16 +233,16 @@ const DATA = {
                 {
                     titulo: 'Ortopedia y Ortodoncia',
                     porcentaje: '30%',
-                    montoMax: '$75.000', // CORREGIDO: 30% de 250.000 = 75.000
-                    descripcion: 'Ortopedia temporaria-definitiva y ortodoncia fija-removible-funcional.',
+                    montoMax: 'Tope máximo: $75.000 (30% de $250.000)',
+                    descripcion: 'Reintegro del 30% del valor de la factura, con un tope máximo de $75.000 (30% de un límite de $250.000).',
                     exclusiones: 'Quedan excluidos los productos estéticos.',
                     documentacion: 'Ticket o factura avalada por ARCA, copia receta médica, carnet de afiliado y último recibo de sueldo.'
                 },
                 {
                     titulo: 'Anteojos y Lentes de Contacto',
                     porcentaje: '40%',
-                    montoMax: '$100.000', // CORREGIDO: 40% de 250.000 = 100.000
-                    descripcion: 'Anteojos y lentes de contacto recetados.',
+                    montoMax: 'Tope máximo: $100.000 (40% de $250.000)',
+                    descripcion: 'Reintegro del 40% del valor de la factura, con un tope máximo de $100.000 (40% de un límite de $250.000).',
                     exclusiones: 'Quedan excluidos los productos estéticos.',
                     documentacion: 'Ticket o factura avalada por ARCA, copia receta médica, carnet de afiliado y último recibo de sueldo.'
                 },
@@ -250,7 +250,7 @@ const DATA = {
                     titulo: 'Hotel por Enfermedad o Fuerza Mayor',
                     porcentaje: '20%',
                     montoMax: null,
-                    descripcion: 'Para afiliados que por motivos de enfermedad o fuerza mayor deban permanecer en San Juan Capital.',
+                    descripcion: 'Reintegro del 20% del valor de la factura, sin tope máximo.',
                     exclusiones: null,
                     documentacion: 'Ticket o factura avalada por ARCA, documentación respaldatoria del motivo, carnet de afiliado y último recibo de sueldo.'
                 },
@@ -258,7 +258,7 @@ const DATA = {
                     titulo: 'Pasajes de Colectivos de Larga Distancia',
                     porcentaje: '20%',
                     montoMax: null,
-                    descripcion: 'Reintegro para pasajes fuera de la provincia de San Juan.',
+                    descripcion: 'Reintegro del 20% del valor del pasaje, sin tope máximo.',
                     exclusiones: null,
                     documentacion: 'Pasajes originales, carnet de afiliado y último recibo de sueldo.'
                 },
@@ -266,7 +266,7 @@ const DATA = {
                     titulo: 'Salones de Eventos Familiares',
                     porcentaje: 'Monto Fijo',
                     montoMax: '$100.000',
-                    descripcion: 'Beneficio exclusivo para el afiliado titular y su grupo familiar primario en Capital San Juan.',
+                    descripcion: 'Beneficio de monto fijo de $100.000 para el alquiler de salones de eventos en Capital San Juan.',
                     exclusiones: null,
                     documentacion: 'Ticket o factura avalada por ARCA, documentación respaldatoria del evento, carnet de afiliado y último recibo de sueldo.'
                 }
@@ -461,7 +461,7 @@ const DATA = {
     ],
 
     // ==========================================
-    // 9. AUTORIDADES DEL SINDICATO
+    // 9. AUTORIDADES DEL SINDICATO (CON FUNCIONES)
     // ==========================================
     autoridades: {
         nacional: {
@@ -499,6 +499,19 @@ const DATA = {
             comisionRevisora: {
                 titulares: ['Cristian Eugenio Aguilar', 'Enrique Verdenelli', 'César Carlos Costello'],
                 suplentes: ['Marcelo David Cervantes', 'María Silvana Aurbone', 'Lucas Muñiz']
+            },
+            // FUNCIONES DE CADA CARGO (según imágenes)
+            funciones: {
+                'Secretario General': 'Representar a la organización. Firmar las actas resoluciones del Secretariado, Consejo Directivo y Congresos. Firmar cheques conjuntamente con el Tesorero. Adoptar resoluciones urgentes al referéndum del Consejo Directivo. Firmar correspondencia con el secretario del área correspondiente. Presidir las reuniones del Consejo Directivo y del Secretariado. Autorizar con el Tesorero las cuentas de gastos y demás documentos de la tesorería.',
+                'Secretario Adjunto': 'Colaborar con el Secretario General. Reemplazarlo en caso de ausencia.',
+                'Secretario Administrativo': 'Tiene a su cargo la confección de las actas. Controla, organiza y ordena los archivos de la Institución. Redacta la memoria a elevarse al Congreso. Controla al personal empleado y aconseja medidas. Gira la correspondencia a las distintas Secretarías. Resuelve y atiende todas las cuestiones administrativas.',
+                'Tesorero': 'Controlar el ingreso y egreso de los fondos sociales y el activo patrimonial. Organiza y perfecciona la contabilidad. Presenta balances, los firma y los somete a consideración del Consejo Directivo. Facilita la tarea a la Comisión Revisora de Cuentas. Efectuar en institución bancaria, a nombre de la Asociación y a la orden conjunta del Secretario General, del Adjunto y del Tesorero los depósitos ingresados.',
+                'Secretario Gremial e Interior': 'Coordinar la acción entre el Consejo Directivo y las Seccionales. Dar cumplimiento a las resoluciones de los Congresos, Consejo Directivo y Secretariado orientando la acción gremial. Llevar las afiliaciones, control de altas y bajas, confección de padrones. Llevar estadísticas de despidos, suspensiones, desocupación, huelgas. Controlar las funciones de las Seccionales. Preparar y confeccionar anteproyecto de CCT.',
+                'Secretario Social y Turismo': 'Defender y representar los intereses de los afiliados ante el Estado, la autoridad del Trabajo y organismos de Previsión Social. Organizar y poner en funcionamiento las obras de Asistencia Social. Proyectar y controlar los servicios que se presten. Informar semanalmente al Secretariado sobre la prestación de los servicios de la Asistencia Social.',
+                'Secretario Prensa y Cultura': 'Gestionar la comunicación institucional, prensa y difusión de actividades culturales y gremiales.',
+                'Secretario de Higiene, Seguridad y Medicina del Trabajo': 'Relevamiento y diagnóstico de los trabajadores en higiene, seguridad y medicina del trabajo. Asesoramiento sobre la materia. Organizar y dirigir cursos, seminarios y jornadas sobre la materia. Representar ante los organismos públicos y privados sobre higiene, seguridad y medicina del trabajo. Promover las mejoras del medio ambiente de trabajo. Proponer asesores en la materia al Consejo Directivo y Secretariado. Elevar los proyectos al Secretario Gremial a implementarse en los futuros CCT.',
+                'Vocales Titulares': 'Desempeñan las funciones que el Consejo Directivo les confía.',
+                'Vocales Suplentes': 'Forman parte del Consejo Directivo solo en caso de renuncia o fallecimiento de los titulares.'
             }
         },
         provincial: {
@@ -549,6 +562,16 @@ const DATA = {
             comisionRevisora: {
                 titulares: ['Alfredo Daniel Morales', 'Joaquín Alejandro Muñoz', 'Diego Orlando Varela'],
                 suplentes: ['Andrés Raúl Alcayaga', 'Jorge Fabián Agudo', 'Francisco Fabián Ibaceta']
+            },
+            // Funciones para los cargos provinciales (similares a las nacionales, pero adaptadas al ámbito provincial)
+            funciones: {
+                'Secretario General': 'Representar a la organización a nivel provincial. Firmar actas y resoluciones del ámbito provincial. Coordinar con el Consejo Directivo Nacional.',
+                'Secretario Adjunto': 'Colaborar con el Secretario General provincial. Reemplazarlo en caso de ausencia.',
+                'Secretario Administrativo': 'Gestionar la administración de la seccional, archivos, actas, personal y correspondencia.',
+                'Tesorero': 'Controlar los fondos de la seccional, contabilidad, balances y depósitos bancarios.',
+                'Secretario Gremial e Interior': 'Coordinar la acción gremial entre la seccional y las bases, afiliaciones, estadísticas y anteproyectos de convenios.',
+                'Secretario Social y Turismo': 'Organizar y gestionar los beneficios sociales, turismo y asistencia social para los afiliados de la provincia.',
+                'Secretario de Higiene, Seguridad y Medicina del Trabajo': 'Velar por la higiene, seguridad y salud de los trabajadores en el ámbito provincial, cursos y representación ante organismos locales.'
             }
         }
     },

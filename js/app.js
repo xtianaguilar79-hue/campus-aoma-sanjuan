@@ -184,7 +184,7 @@ function renderPage(page, container) {
         case 'faq':
             renderFAQ(container);
             break;
-        case 'gremio':  // NUEVA PÁGINA
+        case 'gremio':
             renderOrganigrama(container);
             break;
         default:
@@ -193,7 +193,7 @@ function renderPage(page, container) {
 }
 
 // ============================================
-// RENDERIZADO - ORGANIGRAMA (El Gremio)
+// RENDERIZADO - ORGANIGRAMA (El Gremio) CON FUNCIONES
 // ============================================
 function renderOrganigrama(container) {
     const auth = DATA.autoridades;
@@ -204,6 +204,24 @@ function renderOrganigrama(container) {
     
     // Función para renderizar lista de nombres
     const renderList = (arr) => arr.map((n, i) => `<li>${i+1}. ${n}</li>`).join('');
+    
+    // Función para renderizar comisión directiva con funciones desplegables
+    const renderComision = (comision, funciones) => {
+        return comision.map(m => {
+            const funcDesc = funciones[m.cargo] || 'Sin descripción de funciones.';
+            return `
+                <li>
+                    <strong>${m.cargo}:</strong> ${m.nombre}
+                    <button class="btn-funcion" onclick="this.nextElementSibling.classList.toggle('visible')">
+                        <i class="fas fa-info-circle"></i> Ver función
+                    </button>
+                    <div class="funcion-detalle" style="display:none; padding: 0.5rem; margin-top: 0.25rem; background: var(--bg-input); border-radius: var(--radius); font-size: 0.85rem; color: var(--text-secondary);">
+                        ${funcDesc}
+                    </div>
+                </li>
+            `;
+        }).join('');
+    };
     
     container.innerHTML = `
         <div class="page-header">
@@ -224,7 +242,7 @@ function renderOrganigrama(container) {
                         <div class="organigrama-col">
                             <h4>Comisión Directiva</h4>
                             <ul class="organigrama-lista">
-                                ${auth.nacional.comisionDirectiva.map(m => `<li><strong>${m.cargo}:</strong> ${m.nombre}</li>`).join('')}
+                                ${renderComision(auth.nacional.comisionDirectiva, auth.nacional.funciones)}
                             </ul>
                         </div>
                         <div class="organigrama-col">
@@ -260,7 +278,7 @@ function renderOrganigrama(container) {
                         <div class="organigrama-col">
                             <h4>Comisión Directiva</h4>
                             <ul class="organigrama-lista">
-                                ${auth.provincial.comisionDirectiva.map(m => `<li><strong>${m.cargo}:</strong> ${m.nombre}</li>`).join('')}
+                                ${renderComision(auth.provincial.comisionDirectiva, auth.provincial.funciones)}
                             </ul>
                         </div>
                         <div class="organigrama-col">
@@ -1605,7 +1623,7 @@ function toast(type, title, message) {
 }
 
 // ============================================
-// CHAT - Funciones auxiliares
+// CHAT - Funciones auxiliares (con imagen personalizada en el mensaje)
 // ============================================
 function addChatMessage(type, text) {
     const messages = document.getElementById('chatMessages');
@@ -1615,9 +1633,10 @@ function addChatMessage(type, text) {
     div.className = 'chat-message ' + type;
     
     const time = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute:'2-digit' });
+    // Para el avatar usamos imagen personalizada en el bot, y las iniciales para el usuario
     const avatar = type === 'user' 
         ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
-        : '<i class="fas fa-robot"></i>';
+        : '<img src="assets/chat-avatar.png" alt="AOMA" style="width:32px; height:32px; border-radius:50%; object-fit:cover;">';
     
     div.innerHTML = `
         <div class="chat-message-avatar">${avatar}</div>
