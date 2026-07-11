@@ -2673,7 +2673,7 @@ body {
 
 .organigrama-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
 }
 
@@ -2700,7 +2700,7 @@ body {
 }
 
 .organigrama-lista li {
-    padding: 0.3rem 0;
+    padding: 0.4rem 0;
     font-size: 0.9rem;
     border-bottom: 1px dashed var(--border-light);
     color: var(--text-secondary);
@@ -2720,6 +2720,59 @@ body {
     color: var(--text-primary);
 }
 
+/* Botón para ver función */
+.btn-funcion {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--radius);
+    transition: 0.2s;
+    margin-left: 0.5rem;
+}
+
+.btn-funcion:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.funcion-detalle {
+    display: none;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    background: var(--bg-input);
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    border-left: 3px solid var(--accent);
+}
+
+.funcion-detalle.visible {
+    display: block;
+}
+
+/* Estilo para la imagen del chat (avatar) */
+.chat-avatar img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Ajuste del botón de chat para que muestre la imagen */
+.chat-btn {
+    padding: 0 !important;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.chat-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 @media (max-width: 768px) {
     .organigrama-grid {
         grid-template-columns: 1fr;
@@ -2730,4 +2783,4 @@ body {
     .organigrama-body {
         padding: 1rem;
     }
-   }
+}
