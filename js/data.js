@@ -389,28 +389,9 @@ const DATA = {
     },
 
     // ==========================================
-    // 10. USUARIOS POR DEFECTO
+    // 10. USUARIOS (VACÍO - sin precargados)
     // ==========================================
-    usuarios: [
-        {
-            id: 1,
-            username: 'admin',
-            password: 'admin',
-            name: 'Administrador del Sistema',
-            email: 'admin@aoma.org.ar',
-            role: 'admin',
-            active: true
-        },
-        {
-            id: 2,
-            username: 'delegado',
-            password: '1234',
-            name: 'Juan Carlos Delegado',
-            email: 'delegado@aoma.org.ar',
-            role: 'delegado',
-            active: true
-        }
-    ],
+    usuarios: [],
 
     // ==========================================
     // 11. RESPUESTAS DEL CHAT (fallback)
@@ -425,25 +406,17 @@ const DATA = {
 // FUNCIONES AUXILIARES
 // ============================================
 DATA.formatCurrency = function(amount) {
-    return new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: 'ARS',
-        minimumFractionDigits: 0
-    }).format(amount);
+    return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0 }).format(amount);
 };
 
 DATA.formatDate = function(dateString) {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-AR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    return date.toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
 };
 
 if (typeof window !== 'undefined') {
     window.DATA = DATA;
 }
 
-console.log('✅ Base de datos AOMA cargada correctamente');
+console.log('✅ Base de datos AOMA cargada (sin usuarios precargados)');

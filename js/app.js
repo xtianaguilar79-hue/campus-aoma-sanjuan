@@ -2,30 +2,14 @@
 // APLICACIÓN PRINCIPAL - CAMPUS VIRTUAL AOMA
 // ============================================
 
-// Verificar que DATA esté definida, si no, cargar datos de respaldo
+// Verificar que DATA esté definida
 if (typeof DATA === 'undefined') {
-    console.error('❌ DATA no está definida. Usando datos de respaldo mínimos.');
+    console.error('❌ DATA no está definida.');
     alert('Error crítico: No se pudo cargar la base de datos. Recargá la página.');
     setTimeout(() => location.reload(), 2000);
-    
     window.DATA = {
-        actividades: {},
-        empresas: {},
-        convenios: [],
-        escalas: {},
-        cursos: [],
-        beneficios: {},
-        faqs: {},
-        noticias: [],
-        usuarios: [
-            { id: 1, username: 'admin', password: 'admin', name: 'Administrador', email: 'admin@aoma.org.ar', role: 'admin', active: true },
-            { id: 2, username: 'delegado', password: '1234', name: 'Delegado', email: 'delegado@aoma.org.ar', role: 'delegado', active: true }
-        ],
-        chatResponses: {},
-        autoridades: {
-            nacional: { nombre: 'AOMA Nacional', agrupacion: '', periodo: '', comisionDirectiva: [], vocalesTitulares: [], vocalesSuplentes: [], comisionRevisora: { titulares: [], suplentes: [] }, funciones: {} },
-            provincial: { nombre: 'AOMA San Juan', agrupacion: '', periodo: '', comisionDirectiva: [], vocalesTitulares: [], vocalesSuplentes: [], delegadosCongresalesTitulares: [], delegadosCongresalesSuplentes: [], comisionRevisora: { titulares: [], suplentes: [] }, funciones: {} }
-        },
+        actividades: {}, empresas: {}, convenios: [], escalas: {}, cursos: [], beneficios: {}, faqs: {}, noticias: [], usuarios: [],
+        chatResponses: {}, autoridades: { nacional: {}, provincial: {} },
         formatCurrency: function(amount) { return '$' + amount.toLocaleString(); },
         formatDate: function(date) { return new Date(date).toLocaleDateString('es-AR'); }
     };
@@ -44,11 +28,36 @@ let modalBienvenidaMostrado = false;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 AOMA Campus: Iniciando...');
     try {
+        // Verificar si existe el primer usuario administrador
+        const usuariosActivos = obtenerUsuariosActivos();
+        if (usuariosActivos.length === 0) {
+            const admin = {
+                id: 1,
+                username: 'admin',
+                password: 'admin',
+                name: 'Administrador del Sistema',
+                email: 'admin@aoma.org.ar',
+                role: 'admin',
+                active: true,
+                preguntaSeguridad: '¿Cuál es tu color favorito?',
+                respuestaSeguridad: 'azul'
+            };
+            guardarUsuariosActivos([admin]);
+            console.log('✅ Usuario administrador creado automáticamente.');
+        }
+
         const savedSession = localStorage.getItem('aoma_session');
         if (savedSession) {
             try {
                 currentUser = JSON.parse(savedSession);
-                showApp();
+                const activos = obtenerUsuariosActivos();
+                if (!activos.some(u => u.id === currentUser.id && u.active === true)) {
+                    localStorage.removeItem('aoma_session');
+                    currentUser = null;
+                    showLogin();
+                } else {
+                    showApp();
+                }
             } catch (e) {
                 console.error('Error al parsear sesión:', e);
                 localStorage.removeItem('aoma_session');
@@ -66,9 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ============================================
-// LOGIN / LOGOUT
-// ============================================
 function showLogin() {
     try {
         const html = `
@@ -86,7 +92,7 @@ function showLogin() {
                             <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #1a1a1a;">
                                 <i class="fas fa-user" style="color: #f47b20;"></i> Usuario o Email
                             </label>
-                            <input type="text" id="username" style="width: 100%; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;" placeholder="admin, delegado o tu usuario" required>
+                            <input type="text" id="username" style="width: 100%; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;" placeholder="Tu usuario o email" required>
                         </div>
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #1a1a1a;">
@@ -100,10 +106,6 @@ function showLogin() {
                         <a href="#" onclick="event.preventDefault(); mostrarRegistro();" style="color: #f47b20; text-decoration: none; font-weight: 600;">¿No tenés cuenta? Registrate</a>
                         <span style="margin: 0 0.5rem;">|</span>
                         <a href="#" onclick="event.preventDefault(); mostrarRecuperacion();" style="color: #6b7280; text-decoration: none;">¿Olvidaste tu contraseña?</a>
-                    </div>
-                    <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; font-size: 0.75rem; color: #6b7280; line-height: 1.8;">
-                        <p><strong>Demo:</strong> usuario: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">admin</code> | pass: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">admin</code></p>
-                        <p><strong>Delegado:</strong> usuario: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">delegado</code> | pass: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">1234</code></p>
                     </div>
                 </div>
             </div>
@@ -174,9 +176,6 @@ function toggleTheme() {
     if (icon) icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
 }
 
-// ============================================
-// MODALES (Bienvenida, Registro, Recuperación)
-// ============================================
 function mostrarModalBienvenida() {
     const modal = document.getElementById('modalBienvenida');
     if (modal) modal.style.display = 'flex';
@@ -211,13 +210,10 @@ function cerrarModalRecuperacion() {
     if (modal) modal.style.display = 'none';
 }
 
-// ============================================
-// SISTEMA DE USUARIOS (localStorage)
-// ============================================
 function obtenerUsuariosActivos() {
     try {
-        const base = DATA && DATA.usuarios ? [...DATA.usuarios] : [];
         const almacenados = JSON.parse(localStorage.getItem('aoma_usuarios_activos') || '[]');
+        const base = DATA && DATA.usuarios ? [...DATA.usuarios] : [];
         const todos = [...base];
         almacenados.forEach(u => {
             if (!todos.some(t => t.id === u.id)) todos.push(u);
@@ -239,9 +235,6 @@ function guardarUsuariosActivos(activos) {
     localStorage.setItem('aoma_usuarios_activos', JSON.stringify(paraGuardar));
 }
 
-// ============================================
-// REGISTRO Y RECUPERACIÓN (eventos)
-// ============================================
 document.addEventListener('DOMContentLoaded', () => {
     const formReg = document.getElementById('formRegistro');
     if (formReg) {
@@ -260,20 +253,32 @@ document.addEventListener('DOMContentLoaded', () => {
             const existe = activos.some(u => u.username === usuario || u.email === email) ||
                            pendientes.some(u => u.username === usuario || u.email === email);
             if (existe) { alert('Ese usuario o email ya está registrado.'); return; }
+            
+            const esPrimerUsuario = activos.length === 0 && pendientes.length === 0;
+            const role = esPrimerUsuario ? 'admin' : 'delegado';
+            const active = esPrimerUsuario ? true : false;
+            
             const nuevoUsuario = {
                 id: Date.now(),
                 username: usuario,
                 email: email,
                 password: password,
                 name: nombre,
-                role: 'delegado',
-                active: false,
+                role: role,
+                active: active,
                 preguntaSeguridad: pregunta,
                 respuestaSeguridad: respuesta
             };
-            pendientes.push(nuevoUsuario);
-            guardarUsuariosPendientes(pendientes);
-            alert('Tu registro ha sido enviado. Esperá la aprobación del administrador.');
+            
+            if (esPrimerUsuario) {
+                activos.push(nuevoUsuario);
+                guardarUsuariosActivos(activos);
+                alert('¡Usuario administrador creado exitosamente! Ahora podés iniciar sesión.');
+            } else {
+                pendientes.push(nuevoUsuario);
+                guardarUsuariosPendientes(pendientes);
+                alert('Tu registro ha sido enviado. Esperá la aprobación del administrador.');
+            }
             cerrarModalRegistro();
         });
     }
@@ -317,9 +322,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ============================================
-// PANEL DE ADMINISTRACIÓN DE USUARIOS
-// ============================================
 function mostrarPanelUsuarios() {
     if (currentUser.role !== 'admin') { alert('Solo el administrador puede acceder a este panel.'); return; }
     const modal = document.getElementById('modalPanelUsuarios');
@@ -355,7 +357,7 @@ function actualizarListasUsuarios() {
         }
         const contAct = document.getElementById('listaActivos');
         if (contAct) {
-            const activosNoBase = activos.filter(u => u.role !== 'admin' || u.id > 1000);
+            const activosNoBase = activos.filter(u => u.role !== 'admin' || u.id !== 1);
             if (activosNoBase.length === 0) {
                 contAct.innerHTML = '<p style="color: var(--text-muted);">No hay usuarios adicionales activos.</p>';
             } else {
@@ -416,9 +418,6 @@ function eliminarUsuario(id) {
     } catch (e) { console.error('Error al eliminar usuario:', e); }
 }
 
-// ============================================
-// NAVEGACIÓN
-// ============================================
 function navigateTo(page) {
     currentPage = page;
     document.querySelectorAll('.nav-pill').forEach(pill => {
@@ -461,9 +460,6 @@ function renderPage(page, container) {
     }
 }
 
-// ============================================
-// OBTENER DATOS (con fallbacks)
-// ============================================
 function getLeyes() {
     const leyes = [];
     if (typeof LEY_LCT_20744 !== 'undefined') leyes.push(LEY_LCT_20744);
@@ -498,9 +494,6 @@ function getCapacitaciones() {
     return cursos;
 }
 
-// ============================================
-// EVENTOS
-// ============================================
 function setupEvents() {
     try {
         const menuBtn = document.getElementById('menuBtn');
@@ -624,7 +617,7 @@ function escapeRegExp(string) {
 }
 
 // ============================================
-// RENDERIZADOS COMPLETOS
+// RENDERIZADOS (todas las funciones completas)
 // ============================================
 function renderDashboard(container) {
     try {
@@ -635,7 +628,6 @@ function renderDashboard(container) {
         const leyes = getLeyes();
         const leyCount = leyes.length;
         const benefCount = DATA && DATA.beneficios ? Object.keys(DATA.beneficios).length : 0;
-        
         container.innerHTML = `
             <div class="page-header">
                 <h1>¡Bienvenido, ${currentUser.name.split(' ')[0]}! 👋</h1>
@@ -915,9 +907,6 @@ function showCursoDetalle(cursoId) {
     setTimeout(() => { setupContentSearch('#cursoContent'); }, 100);
 }
 
-// ============================================
-// FUNCIONES PARA PROGRESO DE MÓDULOS
-// ============================================
 function obtenerProgresoModulo(cursoId, moduloIndex) {
     const key = `aoma_progreso_${cursoId}`;
     const progreso = JSON.parse(localStorage.getItem(key) || '{}');
@@ -1011,9 +1000,6 @@ function iniciarEvaluacion(cursoId, moduloIndex) {
     toast('info', '📝 Evaluación', 'La evaluación del módulo se abrirá en breve.');
 }
 
-// ============================================
-// CONVENIOS, LEGISLACIÓN, GREMIO
-// ============================================
 function renderConveniosGeneral(container) {
     const convenios = getConvenios();
     const conveniosActividad = convenios.filter(c => !c.empresa);
@@ -1180,9 +1166,6 @@ function renderOrganigrama(container) {
     `;
 }
 
-// ============================================
-// TOAST NOTIFICATIONS
-// ============================================
 function toast(type, title, message) {
     const container = document.querySelector('.toast-container') || (() => {
         const div = document.createElement('div');
@@ -1201,9 +1184,6 @@ function toast(type, title, message) {
     setTimeout(() => { toast.remove(); }, 5000);
 }
 
-// ============================================
-// CHAT - Funciones auxiliares
-// ============================================
 function addChatMessage(type, text) {
     const messages = document.getElementById('chatMessages');
     if (!messages) return;
