@@ -28,7 +28,6 @@ let modalBienvenidaMostrado = false;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 AOMA Campus: Iniciando...');
     try {
-        // Verificar si existe el primer usuario administrador
         const usuariosActivos = obtenerUsuariosActivos();
         if (usuariosActivos.length === 0) {
             const admin = {
@@ -70,26 +69,141 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('aoma_theme');
         if (savedTheme === 'dark') toggleTheme();
 
-        // Asignar evento de registro (UNA SOLA VEZ)
+        // ============================================
+        // REGISTRO: Asignar evento GLOBAL (para que siempre funcione)
+        // ============================================
         const formReg = document.getElementById('formRegistro');
         if (formReg) {
-            formReg.addEventListener('submit', handleRegistro);
-            console.log('✅ Evento de registro asignado correctamente.');
+            console.log('✅ Formulario de registro encontrado.');
+            formReg.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('📝 Evento de registro DISPARADO');
+                handleRegistro(e);
+            });
         } else {
-            console.warn('⚠️ Formulario de registro no encontrado al cargar.');
+            console.warn('⚠️ Formulario de registro NO encontrado. Revisá el HTML.');
         }
 
-        // Asignar evento de recuperación (si existe)
+        // ============================================
+        // RECUPERACIÓN
+        // ============================================
         const formRec = document.getElementById('formRecuperacion');
         if (formRec) {
             formRec.addEventListener('submit', handleRecuperacion);
         }
+
     } catch (e) {
         console.error('Error en inicialización:', e);
         showLogin();
     }
 });
 
+// ============================================
+// FUNCIÓN DE REGISTRO (desacoplada)
+// ============================================
+function handleRegistro(e) {
+    e.preventDefault();
+    console.log('📝 handleRegistro ejecutándose...');
+    
+    const nombre = document.getElementById('regNombre').value.trim();
+    const usuario = document.getElementById('regUsuario').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const pregunta = document.getElementById('regPregunta').value;
+    const respuesta = document.getElementById('regRespuesta').value.trim();
+    
+    console.log('📋 Datos:', { nombre, usuario, email, password: '***', pregunta, respuesta });
+    
+    if (!nombre || !usuario || !email || !password || !pregunta || !respuesta) {
+        alert('Completá todos los campos.');
+        return;
+    }
+    if (password.length < 6) {
+        alert('La contraseña debe tener al menos 6 caracteres.');
+        return;
+    }
+    
+    const activos = obtenerUsuariosActivos();
+    const pendientes = obtenerUsuariosPendientes();
+    const existe = activos.some(u => u.username === usuario || u.email === email) ||
+                   pendientes.some(u => u.username === usuario || u.email === email);
+    if (existe) {
+        alert('Ese usuario o email ya está registrado.');
+        return;
+    }
+    
+    const esPrimerUsuario = activos.length === 0 && pendientes.length === 0;
+    const role = esPrimerUsuario ? 'admin' : 'delegado';
+    const active = esPrimerUsuario ? true : false;
+    
+    const nuevoUsuario = {
+        id: Date.now(),
+        username: usuario,
+        email: email,
+        password: password,
+        name: nombre,
+        role: role,
+        active: active,
+        preguntaSeguridad: pregunta,
+        respuestaSeguridad: respuesta
+    };
+    
+    if (esPrimerUsuario) {
+        activos.push(nuevoUsuario);
+        guardarUsuariosActivos(activos);
+        alert('¡Usuario administrador creado exitosamente! Ahora podés iniciar sesión.');
+    } else {
+        pendientes.push(nuevoUsuario);
+        guardarUsuariosPendientes(pendientes);
+        alert('Tu registro ha sido enviado. Esperá la aprobación del administrador.');
+    }
+    
+    cerrarModalRegistro();
+    console.log('✅ Registro completado');
+}
+
+// ============================================
+// FUNCIÓN DE RECUPERACIÓN
+// ============================================
+function handleRecuperacion(e) {
+    e.preventDefault();
+    const identifier = document.getElementById('recUser').value.trim();
+    const btn = document.getElementById('recBtn');
+    if (!identifier) { alert('Ingresá tu usuario o email.'); return; }
+    const activos = obtenerUsuariosActivos();
+    const usuario = activos.find(u => u.username === identifier || u.email === identifier);
+    if (!usuario) { alert('No se encontró ningún usuario con esos datos.'); return; }
+    if (!usuario.preguntaSeguridad) { alert('Este usuario no tiene configurada una pregunta de seguridad. Contactá al administrador.'); return; }
+    const preguntaContainer = document.getElementById('recPreguntaContainer');
+    const nuevaPassContainer = document.getElementById('recNuevaPassContainer');
+    if (btn.textContent === 'Buscar usuario') {
+        document.getElementById('recPreguntaLabel').textContent = usuario.preguntaSeguridad;
+        preguntaContainer.style.display = 'block';
+        btn.textContent = 'Verificar respuesta';
+        btn.dataset.userId = usuario.id;
+    } else if (btn.textContent === 'Verificar respuesta') {
+        const respuesta = document.getElementById('recRespuesta').value.trim();
+        if (respuesta.toLowerCase() !== usuario.respuestaSeguridad.toLowerCase()) { alert('Respuesta incorrecta.'); return; }
+        nuevaPassContainer.style.display = 'block';
+        btn.textContent = 'Cambiar contraseña';
+        btn.dataset.step = 'reset';
+        document.getElementById('recRespuesta').setAttribute('readonly', true);
+    } else if (btn.textContent === 'Cambiar contraseña') {
+        const nuevaPass = document.getElementById('recNuevaPass').value;
+        if (!nuevaPass || nuevaPass.length < 6) { alert('La nueva contraseña debe tener al menos 6 caracteres.'); return; }
+        const userId = parseInt(btn.dataset.userId);
+        const userIndex = activos.findIndex(u => u.id === userId);
+        if (userIndex === -1) { alert('Usuario no encontrado.'); return; }
+        activos[userIndex].password = nuevaPass;
+        guardarUsuariosActivos(activos);
+        alert('Contraseña actualizada correctamente. Iniciá sesión con tu nueva contraseña.');
+        cerrarModalRecuperacion();
+    }
+}
+
+// ============================================
+// LOGIN / LOGOUT
+// ============================================
 function showLogin() {
     try {
         const html = `
@@ -126,6 +240,7 @@ function showLogin() {
             </div>
         `;
         document.body.innerHTML = html;
+        
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value.trim();
@@ -145,6 +260,15 @@ function showLogin() {
                 alert('Usuario o contraseña incorrectos, o tu cuenta no ha sido aprobada aún.');
             }
         });
+
+        // RE-ASIGNAR EVENTO DE REGISTRO DESPUÉS DE RECARGAR EL LOGIN
+        const formReg = document.getElementById('formRegistro');
+        if (formReg) {
+            console.log('✅ Formulario de registro re-asignado después del login.');
+            formReg.removeEventListener('submit', handleRegistro);
+            formReg.addEventListener('submit', handleRegistro);
+        }
+
     } catch (e) {
         console.error('Error en showLogin:', e);
         document.body.innerHTML = '<p style="color:red;">Error al cargar el login. Revisá la consola.</p>';
@@ -194,7 +318,6 @@ function toggleTheme() {
 function mostrarModalBienvenida() {
     const modal = document.getElementById('modalBienvenida');
     if (modal) modal.style.display = 'flex';
-    else console.warn('Modal de bienvenida no encontrado');
 }
 function cerrarModalBienvenida() {
     const modal = document.getElementById('modalBienvenida');
@@ -204,65 +327,17 @@ function cerrarModalBienvenida() {
 function mostrarRegistro() {
     const modal = document.getElementById('modalRegistro');
     if (modal) modal.style.display = 'flex';
+    // Asegurar que el evento esté asignado
+    const form = document.getElementById('formRegistro');
+    if (form) {
+        form.removeEventListener('submit', handleRegistro);
+        form.addEventListener('submit', handleRegistro);
+        console.log('🔁 Evento de registro re-asignado al abrir el modal');
+    }
 }
 function cerrarModalRegistro() {
     const modal = document.getElementById('modalRegistro');
     if (modal) modal.style.display = 'none';
-}
-
-function handleRegistro(e) {
-    e.preventDefault();
-    console.log('📝 Evento de registro disparado');
-    const nombre = document.getElementById('regNombre').value.trim();
-    const usuario = document.getElementById('regUsuario').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPassword').value;
-    const pregunta = document.getElementById('regPregunta').value;
-    const respuesta = document.getElementById('regRespuesta').value.trim();
-    
-    if (!nombre || !usuario || !email || !password || !pregunta || !respuesta) {
-        alert('Completá todos los campos.');
-        return;
-    }
-    if (password.length < 6) {
-        alert('La contraseña debe tener al menos 6 caracteres.');
-        return;
-    }
-    const activos = obtenerUsuariosActivos();
-    const pendientes = obtenerUsuariosPendientes();
-    const existe = activos.some(u => u.username === usuario || u.email === email) ||
-                   pendientes.some(u => u.username === usuario || u.email === email);
-    if (existe) {
-        alert('Ese usuario o email ya está registrado.');
-        return;
-    }
-    
-    const esPrimerUsuario = activos.length === 0 && pendientes.length === 0;
-    const role = esPrimerUsuario ? 'admin' : 'delegado';
-    const active = esPrimerUsuario ? true : false;
-    
-    const nuevoUsuario = {
-        id: Date.now(),
-        username: usuario,
-        email: email,
-        password: password,
-        name: nombre,
-        role: role,
-        active: active,
-        preguntaSeguridad: pregunta,
-        respuestaSeguridad: respuesta
-    };
-    
-    if (esPrimerUsuario) {
-        activos.push(nuevoUsuario);
-        guardarUsuariosActivos(activos);
-        alert('¡Usuario administrador creado exitosamente! Ahora podés iniciar sesión.');
-    } else {
-        pendientes.push(nuevoUsuario);
-        guardarUsuariosPendientes(pendientes);
-        alert('Tu registro ha sido enviado. Esperá la aprobación del administrador.');
-    }
-    cerrarModalRegistro();
 }
 
 function mostrarRecuperacion() {
@@ -282,42 +357,9 @@ function cerrarModalRecuperacion() {
     if (modal) modal.style.display = 'none';
 }
 
-function handleRecuperacion(e) {
-    e.preventDefault();
-    const identifier = document.getElementById('recUser').value.trim();
-    const btn = document.getElementById('recBtn');
-    if (!identifier) { alert('Ingresá tu usuario o email.'); return; }
-    const activos = obtenerUsuariosActivos();
-    const usuario = activos.find(u => u.username === identifier || u.email === identifier);
-    if (!usuario) { alert('No se encontró ningún usuario con esos datos.'); return; }
-    if (!usuario.preguntaSeguridad) { alert('Este usuario no tiene configurada una pregunta de seguridad. Contactá al administrador.'); return; }
-    const preguntaContainer = document.getElementById('recPreguntaContainer');
-    const nuevaPassContainer = document.getElementById('recNuevaPassContainer');
-    if (btn.textContent === 'Buscar usuario') {
-        document.getElementById('recPreguntaLabel').textContent = usuario.preguntaSeguridad;
-        preguntaContainer.style.display = 'block';
-        btn.textContent = 'Verificar respuesta';
-        btn.dataset.userId = usuario.id;
-    } else if (btn.textContent === 'Verificar respuesta') {
-        const respuesta = document.getElementById('recRespuesta').value.trim();
-        if (respuesta.toLowerCase() !== usuario.respuestaSeguridad.toLowerCase()) { alert('Respuesta incorrecta.'); return; }
-        nuevaPassContainer.style.display = 'block';
-        btn.textContent = 'Cambiar contraseña';
-        btn.dataset.step = 'reset';
-        document.getElementById('recRespuesta').setAttribute('readonly', true);
-    } else if (btn.textContent === 'Cambiar contraseña') {
-        const nuevaPass = document.getElementById('recNuevaPass').value;
-        if (!nuevaPass || nuevaPass.length < 6) { alert('La nueva contraseña debe tener al menos 6 caracteres.'); return; }
-        const userId = parseInt(btn.dataset.userId);
-        const userIndex = activos.findIndex(u => u.id === userId);
-        if (userIndex === -1) { alert('Usuario no encontrado.'); return; }
-        activos[userIndex].password = nuevaPass;
-        guardarUsuariosActivos(activos);
-        alert('Contraseña actualizada correctamente. Iniciá sesión con tu nueva contraseña.');
-        cerrarModalRecuperacion();
-    }
-}
-
+// ============================================
+// SISTEMA DE USUARIOS (localStorage)
+// ============================================
 function obtenerUsuariosActivos() {
     try {
         const almacenados = JSON.parse(localStorage.getItem('aoma_usuarios_activos') || '[]');
@@ -641,7 +683,7 @@ function escapeRegExp(string) {
 }
 
 // ============================================
-// RENDERIZADOS COMPLETOS (igual que antes)
+// RENDERIZADOS (COMPLETOS)
 // ============================================
 function renderDashboard(container) {
     try {
