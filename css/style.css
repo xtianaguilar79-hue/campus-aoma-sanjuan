@@ -2783,5 +2783,236 @@ body {
     }
     .organigrama-body {
         padding: 1rem;
+/* ============================================
+   MODALES (Bienvenida, Registro, Recuperación, Panel Admin)
+   ============================================ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-container {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-2xl);
+    animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.modal-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.modal-header h2 i {
+    margin-right: 0.5rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.75rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.2s;
+}
+
+.modal-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    text-align: right;
+    background: var(--bg-input);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+/* Modal de bienvenida específico */
+.modal-autoridad {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-autoridad h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.modal-autoridad p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.modal-mensaje {
+    background: var(--bg-input);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border-left: 4px solid var(--accent);
+    line-height: 1.8;
+}
+
+.modal-mensaje p {
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Formularios dentro de modales */
+.modal-body .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal-body .form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.modal-body .form-group input,
+.modal-body .form-group select {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    background: var(--bg-input);
+    color: var(--text-primary);
+}
+
+.modal-body .form-group input:focus,
+.modal-body .form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(244, 123, 32, 0.15);
+}
+
+/* Panel de usuarios (admin) */
+#listaPendientes, #listaActivos {
+    margin: 0.75rem 0 1.5rem;
+}
+
+.usuario-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-input);
+    border-radius: var(--radius);
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--border-light);
+}
+
+.usuario-item .info {
+    display: flex;
+    flex-direction: column;
+}
+
+.usuario-item .info .nombre {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.usuario-item .info .email {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.usuario-item .acciones button {
+    margin-left: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-aprobar {
+    background: var(--success);
+    color: white;
+}
+
+.btn-aprobar:hover {
+    background: #059669;
+}
+
+.btn-rechazar {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-rechazar:hover {
+    background: #b91c1c;
+}
+
+.btn-eliminar {
+    background: var(--gray-400);
+    color: white;
+}
+
+.btn-eliminar:hover {
+    background: var(--gray-500);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-container {
+        max-width: 100%;
+        margin: 0.5rem;
+    }
+    
+    .usuario-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    
+    .usuario-item .acciones {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
     }
 }
