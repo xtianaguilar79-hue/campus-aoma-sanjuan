@@ -1,8 +1,8 @@
 // ============================================
 // APLICACIÓN PRINCIPAL - CAMPUS VIRTUAL AOMA
+// VERSIÓN DEFINITIVA CON REGISTRO CORREGIDO
 // ============================================
 
-// Verificar que DATA esté definida
 if (typeof DATA === 'undefined') {
     console.error('❌ DATA no está definida.');
     alert('Error crítico: No se pudo cargar la base de datos. Recargá la página.');
@@ -23,13 +23,122 @@ let currentHighlightIndex = -1;
 let modalBienvenidaMostrado = false;
 
 // ============================================
+// FUNCIONES DE LOCALSTORAGE (SOLO LECTURA/ESCRITURA)
+// ============================================
+function obtenerUsuariosActivos() {
+    try {
+        return JSON.parse(localStorage.getItem('aoma_usuarios_activos') || '[]');
+    } catch (e) { return []; }
+}
+function obtenerUsuariosPendientes() {
+    try {
+        return JSON.parse(localStorage.getItem('aoma_usuarios_pendientes') || '[]');
+    } catch (e) { return []; }
+}
+function guardarUsuariosActivos(activos) {
+    localStorage.setItem('aoma_usuarios_activos', JSON.stringify(activos));
+}
+function guardarUsuariosPendientes(pendientes) {
+    localStorage.setItem('aoma_usuarios_pendientes', JSON.stringify(pendientes));
+}
+
+// ============================================
+// HARD RESET - BORRA TODOS LOS DATOS DE USUARIOS
+// ============================================
+function resetearUsuarios() {
+    if (!confirm('⚠️ Esto borrará TODOS los usuarios registrados. ¿Estás seguro?')) return;
+    localStorage.removeItem('aoma_usuarios_activos');
+    localStorage.removeItem('aoma_usuarios_pendientes');
+    localStorage.removeItem('aoma_session');
+    alert('✅ Datos de usuarios eliminados. La página se recargará.');
+    location.reload();
+}
+
+// ============================================
+// FORZAR CREACIÓN DE ADMINISTRADOR (CRISTIAN AGUILAR)
+// ============================================
+function forzarAdmin() {
+    if (!confirm('⚠️ Esto creará al administrador Cristian Aguilar y eliminará cualquier otro usuario. ¿Continuar?')) return;
+
+    // Borrar todo
+    localStorage.removeItem('aoma_usuarios_activos');
+    localStorage.removeItem('aoma_usuarios_pendientes');
+    localStorage.removeItem('aoma_session');
+
+    const admin = {
+        id: Date.now(),
+        username: 'cristian',
+        email: 'aomasjhys@gmail.com',
+        password: 'admin123', // Cambiá esto después
+        name: 'Cristian Aguilar',
+        dni: '12345678',
+        telefono: '264-1234567',
+        dirigente: false,
+        delegado: false,
+        empresa: 'veladero',
+        actividad: 'mineria-extractiva',
+        convenio: '36/89',
+        role: 'admin',
+        active: true,
+        preguntaSeguridad: '¿Cuál es tu color favorito?',
+        respuestaSeguridad: 'azul',
+        fechaRegistro: new Date().toISOString()
+    };
+
+    guardarUsuariosActivos([admin]);
+    alert('✅ Administrador creado. Iniciá sesión con usuario "cristian" y contraseña "admin123".');
+    location.reload();
+}
+
+// ============================================
 // INICIALIZACIÓN
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 AOMA Campus: Iniciando...');
 
-    // ✅ ELIMINADA la creación de admin por defecto
-    // El primer registro será el administrador.
+    // ✅ Verificar si ya existe un administrador, si no, crearlo automáticamente
+    const activos = obtenerUsuariosActivos();
+    const pendientes = obtenerUsuariosPendientes();
+
+    // Si no hay ningún usuario activo, pero hay pendientes, mover el primero a admin
+    if (activos.length === 0 && pendientes.length > 0) {
+        // Buscar el primero con email aomasjhys@gmail.com o simplemente el primero
+        const candidato = pendientes.find(u => u.email === 'aomasjhys@gmail.com') || pendientes[0];
+        candidato.active = true;
+        candidato.role = 'admin';
+        activos.push(candidato);
+        const idx = pendientes.indexOf(candidato);
+        pendientes.splice(idx, 1);
+        guardarUsuariosActivos(activos);
+        guardarUsuariosPendientes(pendientes);
+        console.log('✅ Usuario movido de pendientes a activos como admin.');
+    }
+
+    // Si no hay ningún usuario (activos ni pendientes), crear admin por defecto
+    if (activos.length === 0 && pendientes.length === 0) {
+        console.log('🆕 No hay usuarios, creando administrador predeterminado...');
+        const admin = {
+            id: Date.now(),
+            username: 'cristian',
+            email: 'aomasjhys@gmail.com',
+            password: 'admin123',
+            name: 'Cristian Aguilar',
+            dni: '12345678',
+            telefono: '264-1234567',
+            dirigente: false,
+            delegado: false,
+            empresa: 'veladero',
+            actividad: 'mineria-extractiva',
+            convenio: '36/89',
+            role: 'admin',
+            active: true,
+            preguntaSeguridad: '¿Cuál es tu color favorito?',
+            respuestaSeguridad: 'azul',
+            fechaRegistro: new Date().toISOString()
+        };
+        guardarUsuariosActivos([admin]);
+        console.log('✅ Administrador creado automáticamente.');
+    }
 
     // ✅ EVENTO DE REGISTRO
     const formReg = document.getElementById('formRegistro');
@@ -98,26 +207,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
-// RESETEAR USUARIOS (desde el login)
-// ============================================
-function resetearUsuarios() {
-    if (confirm('⚠️ Esto borrará TODOS los usuarios registrados. ¿Estás seguro?')) {
-        localStorage.removeItem('aoma_usuarios_activos');
-        localStorage.removeItem('aoma_usuarios_pendientes');
-        localStorage.removeItem('aoma_session');
-        alert('✅ Datos de usuarios eliminados. La página se recargará.');
-        location.reload();
-    }
-}
-
-// ============================================
-// REGISTRO (SOLO VERIFICA LOCALSTORAGE)
+// REGISTRO (CORREGIDO)
 // ============================================
 function handleRegistro(e) {
     e.preventDefault();
     console.log('📝 handleRegistro ejecutándose...');
 
-    // Obtener campos
     const nombre = document.getElementById('regNombre').value.trim();
     const dni = document.getElementById('regDni').value.trim();
     const email = document.getElementById('regEmail').value.trim();
@@ -132,7 +227,6 @@ function handleRegistro(e) {
     const pregunta = document.getElementById('regPregunta').value;
     const respuesta = document.getElementById('regRespuesta').value.trim();
 
-    // Validaciones
     if (!nombre || !dni || !email || !usuario || !password || !pregunta || !respuesta || !empresa || !actividad || !convenio) {
         alert('Todos los campos marcados con * son obligatorios.');
         return;
@@ -146,7 +240,6 @@ function handleRegistro(e) {
         return;
     }
 
-    // Obtener usuarios SOLO de localStorage (ignoramos DATA.usuarios)
     const activos = obtenerUsuariosActivos();
     const pendientes = obtenerUsuariosPendientes();
 
@@ -159,8 +252,33 @@ function handleRegistro(e) {
         return;
     }
     if (existeEmail) {
-        alert('❌ Ese email ya está registrado. Usá otro.');
-        return;
+        // Si el email existe en pendientes, lo movemos a activos como admin (solución de emergencia)
+        const pendiente = pendientes.find(u => u.email === email);
+        if (pendiente) {
+            pendiente.active = true;
+            pendiente.role = 'admin';
+            pendiente.password = password; // actualizamos contraseña
+            pendiente.name = nombre;
+            pendiente.dni = dni;
+            pendiente.telefono = telefono;
+            pendiente.empresa = empresa;
+            pendiente.actividad = actividad;
+            pendiente.convenio = convenio;
+            pendiente.preguntaSeguridad = pregunta;
+            pendiente.respuestaSeguridad = respuesta;
+            const idx = pendientes.indexOf(pendiente);
+            pendientes.splice(idx, 1);
+            activos.push(pendiente);
+            guardarUsuariosActivos(activos);
+            guardarUsuariosPendientes(pendientes);
+            alert('✅ Tu cuenta pendiente ha sido activada como administrador. Podés iniciar sesión.');
+            cerrarModalRegistro();
+            location.reload();
+            return;
+        } else {
+            alert('❌ Ese email ya está registrado como usuario activo. Usá otro.');
+            return;
+        }
     }
 
     // Determinar rol
@@ -187,7 +305,7 @@ function handleRegistro(e) {
         actividad: actividad,
         convenio: convenio,
         role: role,
-        active: esPrimerUsuario, // si es el primero, se activa automáticamente
+        active: esPrimerUsuario,
         preguntaSeguridad: pregunta,
         respuestaSeguridad: respuesta,
         fechaRegistro: new Date().toISOString()
@@ -198,7 +316,7 @@ function handleRegistro(e) {
         guardarUsuariosActivos(activos);
         alert('✅ ¡Usuario administrador creado exitosamente! Ahora podés iniciar sesión.');
         cerrarModalRegistro();
-        location.reload(); // Recarga para que el login reconozca al nuevo admin
+        location.reload();
     } else {
         pendientes.push(nuevoUsuario);
         guardarUsuariosPendientes(pendientes);
@@ -333,26 +451,6 @@ function mostrarRecuperacion() {
 function cerrarModalRecuperacion() {
     const modal = document.getElementById('modalRecuperacion');
     if (modal) modal.style.display = 'none';
-}
-
-// ============================================
-// SISTEMA DE USUARIOS (SOLO LOCALSTORAGE)
-// ============================================
-function obtenerUsuariosActivos() {
-    try {
-        return JSON.parse(localStorage.getItem('aoma_usuarios_activos') || '[]');
-    } catch (e) { console.error('Error al obtener activos:', e); return []; }
-}
-function obtenerUsuariosPendientes() {
-    try {
-        return JSON.parse(localStorage.getItem('aoma_usuarios_pendientes') || '[]');
-    } catch (e) { console.error('Error al obtener pendientes:', e); return []; }
-}
-function guardarUsuariosPendientes(pendientes) {
-    localStorage.setItem('aoma_usuarios_pendientes', JSON.stringify(pendientes));
-}
-function guardarUsuariosActivos(activos) {
-    localStorage.setItem('aoma_usuarios_activos', JSON.stringify(activos));
 }
 
 // ============================================
@@ -846,7 +944,6 @@ function renderCursos(container) {
 // ============================================
 function showCursoDetalle(cursoId) {
     toast('info', 'Curso', 'Detalle del curso en construcción.');
-    // Puedes implementar la vista detallada si lo deseas.
 }
 
 function obtenerProgresoModulo(cursoId, moduloIndex) { return false; }
