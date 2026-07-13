@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
-        /* ===== ESTILOS COMPLETOS ===== */
+        /* ===== ESTILOS COMPLETOS (mismos que antes) ===== */
         :root {
             --primary: #1a1a1a;
             --accent: #f47b20;
@@ -32,7 +32,6 @@
         }
         .hidden { display: none !important; }
         
-        /* HEADER */
         .header {
             position: fixed; top:0; left:0; right:0; height:var(--header-height);
             background: white; border-bottom:1px solid var(--border);
@@ -56,13 +55,11 @@
         .dropdown a { display:block; padding:0.75rem 1rem; color:var(--text-primary); text-decoration:none; font-size:0.9rem; }
         .dropdown a:hover { background:var(--bg-body); }
         
-        /* MAIN */
         .main { margin-top:var(--header-height); padding:2rem; min-height:calc(100vh - var(--header-height)); }
         .page-header { margin-bottom:2rem; }
         .page-header h1 { font-size:2rem; }
         .page-header p { color:var(--text-muted); }
         
-        /* LOGIN OVERLAY */
         #loginOverlay {
             position:fixed; inset:0; z-index:1000;
             background:linear-gradient(135deg,#1a1a1a 0%,#333 100%);
@@ -95,7 +92,6 @@
         .error-msg { background:#fee2e2; color:#b91c1c; padding:0.75rem; border-radius:8px; margin-bottom:1rem; display:none; }
         .success-msg { background:#d1fae5; color:#065f46; padding:0.75rem; border-radius:8px; margin-bottom:1rem; display:none; }
         
-        /* MODAL */
         .modal-overlay {
             position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:2000;
             display:none; align-items:center; justify-content:center; padding:1rem;
@@ -112,7 +108,6 @@
         .form-row .form-group { flex:1; min-width:200px; }
         .required { color:#ef4444; margin-left:2px; }
         
-        /* CARDS / DASHBOARD */
         .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1.5rem; margin-bottom:2rem; }
         .stat-card { background:white; padding:1.5rem; border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid var(--border); cursor:pointer; transition:0.2s; }
         .stat-card:hover { transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.1); }
@@ -130,7 +125,6 @@
         .section { background:white; padding:1.5rem; border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:2rem; border:1px solid var(--border); }
         .section-title { font-size:1.3rem; font-weight:700; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:3px solid var(--accent); display:inline-block; }
         
-        /* USUARIOS PANEL */
         .usuario-item { display:flex; justify-content:space-between; align-items:center; padding:0.75rem; background:var(--bg-body); border-radius:8px; margin-bottom:0.5rem; }
         .usuario-item .info { display:flex; flex-direction:column; }
         .usuario-item .info .nombre { font-weight:600; }
@@ -142,7 +136,6 @@
         .btn-eliminar { background:#9ca3af; color:white; border:none; padding:0.25rem 0.75rem; border-radius:6px; cursor:pointer; }
         .btn-eliminar:hover { background:#6b7280; }
         
-        /* CHAT */
         .chat-window { position:fixed; bottom:80px; right:20px; width:340px; height:400px; background:white; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.2); display:none; flex-direction:column; overflow:hidden; border:1px solid var(--border); z-index:100; }
         .chat-window.active { display:flex; }
         .chat-header { background:var(--primary); color:white; padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center; }
@@ -152,7 +145,6 @@
         .chat-form button { background:var(--accent); color:white; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; }
         .chat-btn { position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; background:var(--accent); color:white; border:none; font-size:2rem; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.2); z-index:100; }
         
-        /* RESPONSIVE */
         @media (max-width:768px) {
             .header { padding:0 1rem; }
             .login-box { padding:1.5rem; }
@@ -237,7 +229,7 @@
             </button>
         </div>
         <div style="text-align:center;margin-top:0.75rem;font-size:0.7rem;color:var(--text-muted);">
-            Email: admin@aoma.com | Contraseña: admin123
+            Usuarios de prueba: admin@aoma.com / admin123
         </div>
     </div>
 </div>
@@ -321,6 +313,12 @@
                 <label>Email</label>
                 <input type="email" id="recEmail" placeholder="tu@email.com" required />
             </div>
+            <div id="recPreguntaContainer" style="display:none;">
+                <div class="form-group">
+                    <label id="recPreguntaLabel">Pregunta de seguridad</label>
+                    <input type="text" id="recRespuesta" placeholder="Tu respuesta" required />
+                </div>
+            </div>
             <div id="recNuevaPassContainer" style="display:none;">
                 <div class="form-group">
                     <label>Nueva contraseña</label>
@@ -345,8 +343,11 @@
             <button class="modal-close" onclick="cerrarPanelUsuarios()">&times;</button>
         </div>
         <div id="panelContent">
-            <h3>Usuarios</h3>
-            <div id="listaUsuarios"><p>Cargando...</p></div>
+            <h3>Pendientes de aprobación</h3>
+            <div id="listaPendientes"><p>Cargando...</p></div>
+            <hr style="margin:1.5rem 0;" />
+            <h3>Usuarios activos</h3>
+            <div id="listaActivos"><p>Cargando...</p></div>
         </div>
     </div>
 </div>
@@ -369,9 +370,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ============================================
-// CONFIGURACIÓN SUPABASE (CORREGIDA)
+// CONFIGURACIÓN SUPABASE (ADAPTADA A TU TABLA)
 // ============================================
-const SUPABASE_URL = 'https://irvacaxwrzaouqzwwxlq.supabase.co'; // ← SIN /rest/v1/
+const SUPABASE_URL = 'https://irvacaxwrzaouqzwwxlq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlydmFjYXh3cnphb3Vxend3eGxxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjQ4MzUsImV4cCI6MjA5OTU0MDgzNX0.D-NR-o7NzJ0RaJqZ7xYyMm6fgAwlg0_l-SFQr4voNCA';
 
 let supabaseClient;
@@ -404,13 +405,22 @@ function togglePassword(inputId, btn) {
 }
 
 // ============================================
-// FUNCIONES DE USUARIOS (SUPABASE)
+// FUNCIONES DE USUARIOS (ADAPTADAS A TU TABLA)
 // ============================================
-async function obtenerUsuarios() {
+async function obtenerUsuariosActivos() {
     const { data, error } = await supabaseClient
         .from('usuarios')
         .select('*')
-        .order('created_at', { ascending: false });
+        .eq('aprobado', true);
+    if (error) { console.error(error); return []; }
+    return data || [];
+}
+
+async function obtenerUsuariosPendientes() {
+    const { data, error } = await supabaseClient
+        .from('usuarios')
+        .select('*')
+        .eq('aprobado', false);
     if (error) { console.error(error); return []; }
     return data || [];
 }
@@ -441,7 +451,7 @@ async function eliminarUsuarioDB(id) {
 }
 
 // ============================================
-// REGISTRO
+// REGISTRO (ADAPTADO)
 // ============================================
 async function handleRegistro(e) {
     e.preventDefault();
@@ -473,12 +483,13 @@ async function handleRegistro(e) {
             return;
         }
 
-        // Verificar si hay algún usuario (para saber si es el primero)
-        const { data: todos } = await supabaseClient
+        // Verificar si hay algún usuario aprobado (para saber si es el primero)
+        const { data: aprobados } = await supabaseClient
             .from('usuarios')
-            .select('id');
+            .select('id')
+            .eq('aprobado', true);
         
-        const esPrimerUsuario = !todos || todos.length === 0;
+        const esPrimerUsuario = !aprobados || aprobados.length === 0;
 
         const nuevoUsuario = {
             email: email,
@@ -489,7 +500,7 @@ async function handleRegistro(e) {
             empresa: empresa,
             actividad: actividad,
             rol: esPrimerUsuario ? 'admin' : 'afiliado',
-            aprobado: esPrimerUsuario // el primero se aprueba automáticamente
+            aprobado: esPrimerUsuario
         };
 
         await guardarUsuario(nuevoUsuario);
@@ -511,7 +522,7 @@ async function handleRegistro(e) {
 }
 
 // ============================================
-// LOGIN
+// LOGIN (ADAPTADO)
 // ============================================
 async function handleLogin(e) {
     e.preventDefault();
@@ -533,7 +544,7 @@ async function handleLogin(e) {
             localStorage.setItem('aoma_session', JSON.stringify(currentUser));
             mostrarApp();
         } else {
-            document.getElementById('loginError').textContent = '❌ Usuario o contraseña incorrectos, o tu cuenta no ha sido aprobada aún.';
+            document.getElementById('loginError').textContent = '❌ Email o contraseña incorrectos, o tu cuenta no ha sido aprobada aún.';
             document.getElementById('loginError').style.display = 'block';
         }
     } catch (error) {
@@ -589,7 +600,7 @@ function mostrarApp() {
 }
 
 // ============================================
-// RESET Y FORZAR ADMIN
+// RESET Y FORZAR ADMIN (ADAPTADOS)
 // ============================================
 async function resetearUsuarios() {
     if (!confirm('⚠️ ¿Borrar TODOS los usuarios de Supabase? Esto es irreversible.')) return;
@@ -608,7 +619,7 @@ async function resetearUsuarios() {
 }
 
 async function forzarAdmin() {
-    if (!confirm('⚠️ ¿Crear administrador y eliminar otros usuarios?')) return;
+    if (!confirm('⚠️ ¿Crear administrador Cristian Aguilar y eliminar otros usuarios?')) return;
     try {
         await supabaseClient.from('usuarios').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         
@@ -650,26 +661,44 @@ function cerrarPanelUsuarios() {
 
 async function actualizarListasUsuarios() {
     try {
-        const usuarios = await obtenerUsuarios();
+        const pendientes = await obtenerUsuariosPendientes();
+        const activos = await obtenerUsuariosActivos();
         
-        const cont = document.getElementById('listaUsuarios');
-        if (cont) {
-            if (usuarios.length === 0) {
-                cont.innerHTML = '<p style="color:var(--text-muted);">No hay usuarios registrados.</p>';
+        const contPend = document.getElementById('listaPendientes');
+        if (contPend) {
+            if (pendientes.length === 0) {
+                contPend.innerHTML = '<p style="color:var(--text-muted);">No hay usuarios pendientes.</p>';
             } else {
-                cont.innerHTML = usuarios.map(u => `
+                contPend.innerHTML = pendientes.map(u => `
                     <div class="usuario-item">
                         <div class="info">
                             <span class="nombre">${u.nombre}</span>
                             <span class="email">${u.email}</span>
-                            <span style="font-size:0.8rem;color:var(--text-muted);">DNI: ${u.dni || 'N/A'} - ${u.empresa || ''} - ${u.rol || 'afiliado'}</span>
-                            <span style="font-size:0.7rem;color:${u.aprobado ? '#10b981' : '#f59e0b'};">
-                                ${u.aprobado ? '✅ Aprobado' : '⏳ Pendiente'}
-                            </span>
+                            <span style="font-size:0.8rem;color:var(--text-muted);">DNI: ${u.dni || 'N/A'} - ${u.empresa || ''}</span>
                         </div>
                         <div class="acciones">
-                            ${!u.aprobado ? `<button class="btn-aprobar" onclick="aprobarUsuario('${u.id}')"><i class="fas fa-check"></i> Aprobar</button>` : ''}
-                            ${u.rol !== 'admin' ? `<button class="btn-eliminar" onclick="eliminarUsuarioDB('${u.id}')"><i class="fas fa-trash"></i> Eliminar</button>` : ''}
+                            <button class="btn-aprobar" onclick="aprobarUsuario('${u.id}')"><i class="fas fa-check"></i> Aprobar</button>
+                            <button class="btn-rechazar" onclick="rechazarUsuario('${u.id}')"><i class="fas fa-times"></i> Rechazar</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        const contAct = document.getElementById('listaActivos');
+        if (contAct) {
+            if (activos.length === 0) {
+                contAct.innerHTML = '<p style="color:var(--text-muted);">No hay usuarios activos.</p>';
+            } else {
+                contAct.innerHTML = activos.filter(u => u.rol !== 'admin').map(u => `
+                    <div class="usuario-item">
+                        <div class="info">
+                            <span class="nombre">${u.nombre} (${u.rol})</span>
+                            <span class="email">${u.email}</span>
+                            <span style="font-size:0.8rem;color:var(--text-muted);">${u.empresa || ''}</span>
+                        </div>
+                        <div class="acciones">
+                            <button class="btn-eliminar" onclick="eliminarUsuarioDB('${u.id}')"><i class="fas fa-trash"></i> Eliminar</button>
                         </div>
                     </div>
                 `).join('');
@@ -690,8 +719,19 @@ async function aprobarUsuario(id) {
     }
 }
 
+async function rechazarUsuario(id) {
+    if (!confirm('¿Rechazar este usuario?')) return;
+    try {
+        await eliminarUsuarioDB(id);
+        await actualizarListasUsuarios();
+        alert('✅ Usuario rechazado.');
+    } catch (e) {
+        alert('❌ Error: ' + e.message);
+    }
+}
+
 // ============================================
-// RECUPERACIÓN DE CONTRASEÑA
+// RECUPERACIÓN DE CONTRASEÑA (SIN PREGUNTA)
 // ============================================
 async function handleRecuperacion(e) {
     e.preventDefault();
@@ -760,7 +800,7 @@ function navigateTo(page) {
 }
 
 // ============================================
-// RENDER DASHBOARD
+// RENDERIZADOS (iguales que antes)
 // ============================================
 function renderDashboard(container) {
     container.innerHTML = `
@@ -818,9 +858,6 @@ function renderDashboard(container) {
     `;
 }
 
-// ============================================
-// RENDER BENEFICIOS
-// ============================================
 function renderBeneficios(container) {
     container.innerHTML = `
         <div class="page-header"><h1>Beneficios Sociales 🎁</h1><p>Beneficios para afiliados</p></div>
@@ -853,9 +890,6 @@ function renderBeneficios(container) {
     `;
 }
 
-// ============================================
-// RENDER CURSOS
-// ============================================
 function renderCursos(container) {
     container.innerHTML = `
         <div class="page-header"><h1>Capacitaciones 🎓</h1></div>
@@ -880,9 +914,6 @@ function renderCursos(container) {
     `;
 }
 
-// ============================================
-// RENDER CONVENIOS
-// ============================================
 function renderConvenios(container) {
     container.innerHTML = `
         <div class="page-header"><h1>Convenios Colectivos 📋</h1></div>
@@ -910,9 +941,6 @@ function renderConvenios(container) {
     `;
 }
 
-// ============================================
-// RENDER LEGISLACIÓN
-// ============================================
 function renderLegislacion(container) {
     container.innerHTML = `
         <div class="page-header"><h1>Legislación Laboral ⚖️</h1></div>
@@ -943,9 +971,6 @@ function renderLegislacion(container) {
     `;
 }
 
-// ============================================
-// RENDER ORGANIGRAMA
-// ============================================
 function renderOrganigrama(container) {
     container.innerHTML = `
         <div class="page-header"><h1>📋 Estructura Orgánica</h1></div>
@@ -1031,9 +1056,11 @@ function cerrarModalRecuperacion() {
 }
 function mostrarRecuperacion() {
     document.getElementById('modalRecuperacion').style.display = 'flex';
+    document.getElementById('recPreguntaContainer').style.display = 'none';
     document.getElementById('recNuevaPassContainer').style.display = 'none';
     document.getElementById('recBtn').textContent = 'Buscar usuario';
     document.getElementById('recEmail').value = '';
+    document.getElementById('recRespuesta').value = '';
     document.getElementById('recNuevaPass').value = '';
 }
 function toggleTheme() {
