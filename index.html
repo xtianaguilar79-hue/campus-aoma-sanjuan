@@ -209,8 +209,8 @@
         <div id="loginSuccess" class="success-msg"></div>
         <form id="loginForm">
             <div class="form-group">
-                <label><i class="fas fa-user"></i> Usuario o Email</label>
-                <input type="text" id="loginUsername" placeholder="Tu usuario o email" required />
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" id="loginEmail" placeholder="tu@email.com" required />
             </div>
             <div class="form-group">
                 <label><i class="fas fa-lock"></i> Contraseña</label>
@@ -237,7 +237,7 @@
             </button>
         </div>
         <div style="text-align:center;margin-top:0.75rem;font-size:0.7rem;color:var(--text-muted);">
-            Usuarios de prueba: admin / admin123 | delegado / delegado123
+            Email: admin@aoma.com | Contraseña: admin123
         </div>
     </div>
 </div>
@@ -257,7 +257,7 @@
                 </div>
                 <div class="form-group">
                     <label>DNI <span class="required">*</span></label>
-                    <input type="number" id="regDni" placeholder="Número de documento" required />
+                    <input type="text" id="regDni" placeholder="Número de documento" required />
                 </div>
             </div>
             <div class="form-row">
@@ -268,16 +268,6 @@
                 <div class="form-group">
                     <label>Teléfono</label>
                     <input type="tel" id="regTelefono" placeholder="264-1234567" />
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>¿Dirigente?</label>
-                    <select id="regDirigente"><option value="no">No</option><option value="si">Sí</option></select>
-                </div>
-                <div class="form-group">
-                    <label>¿Delegado?</label>
-                    <select id="regDelegado"><option value="no">No</option><option value="si">Sí</option></select>
                 </div>
             </div>
             <div class="form-row">
@@ -303,42 +293,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>Convenio <span class="required">*</span></label>
-                <select id="regConvenio" required>
-                    <option value="">Seleccionar</option>
-                    <option value="36/89">CCT 36/89 (Minería)</option>
-                    <option value="38/89">CCT 38/89 (Cemento)</option>
-                    <option value="54/89">CCT 54/89 (Cal y Piedra)</option>
-                    <option value="673/04">CCT 673/04 (Molienda)</option>
-                </select>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Usuario <span class="required">*</span></label>
-                    <input type="text" id="regUsuario" placeholder="Elegí un usuario" required />
+                <label>Contraseña <span class="required">*</span></label>
+                <div class="password-wrapper">
+                    <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" />
+                    <button type="button" class="password-toggle" onclick="togglePassword('regPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label>Contraseña <span class="required">*</span></label>
-                    <div class="password-wrapper">
-                        <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" />
-                        <button type="button" class="password-toggle" onclick="togglePassword('regPassword', this)">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Pregunta de seguridad <span class="required">*</span></label>
-                <select id="regPregunta" required>
-                    <option value="">Seleccionar</option>
-                    <option value="¿Cuál es el nombre de tu madre?">¿Cuál es el nombre de tu madre?</option>
-                    <option value="¿Cuál es tu ciudad natal?">¿Cuál es tu ciudad natal?</option>
-                    <option value="¿Cuál es el nombre de tu primera mascota?">¿Cuál es el nombre de tu primera mascota?</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Respuesta <span class="required">*</span></label>
-                <input type="text" id="regRespuesta" placeholder="Tu respuesta" required />
             </div>
             <button type="submit" class="btn">Registrarme</button>
         </form>
@@ -357,14 +318,8 @@
         </div>
         <form id="formRecuperacion">
             <div class="form-group">
-                <label>Usuario o Email</label>
-                <input type="text" id="recUser" placeholder="Tu usuario o email" required />
-            </div>
-            <div id="recPreguntaContainer" style="display:none;">
-                <div class="form-group">
-                    <label id="recPreguntaLabel">Pregunta de seguridad</label>
-                    <input type="text" id="recRespuesta" placeholder="Tu respuesta" required />
-                </div>
+                <label>Email</label>
+                <input type="email" id="recEmail" placeholder="tu@email.com" required />
             </div>
             <div id="recNuevaPassContainer" style="display:none;">
                 <div class="form-group">
@@ -390,11 +345,8 @@
             <button class="modal-close" onclick="cerrarPanelUsuarios()">&times;</button>
         </div>
         <div id="panelContent">
-            <h3>Pendientes de aprobación</h3>
-            <div id="listaPendientes"><p>Cargando...</p></div>
-            <hr style="margin:1.5rem 0;" />
-            <h3>Usuarios activos</h3>
-            <div id="listaActivos"><p>Cargando...</p></div>
+            <h3>Usuarios</h3>
+            <div id="listaUsuarios"><p>Cargando...</p></div>
         </div>
     </div>
 </div>
@@ -419,7 +371,7 @@
 // ============================================
 // CONFIGURACIÓN SUPABASE (CORREGIDA)
 // ============================================
-const SUPABASE_URL = 'https://irvacaxwrzaouqzwwxlq.supabase.co';
+const SUPABASE_URL = 'https://irvacaxwrzaouqzwwxlq.supabase.co'; // ← SIN /rest/v1/
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlydmFjYXh3cnphb3Vxend3eGxxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjQ4MzUsImV4cCI6MjA5OTU0MDgzNX0.D-NR-o7NzJ0RaJqZ7xYyMm6fgAwlg0_l-SFQr4voNCA';
 
 let supabaseClient;
@@ -454,20 +406,11 @@ function togglePassword(inputId, btn) {
 // ============================================
 // FUNCIONES DE USUARIOS (SUPABASE)
 // ============================================
-async function obtenerUsuariosActivos() {
+async function obtenerUsuarios() {
     const { data, error } = await supabaseClient
         .from('usuarios')
         .select('*')
-        .eq('activo', true);
-    if (error) { console.error(error); return []; }
-    return data || [];
-}
-
-async function obtenerUsuariosPendientes() {
-    const { data, error } = await supabaseClient
-        .from('usuarios')
-        .select('*')
-        .eq('activo', false);
+        .order('created_at', { ascending: false });
     if (error) { console.error(error); return []; }
     return data || [];
 }
@@ -508,56 +451,45 @@ async function handleRegistro(e) {
     const dni = document.getElementById('regDni').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const telefono = document.getElementById('regTelefono').value.trim();
-    const dirigente = document.getElementById('regDirigente').value === 'si';
-    const delegado = document.getElementById('regDelegado').value === 'si';
     const empresa = document.getElementById('regEmpresa').value;
     const actividad = document.getElementById('regActividad').value;
-    const convenio = document.getElementById('regConvenio').value;
-    const usuario = document.getElementById('regUsuario').value.trim();
     const password = document.getElementById('regPassword').value;
-    const pregunta = document.getElementById('regPregunta').value;
-    const respuesta = document.getElementById('regRespuesta').value.trim();
 
-    if (!nombre || !dni || !email || !usuario || !password || !pregunta || !respuesta || !empresa || !actividad || !convenio) {
+    if (!nombre || !dni || !email || !password || !empresa || !actividad) {
         alert('Todos los campos marcados con * son obligatorios.');
         return;
     }
     if (password.length < 6) { alert('La contraseña debe tener al menos 6 caracteres.'); return; }
 
     try {
+        // Verificar si ya existe el email
         const { data: existentes } = await supabaseClient
             .from('usuarios')
             .select('id')
-            .or(`username.eq.${usuario},email.eq.${email}`);
+            .eq('email', email);
         
         if (existentes && existentes.length > 0) {
-            alert('❌ Ese usuario o email ya está registrado.');
+            alert('❌ Ese email ya está registrado.');
             return;
         }
 
-        const { data: activos } = await supabaseClient
+        // Verificar si hay algún usuario (para saber si es el primero)
+        const { data: todos } = await supabaseClient
             .from('usuarios')
-            .select('id')
-            .eq('activo', true);
+            .select('id');
         
-        const esPrimerUsuario = !activos || activos.length === 0;
+        const esPrimerUsuario = !todos || todos.length === 0;
 
         const nuevoUsuario = {
-            username: usuario,
             email: email,
             password: password,
             nombre: nombre,
             dni: dni,
             telefono: telefono,
-            dirigente: dirigente,
-            delegado: delegado,
             empresa: empresa,
             actividad: actividad,
-            convenio: convenio,
-            role: esPrimerUsuario ? 'admin' : 'afiliado',
-            activo: esPrimerUsuario,
-            pregunta_seguridad: pregunta,
-            respuesta_seguridad: respuesta
+            rol: esPrimerUsuario ? 'admin' : 'afiliado',
+            aprobado: esPrimerUsuario // el primero se aprueba automáticamente
         };
 
         await guardarUsuario(nuevoUsuario);
@@ -583,16 +515,16 @@ async function handleRegistro(e) {
 // ============================================
 async function handleLogin(e) {
     e.preventDefault();
-    const username = document.getElementById('loginUsername').value.trim();
+    const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
 
     try {
         const { data, error } = await supabaseClient
             .from('usuarios')
             .select('*')
-            .or(`username.eq.${username},email.eq.${username}`)
+            .eq('email', email)
             .eq('password', password)
-            .eq('activo', true);
+            .eq('aprobado', true);
 
         if (error) throw error;
 
@@ -643,14 +575,14 @@ function mostrarApp() {
     if (!currentUser) return;
 
     document.getElementById('userName').textContent = currentUser.nombre;
-    const roleText = currentUser.role === 'admin' ? 'Administrador' :
-                     currentUser.role === 'dirigente' ? 'Dirigente' : 'Delegado';
+    const roleText = currentUser.rol === 'admin' ? 'Administrador' :
+                     currentUser.rol === 'dirigente' ? 'Dirigente' : 'Delegado';
     document.getElementById('userRole').textContent = roleText;
     document.getElementById('userAvatar').textContent = currentUser.nombre.split(' ').map(n => n[0]).join('').toUpperCase();
     
     const adminLink = document.getElementById('adminPanelLink');
     if (adminLink) {
-        adminLink.style.display = currentUser.role === 'admin' ? 'block' : 'none';
+        adminLink.style.display = currentUser.rol === 'admin' ? 'block' : 'none';
     }
     
     navigateTo('inicio');
@@ -665,7 +597,7 @@ async function resetearUsuarios() {
         const { error } = await supabaseClient
             .from('usuarios')
             .delete()
-            .neq('id', 0);
+            .neq('id', '00000000-0000-0000-0000-000000000000');
         if (error) throw error;
         localStorage.removeItem('aoma_session');
         alert('✅ Usuarios eliminados. La página se recargará.');
@@ -676,30 +608,24 @@ async function resetearUsuarios() {
 }
 
 async function forzarAdmin() {
-    if (!confirm('⚠️ ¿Crear administrador Cristian Aguilar y eliminar otros usuarios?')) return;
+    if (!confirm('⚠️ ¿Crear administrador y eliminar otros usuarios?')) return;
     try {
-        await supabaseClient.from('usuarios').delete().neq('id', 0);
+        await supabaseClient.from('usuarios').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         
         const admin = {
-            username: 'cristian',
             email: 'aomasjhys@gmail.com',
             password: 'admin123',
             nombre: 'Cristian Aguilar',
             dni: '12345678',
             telefono: '264-1234567',
-            dirigente: false,
-            delegado: false,
             empresa: 'veladero',
             actividad: 'mineria-extractiva',
-            convenio: '36/89',
-            role: 'admin',
-            activo: true,
-            pregunta_seguridad: '¿Cuál es tu color favorito?',
-            respuesta_seguridad: 'azul'
+            rol: 'admin',
+            aprobado: true
         };
         await guardarUsuario(admin);
         localStorage.removeItem('aoma_session');
-        alert('✅ Administrador creado. Iniciá sesión con usuario "cristian" y contraseña "admin123".');
+        alert('✅ Administrador creado. Iniciá sesión con email "aomasjhys@gmail.com" y contraseña "admin123".');
         location.reload();
     } catch (e) {
         alert('❌ Error: ' + e.message);
@@ -710,7 +636,7 @@ async function forzarAdmin() {
 // PANEL DE USUARIOS
 // ============================================
 async function mostrarPanelUsuarios() {
-    if (currentUser.role !== 'admin') {
+    if (currentUser.rol !== 'admin') {
         alert('Solo el administrador puede acceder a este panel.');
         return;
     }
@@ -724,44 +650,26 @@ function cerrarPanelUsuarios() {
 
 async function actualizarListasUsuarios() {
     try {
-        const pendientes = await obtenerUsuariosPendientes();
-        const activos = await obtenerUsuariosActivos();
+        const usuarios = await obtenerUsuarios();
         
-        const contPend = document.getElementById('listaPendientes');
-        if (contPend) {
-            if (pendientes.length === 0) {
-                contPend.innerHTML = '<p style="color:var(--text-muted);">No hay usuarios pendientes.</p>';
+        const cont = document.getElementById('listaUsuarios');
+        if (cont) {
+            if (usuarios.length === 0) {
+                cont.innerHTML = '<p style="color:var(--text-muted);">No hay usuarios registrados.</p>';
             } else {
-                contPend.innerHTML = pendientes.map(u => `
+                cont.innerHTML = usuarios.map(u => `
                     <div class="usuario-item">
                         <div class="info">
                             <span class="nombre">${u.nombre}</span>
-                            <span class="email">${u.email} (${u.username})</span>
-                            <span style="font-size:0.8rem;color:var(--text-muted);">DNI: ${u.dni || 'N/A'} - ${u.empresa || ''}</span>
-                        </div>
-                        <div class="acciones">
-                            <button class="btn-aprobar" onclick="aprobarUsuario(${u.id})"><i class="fas fa-check"></i> Aprobar</button>
-                            <button class="btn-rechazar" onclick="rechazarUsuario(${u.id})"><i class="fas fa-times"></i> Rechazar</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-        
-        const contAct = document.getElementById('listaActivos');
-        if (contAct) {
-            if (activos.length === 0) {
-                contAct.innerHTML = '<p style="color:var(--text-muted);">No hay usuarios activos.</p>';
-            } else {
-                contAct.innerHTML = activos.filter(u => u.role !== 'admin').map(u => `
-                    <div class="usuario-item">
-                        <div class="info">
-                            <span class="nombre">${u.nombre} (${u.role})</span>
                             <span class="email">${u.email}</span>
-                            <span style="font-size:0.8rem;color:var(--text-muted);">${u.empresa || ''}</span>
+                            <span style="font-size:0.8rem;color:var(--text-muted);">DNI: ${u.dni || 'N/A'} - ${u.empresa || ''} - ${u.rol || 'afiliado'}</span>
+                            <span style="font-size:0.7rem;color:${u.aprobado ? '#10b981' : '#f59e0b'};">
+                                ${u.aprobado ? '✅ Aprobado' : '⏳ Pendiente'}
+                            </span>
                         </div>
                         <div class="acciones">
-                            <button class="btn-eliminar" onclick="eliminarUsuarioDB(${u.id})"><i class="fas fa-trash"></i> Eliminar</button>
+                            ${!u.aprobado ? `<button class="btn-aprobar" onclick="aprobarUsuario('${u.id}')"><i class="fas fa-check"></i> Aprobar</button>` : ''}
+                            ${u.rol !== 'admin' ? `<button class="btn-eliminar" onclick="eliminarUsuarioDB('${u.id}')"><i class="fas fa-trash"></i> Eliminar</button>` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -774,20 +682,9 @@ async function actualizarListasUsuarios() {
 
 async function aprobarUsuario(id) {
     try {
-        await actualizarUsuario(id, { activo: true, role: 'delegado' });
+        await actualizarUsuario(id, { aprobado: true, rol: 'delegado' });
         await actualizarListasUsuarios();
         alert('✅ Usuario aprobado.');
-    } catch (e) {
-        alert('❌ Error: ' + e.message);
-    }
-}
-
-async function rechazarUsuario(id) {
-    if (!confirm('¿Rechazar este usuario?')) return;
-    try {
-        await eliminarUsuarioDB(id);
-        await actualizarListasUsuarios();
-        alert('✅ Usuario rechazado.');
     } catch (e) {
         alert('❌ Error: ' + e.message);
     }
@@ -798,40 +695,29 @@ async function rechazarUsuario(id) {
 // ============================================
 async function handleRecuperacion(e) {
     e.preventDefault();
-    const identifier = document.getElementById('recUser').value.trim();
+    const email = document.getElementById('recEmail').value.trim();
     const btn = document.getElementById('recBtn');
     
-    if (!identifier) { alert('Ingresá tu usuario o email.'); return; }
+    if (!email) { alert('Ingresá tu email.'); return; }
 
     try {
         const { data } = await supabaseClient
             .from('usuarios')
             .select('*')
-            .or(`username.eq.${identifier},email.eq.${identifier}`)
+            .eq('email', email)
             .single();
 
         if (!data) {
-            alert('No se encontró ningún usuario con esos datos.');
+            alert('No se encontró ningún usuario con ese email.');
             return;
         }
 
-        const preguntaContainer = document.getElementById('recPreguntaContainer');
         const nuevaPassContainer = document.getElementById('recNuevaPassContainer');
 
         if (btn.textContent === 'Buscar usuario') {
-            document.getElementById('recPreguntaLabel').textContent = data.pregunta_seguridad;
-            preguntaContainer.style.display = 'block';
-            btn.textContent = 'Verificar respuesta';
-            btn.dataset.userId = data.id;
-        } else if (btn.textContent === 'Verificar respuesta') {
-            const respuesta = document.getElementById('recRespuesta').value.trim();
-            if (respuesta.toLowerCase() !== data.respuesta_seguridad.toLowerCase()) {
-                alert('Respuesta incorrecta.');
-                return;
-            }
             nuevaPassContainer.style.display = 'block';
             btn.textContent = 'Cambiar contraseña';
-            document.getElementById('recRespuesta').setAttribute('readonly', true);
+            btn.dataset.userId = data.id;
         } else if (btn.textContent === 'Cambiar contraseña') {
             const nuevaPass = document.getElementById('recNuevaPass').value;
             if (!nuevaPass || nuevaPass.length < 6) {
@@ -1090,7 +976,7 @@ async function initSession() {
                 .from('usuarios')
                 .select('*')
                 .eq('id', user.id)
-                .eq('activo', true)
+                .eq('aprobado', true)
                 .single();
             if (data) {
                 currentUser = data;
@@ -1145,11 +1031,9 @@ function cerrarModalRecuperacion() {
 }
 function mostrarRecuperacion() {
     document.getElementById('modalRecuperacion').style.display = 'flex';
-    document.getElementById('recPreguntaContainer').style.display = 'none';
     document.getElementById('recNuevaPassContainer').style.display = 'none';
     document.getElementById('recBtn').textContent = 'Buscar usuario';
-    document.getElementById('recUser').value = '';
-    document.getElementById('recRespuesta').value = '';
+    document.getElementById('recEmail').value = '';
     document.getElementById('recNuevaPass').value = '';
 }
 function toggleTheme() {
