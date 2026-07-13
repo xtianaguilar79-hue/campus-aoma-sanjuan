@@ -185,14 +185,78 @@ function cerrarModalBienvenida() {
     const modal = document.getElementById('modalBienvenida');
     if (modal) modal.style.display = 'none';
 }
+
 function mostrarRegistro() {
     const modal = document.getElementById('modalRegistro');
     if (modal) modal.style.display = 'flex';
+    // Asignar evento al formulario de registro cada vez que se abre el modal
+    const form = document.getElementById('formRegistro');
+    if (form) {
+        // Eliminar eventos previos para evitar duplicados
+        form.removeEventListener('submit', handleRegistro);
+        form.addEventListener('submit', handleRegistro);
+    }
 }
 function cerrarModalRegistro() {
     const modal = document.getElementById('modalRegistro');
     if (modal) modal.style.display = 'none';
 }
+
+function handleRegistro(e) {
+    e.preventDefault();
+    console.log('📝 Evento de registro disparado');
+    const nombre = document.getElementById('regNombre').value.trim();
+    const usuario = document.getElementById('regUsuario').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const pregunta = document.getElementById('regPregunta').value;
+    const respuesta = document.getElementById('regRespuesta').value.trim();
+    
+    if (!nombre || !usuario || !email || !password || !pregunta || !respuesta) {
+        alert('Completá todos los campos.');
+        return;
+    }
+    if (password.length < 6) {
+        alert('La contraseña debe tener al menos 6 caracteres.');
+        return;
+    }
+    const activos = obtenerUsuariosActivos();
+    const pendientes = obtenerUsuariosPendientes();
+    const existe = activos.some(u => u.username === usuario || u.email === email) ||
+                   pendientes.some(u => u.username === usuario || u.email === email);
+    if (existe) {
+        alert('Ese usuario o email ya está registrado.');
+        return;
+    }
+    
+    const esPrimerUsuario = activos.length === 0 && pendientes.length === 0;
+    const role = esPrimerUsuario ? 'admin' : 'delegado';
+    const active = esPrimerUsuario ? true : false;
+    
+    const nuevoUsuario = {
+        id: Date.now(),
+        username: usuario,
+        email: email,
+        password: password,
+        name: nombre,
+        role: role,
+        active: active,
+        preguntaSeguridad: pregunta,
+        respuestaSeguridad: respuesta
+    };
+    
+    if (esPrimerUsuario) {
+        activos.push(nuevoUsuario);
+        guardarUsuariosActivos(activos);
+        alert('¡Usuario administrador creado exitosamente! Ahora podés iniciar sesión.');
+    } else {
+        pendientes.push(nuevoUsuario);
+        guardarUsuariosPendientes(pendientes);
+        alert('Tu registro ha sido enviado. Esperá la aprobación del administrador.');
+    }
+    cerrarModalRegistro();
+}
+
 function mostrarRecuperacion() {
     const modal = document.getElementById('modalRecuperacion');
     if (modal) {
@@ -235,53 +299,11 @@ function guardarUsuariosActivos(activos) {
     localStorage.setItem('aoma_usuarios_activos', JSON.stringify(paraGuardar));
 }
 
+// ============================================
+// MANEJO DE RECUPERACIÓN
+// ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    const formReg = document.getElementById('formRegistro');
-    if (formReg) {
-        formReg.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const nombre = document.getElementById('regNombre').value.trim();
-            const usuario = document.getElementById('regUsuario').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const pregunta = document.getElementById('regPregunta').value;
-            const respuesta = document.getElementById('regRespuesta').value.trim();
-            if (!nombre || !usuario || !email || !password || !pregunta || !respuesta) { alert('Completá todos los campos.'); return; }
-            if (password.length < 6) { alert('La contraseña debe tener al menos 6 caracteres.'); return; }
-            const activos = obtenerUsuariosActivos();
-            const pendientes = obtenerUsuariosPendientes();
-            const existe = activos.some(u => u.username === usuario || u.email === email) ||
-                           pendientes.some(u => u.username === usuario || u.email === email);
-            if (existe) { alert('Ese usuario o email ya está registrado.'); return; }
-            
-            const esPrimerUsuario = activos.length === 0 && pendientes.length === 0;
-            const role = esPrimerUsuario ? 'admin' : 'delegado';
-            const active = esPrimerUsuario ? true : false;
-            
-            const nuevoUsuario = {
-                id: Date.now(),
-                username: usuario,
-                email: email,
-                password: password,
-                name: nombre,
-                role: role,
-                active: active,
-                preguntaSeguridad: pregunta,
-                respuestaSeguridad: respuesta
-            };
-            
-            if (esPrimerUsuario) {
-                activos.push(nuevoUsuario);
-                guardarUsuariosActivos(activos);
-                alert('¡Usuario administrador creado exitosamente! Ahora podés iniciar sesión.');
-            } else {
-                pendientes.push(nuevoUsuario);
-                guardarUsuariosPendientes(pendientes);
-                alert('Tu registro ha sido enviado. Esperá la aprobación del administrador.');
-            }
-            cerrarModalRegistro();
-        });
-    }
+    // El evento de registro se asigna en mostrarRegistro()
     const formRec = document.getElementById('formRecuperacion');
     if (formRec) {
         formRec.addEventListener('submit', (e) => {
@@ -418,6 +440,9 @@ function eliminarUsuario(id) {
     } catch (e) { console.error('Error al eliminar usuario:', e); }
 }
 
+// ============================================
+// NAVEGACIÓN (sin cambios)
+// ============================================
 function navigateTo(page) {
     currentPage = page;
     document.querySelectorAll('.nav-pill').forEach(pill => {
@@ -617,7 +642,7 @@ function escapeRegExp(string) {
 }
 
 // ============================================
-// RENDERIZADOS (todas las funciones completas)
+// RENDERIZADOS COMPLETOS (igual que antes)
 // ============================================
 function renderDashboard(container) {
     try {
