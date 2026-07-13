@@ -620,7 +620,21 @@ const DATA = {
         'default': 'No encontré información específica sobre eso. Te recomiendo revisar las secciones del menú o contactar a la Seccional al (0264) 422-0191.'
     }
 };
+// ==========================================
+// 12. SISTEMA DE USUARIOS (extendido)
+// ==========================================
+// Usuarios pendientes de aprobación (se guardan en localStorage)
+// Esta estructura se usa como base, pero los datos reales se leen de localStorage
+usuariosPendientes: [],
 
+// Preguntas de seguridad predefinidas
+preguntasSeguridad: [
+    '¿Cuál es el nombre de tu madre?',
+    '¿Cuál es tu ciudad natal?',
+    '¿Cuál es el nombre de tu primera mascota?',
+    '¿Cuál es tu color favorito?',
+    '¿Cuál es el apellido de soltera de tu madre?'
+]
 // ============================================
 // FUNCIONES AUXILIARES
 // ============================================

@@ -6,6 +6,7 @@ let currentUser = null;
 let currentPage = 'inicio';
 let searchHighlights = [];
 let currentHighlightIndex = -1;
+let modalBienvenidaMostrado = false; // para mostrar una sola vez por sesión
 
 // ============================================
 // INICIALIZACIÓN
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // LOGIN / LOGOUT
 // ============================================
 function showLogin() {
+    // Mostrar formulario de login con botones para registro y recuperación
     const html = `
         <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);">
             <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 20px 25px rgba(0,0,0,0.15); width: 100%; max-width: 420px;">
@@ -51,18 +53,23 @@ function showLogin() {
                 <form id="loginForm">
                     <div style="margin-bottom: 1.25rem;">
                         <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #1a1a1a;">
-                            <i class="fas fa-user" style="color: #f47b20;"></i> Usuario
+                            <i class="fas fa-user" style="color: #f47b20;"></i> Usuario o Email
                         </label>
-                        <input type="text" id="username" style="width: 100%; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;" placeholder="admin o delegado" required>
+                        <input type="text" id="username" style="width: 100%; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;" placeholder="admin, delegado o tu usuario" required>
                     </div>
                     <div style="margin-bottom: 1.5rem;">
                         <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #1a1a1a;">
                             <i class="fas fa-lock" style="color: #f47b20;"></i> Contraseña
                         </label>
-                        <input type="password" id="password" style="width: 100%; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;" placeholder="admin o 1234" required>
+                        <input type="password" id="password" style="width: 100%; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;" placeholder="••••••••" required>
                     </div>
                     <button type="submit" style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, #f47b20, #f69b4c); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">Ingresar al Campus</button>
                 </form>
+                <div style="text-align: center; padding-top: 1rem; font-size: 0.875rem; color: #6b7280;">
+                    <a href="#" onclick="event.preventDefault(); mostrarRegistro();" style="color: #f47b20; text-decoration: none; font-weight: 600;">¿No tenés cuenta? Registrate</a>
+                    <span style="margin: 0 0.5rem;">|</span>
+                    <a href="#" onclick="event.preventDefault(); mostrarRecuperacion();" style="color: #6b7280; text-decoration: none;">¿Olvidaste tu contraseña?</a>
+                </div>
                 <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; font-size: 0.75rem; color: #6b7280; line-height: 1.8;">
                     <p><strong>Demo:</strong> usuario: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">admin</code> | pass: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">admin</code></p>
                     <p><strong>Delegado:</strong> usuario: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">delegado</code> | pass: <code style="background: #f9fafb; padding: 0.125rem 0.375rem; border-radius: 4px; color: #f47b20;">1234</code></p>
@@ -74,17 +81,25 @@ function showLogin() {
     
     document.getElementById('loginForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        const username = document.getElementById('username').value.trim().toLowerCase();
+        const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
         
-        const user = DATA.usuarios.find(u => u.username === username && u.password === password);
+        // Buscar en usuarios activos (DATA.usuarios + los aprobados en localStorage)
+        const usuariosActivos = obtenerUsuariosActivos();
+        const user = usuariosActivos.find(u => 
+            (u.username === username || u.email === username) && 
+            u.password === password && 
+            u.active === true
+        );
         
-        if (user && user.active) {
+        if (user) {
             currentUser = user;
             localStorage.setItem('aoma_session', JSON.stringify(user));
+            // Resetear el flag de bienvenida para que se muestre al loguear
+            modalBienvenidaMostrado = false;
             location.reload();
         } else {
-            alert('Usuario o contraseña incorrectos');
+            alert('Usuario o contraseña incorrectos, o tu cuenta no ha sido aprobada aún.');
         }
     });
 }
@@ -96,12 +111,24 @@ function showApp() {
     document.getElementById('userRole').textContent = roleText;
     document.getElementById('userAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
     
+    // Mostrar enlace de panel de admin si es admin
+    if (currentUser.role === 'admin') {
+        document.getElementById('adminPanelLink').style.display = 'block';
+    }
+    
     navigateTo('inicio');
+    
+    // Mostrar modal de bienvenida si no se ha mostrado en esta sesión
+    if (!modalBienvenidaMostrado) {
+        mostrarModalBienvenida();
+        modalBienvenidaMostrado = true;
+    }
 }
 
 function logout() {
     if (confirm('¿Estás seguro que deseas cerrar sesión?')) {
         localStorage.removeItem('aoma_session');
+        modalBienvenidaMostrado = false;
         location.reload();
     }
 }
@@ -115,6 +142,314 @@ function toggleTheme() {
     if (icon) {
         icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
     }
+}
+
+// ============================================
+// MODAL DE BIENVENIDA
+// ============================================
+function mostrarModalBienvenida() {
+    const modal = document.getElementById('modalBienvenida');
+    if (modal) modal.style.display = 'flex';
+}
+
+function cerrarModalBienvenida() {
+    const modal = document.getElementById('modalBienvenida');
+    if (modal) modal.style.display = 'none';
+}
+
+// ============================================
+// REGISTRO Y RECUPERACIÓN (MODALES)
+// ============================================
+function mostrarRegistro() {
+    document.getElementById('modalRegistro').style.display = 'flex';
+}
+
+function cerrarModalRegistro() {
+    document.getElementById('modalRegistro').style.display = 'none';
+}
+
+function mostrarRecuperacion() {
+    document.getElementById('modalRecuperacion').style.display = 'flex';
+    // Reiniciar el flujo
+    document.getElementById('recPreguntaContainer').style.display = 'none';
+    document.getElementById('recNuevaPassContainer').style.display = 'none';
+    document.getElementById('recBtn').textContent = 'Buscar usuario';
+    document.getElementById('recUser').value = '';
+    document.getElementById('recRespuesta').value = '';
+    document.getElementById('recNuevaPass').value = '';
+}
+
+function cerrarModalRecuperacion() {
+    document.getElementById('modalRecuperacion').style.display = 'none';
+}
+
+// ============================================
+// SISTEMA DE USUARIOS (localStorage)
+// ============================================
+function obtenerUsuariosActivos() {
+    // Combinar usuarios de DATA.usuarios (precargados) con los aprobados de localStorage
+    const base = DATA.usuarios ? [...DATA.usuarios] : [];
+    const almacenados = JSON.parse(localStorage.getItem('aoma_usuarios_activos') || '[]');
+    // Unir evitando duplicados por id
+    const todos = [...base];
+    almacenados.forEach(u => {
+        if (!todos.some(t => t.id === u.id)) {
+            todos.push(u);
+        }
+    });
+    return todos;
+}
+
+function obtenerUsuariosPendientes() {
+    return JSON.parse(localStorage.getItem('aoma_usuarios_pendientes') || '[]');
+}
+
+function guardarUsuariosPendientes(pendientes) {
+    localStorage.setItem('aoma_usuarios_pendientes', JSON.stringify(pendientes));
+}
+
+function guardarUsuariosActivos(activos) {
+    // Solo guardar los que no están en DATA.usuarios (los precargados)
+    const baseIds = DATA.usuarios ? DATA.usuarios.map(u => u.id) : [];
+    const paraGuardar = activos.filter(u => !baseIds.includes(u.id));
+    localStorage.setItem('aoma_usuarios_activos', JSON.stringify(paraGuardar));
+}
+
+// ============================================
+// REGISTRO DE NUEVO USUARIO
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Formulario de registro
+    const formReg = document.getElementById('formRegistro');
+    if (formReg) {
+        formReg.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById('regNombre').value.trim();
+            const usuario = document.getElementById('regUsuario').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const pregunta = document.getElementById('regPregunta').value;
+            const respuesta = document.getElementById('regRespuesta').value.trim();
+            
+            if (!nombre || !usuario || !email || !password || !pregunta || !respuesta) {
+                alert('Completá todos los campos.');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('La contraseña debe tener al menos 6 caracteres.');
+                return;
+            }
+            
+            // Verificar si el usuario o email ya existe en activos o pendientes
+            const activos = obtenerUsuariosActivos();
+            const pendientes = obtenerUsuariosPendientes();
+            const existe = activos.some(u => u.username === usuario || u.email === email) ||
+                           pendientes.some(u => u.username === usuario || u.email === email);
+            if (existe) {
+                alert('Ese usuario o email ya está registrado.');
+                return;
+            }
+            
+            // Crear usuario pendiente
+            const nuevoUsuario = {
+                id: Date.now(),
+                username: usuario,
+                email: email,
+                password: password,
+                name: nombre,
+                role: 'delegado',
+                active: false, // pendiente de aprobación
+                preguntaSeguridad: pregunta,
+                respuestaSeguridad: respuesta
+            };
+            
+            pendientes.push(nuevoUsuario);
+            guardarUsuariosPendientes(pendientes);
+            
+            alert('Tu registro ha sido enviado. Esperá la aprobación del administrador.');
+            cerrarModalRegistro();
+        });
+    }
+    
+    // Formulario de recuperación
+    const formRec = document.getElementById('formRecuperacion');
+    if (formRec) {
+        formRec.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const identifier = document.getElementById('recUser').value.trim();
+            const btn = document.getElementById('recBtn');
+            
+            if (!identifier) {
+                alert('Ingresá tu usuario o email.');
+                return;
+            }
+            
+            // Buscar en activos
+            const activos = obtenerUsuariosActivos();
+            const usuario = activos.find(u => u.username === identifier || u.email === identifier);
+            
+            if (!usuario) {
+                alert('No se encontró ningún usuario con esos datos.');
+                return;
+            }
+            
+            // Si no tiene pregunta de seguridad (es un usuario precargado), no puede recuperar
+            if (!usuario.preguntaSeguridad) {
+                alert('Este usuario no tiene configurada una pregunta de seguridad. Contactá al administrador.');
+                return;
+            }
+            
+            const preguntaContainer = document.getElementById('recPreguntaContainer');
+            const nuevaPassContainer = document.getElementById('recNuevaPassContainer');
+            
+            if (btn.textContent === 'Buscar usuario') {
+                // Mostrar pregunta
+                document.getElementById('recPreguntaLabel').textContent = usuario.preguntaSeguridad;
+                preguntaContainer.style.display = 'block';
+                btn.textContent = 'Verificar respuesta';
+                // Guardar usuario temporalmente en atributo
+                btn.dataset.userId = usuario.id;
+            } else {
+                // Verificar respuesta
+                const respuesta = document.getElementById('recRespuesta').value.trim();
+                if (respuesta.toLowerCase() !== usuario.respuestaSeguridad.toLowerCase()) {
+                    alert('Respuesta incorrecta.');
+                    return;
+                }
+                // Mostrar campo para nueva contraseña
+                nuevaPassContainer.style.display = 'block';
+                btn.textContent = 'Cambiar contraseña';
+                // Cambiar evento para resetear
+                btn.dataset.step = 'reset';
+                document.getElementById('recRespuesta').setAttribute('readonly', true);
+            }
+            
+            // Si estamos en el paso final
+            if (btn.dataset.step === 'reset') {
+                const nuevaPass = document.getElementById('recNuevaPass').value;
+                if (!nuevaPass || nuevaPass.length < 6) {
+                    alert('La nueva contraseña debe tener al menos 6 caracteres.');
+                    return;
+                }
+                // Actualizar contraseña
+                const userId = parseInt(btn.dataset.userId);
+                const userIndex = activos.findIndex(u => u.id === userId);
+                if (userIndex === -1) {
+                    alert('Usuario no encontrado.');
+                    return;
+                }
+                activos[userIndex].password = nuevaPass;
+                guardarUsuariosActivos(activos);
+                alert('Contraseña actualizada correctamente. Iniciá sesión con tu nueva contraseña.');
+                cerrarModalRecuperacion();
+            }
+        });
+    }
+});
+
+// ============================================
+// PANEL DE ADMINISTRACIÓN DE USUARIOS
+// ============================================
+function mostrarPanelUsuarios() {
+    if (currentUser.role !== 'admin') {
+        alert('Solo el administrador puede acceder a este panel.');
+        return;
+    }
+    const modal = document.getElementById('modalPanelUsuarios');
+    modal.style.display = 'flex';
+    actualizarListasUsuarios();
+}
+
+function cerrarPanelUsuarios() {
+    document.getElementById('modalPanelUsuarios').style.display = 'none';
+}
+
+function actualizarListasUsuarios() {
+    const pendientes = obtenerUsuariosPendientes();
+    const activos = obtenerUsuariosActivos();
+    
+    // Lista pendientes
+    const contPend = document.getElementById('listaPendientes');
+    if (pendientes.length === 0) {
+        contPend.innerHTML = '<p style="color: var(--text-muted);">No hay usuarios pendientes de aprobación.</p>';
+    } else {
+        contPend.innerHTML = pendientes.map(u => `
+            <div class="usuario-item">
+                <div class="info">
+                    <span class="nombre">${u.name}</span>
+                    <span class="email">${u.email} (${u.username})</span>
+                </div>
+                <div class="acciones">
+                    <button class="btn-aprobar" onclick="aprobarUsuario(${u.id})"><i class="fas fa-check"></i> Aprobar</button>
+                    <button class="btn-rechazar" onclick="rechazarUsuario(${u.id})"><i class="fas fa-times"></i> Rechazar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Lista activos (solo los que no son admin precargados)
+    const activosNoBase = activos.filter(u => u.role !== 'admin' || u.id > 1000);
+    const contAct = document.getElementById('listaActivos');
+    if (activosNoBase.length === 0) {
+        contAct.innerHTML = '<p style="color: var(--text-muted);">No hay usuarios adicionales activos.</p>';
+    } else {
+        contAct.innerHTML = activosNoBase.map(u => `
+            <div class="usuario-item">
+                <div class="info">
+                    <span class="nombre">${u.name} (${u.role})</span>
+                    <span class="email">${u.email}</span>
+                </div>
+                <div class="acciones">
+                    <button class="btn-eliminar" onclick="eliminarUsuario(${u.id})"><i class="fas fa-trash"></i> Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function aprobarUsuario(id) {
+    const pendientes = obtenerUsuariosPendientes();
+    const index = pendientes.findIndex(u => u.id === id);
+    if (index === -1) return;
+    
+    const usuario = pendientes[index];
+    usuario.active = true;
+    usuario.role = usuario.role || 'delegado';
+    
+    // Quitar de pendientes y agregar a activos
+    pendientes.splice(index, 1);
+    guardarUsuariosPendientes(pendientes);
+    
+    const activos = obtenerUsuariosActivos();
+    // Verificar que no exista ya (por si acaso)
+    if (!activos.some(u => u.id === usuario.id)) {
+        activos.push(usuario);
+        guardarUsuariosActivos(activos);
+    }
+    
+    actualizarListasUsuarios();
+    alert(`Usuario ${usuario.name} aprobado correctamente.`);
+}
+
+function rechazarUsuario(id) {
+    if (!confirm('¿Estás seguro de rechazar este usuario?')) return;
+    const pendientes = obtenerUsuariosPendientes();
+    const index = pendientes.findIndex(u => u.id === id);
+    if (index === -1) return;
+    pendientes.splice(index, 1);
+    guardarUsuariosPendientes(pendientes);
+    actualizarListasUsuarios();
+}
+
+function eliminarUsuario(id) {
+    if (!confirm('¿Estás seguro de eliminar este usuario?')) return;
+    const activos = obtenerUsuariosActivos();
+    const index = activos.findIndex(u => u.id === id);
+    if (index === -1) return;
+    activos.splice(index, 1);
+    guardarUsuariosActivos(activos);
+    actualizarListasUsuarios();
 }
 
 // ============================================
@@ -181,134 +516,12 @@ function renderPage(page, container) {
         case 'legislacion':
             renderLegislacion(container);
             break;
-        case 'faq':
-            renderFAQ(container);
-            break;
         case 'gremio':
             renderOrganigrama(container);
             break;
         default:
             container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Página no encontrada</h3></div>';
     }
-}
-
-// ============================================
-// RENDERIZADO - ORGANIGRAMA (El Gremio) CON FUNCIONES
-// ============================================
-function renderOrganigrama(container) {
-    const auth = DATA.autoridades;
-    if (!auth) {
-        container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><h3>No hay datos de autoridades</h3></div>';
-        return;
-    }
-    
-    // Función para renderizar lista de nombres
-    const renderList = (arr) => arr.map((n, i) => `<li>${i+1}. ${n}</li>`).join('');
-    
-    // Función para renderizar comisión directiva con funciones desplegables (CORREGIDA)
-    const renderComision = (comision, funciones) => {
-        return comision.map(m => {
-            const funcDesc = funciones[m.cargo] || 'Sin descripción de funciones.';
-            return `
-                <li>
-                    <strong>${m.cargo}:</strong> ${m.nombre}
-                    <button class="btn-funcion" onclick="this.nextElementSibling.classList.toggle('visible')">
-                        <i class="fas fa-info-circle"></i> Ver función
-                    </button>
-                    <div class="funcion-detalle">
-                        ${funcDesc}
-                    </div>
-                </li>
-            `;
-        }).join('');
-    };
-    
-    container.innerHTML = `
-        <div class="page-header">
-            <h1>📋 Estructura Orgánica de AOMA</h1>
-            <p>Autoridades nacionales y de la Seccional San Juan</p>
-        </div>
-        
-        <!-- ORGANIGRAMA NACIONAL -->
-        <div class="section organigrama-section">
-            <h2 class="section-title" style="margin-bottom: 1.5rem;">🇦🇷 Consejo Directivo Nacional</h2>
-            <div class="organigrama-card">
-                <div class="organigrama-header" style="background: var(--gradient-primary);">
-                    <h3>${auth.nacional.nombre}</h3>
-                    <p>${auth.nacional.agrupacion} - ${auth.nacional.periodo}</p>
-                </div>
-                <div class="organigrama-body">
-                    <div class="organigrama-grid">
-                        <div class="organigrama-col">
-                            <h4>Comisión Directiva</h4>
-                            <ul class="organigrama-lista">
-                                ${renderComision(auth.nacional.comisionDirectiva, auth.nacional.funciones)}
-                            </ul>
-                        </div>
-                        <div class="organigrama-col">
-                            <h4>Vocales Titulares</h4>
-                            <ul class="organigrama-lista">${renderList(auth.nacional.vocalesTitulares)}</ul>
-                        </div>
-                        <div class="organigrama-col">
-                            <h4>Vocales Suplentes</h4>
-                            <ul class="organigrama-lista">${renderList(auth.nacional.vocalesSuplentes)}</ul>
-                        </div>
-                        <div class="organigrama-col">
-                            <h4>Comisión Revisora de Cuentas</h4>
-                            <p><strong>Titulares:</strong></p>
-                            <ul class="organigrama-lista">${renderList(auth.nacional.comisionRevisora.titulares)}</ul>
-                            <p><strong>Suplentes:</strong></p>
-                            <ul class="organigrama-lista">${renderList(auth.nacional.comisionRevisora.suplentes)}</ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- ORGANIGRAMA PROVINCIAL -->
-        <div class="section organigrama-section">
-            <h2 class="section-title" style="margin-bottom: 1.5rem;">🏔️ Seccional San Juan</h2>
-            <div class="organigrama-card">
-                <div class="organigrama-header" style="background: var(--gradient-accent);">
-                    <h3>${auth.provincial.nombre}</h3>
-                    <p>${auth.provincial.agrupacion} - ${auth.provincial.periodo}</p>
-                </div>
-                <div class="organigrama-body">
-                    <div class="organigrama-grid">
-                        <div class="organigrama-col">
-                            <h4>Comisión Directiva</h4>
-                            <ul class="organigrama-lista">
-                                ${renderComision(auth.provincial.comisionDirectiva, auth.provincial.funciones)}
-                            </ul>
-                        </div>
-                        <div class="organigrama-col">
-                            <h4>Vocales Titulares</h4>
-                            <ul class="organigrama-lista">${renderList(auth.provincial.vocalesTitulares)}</ul>
-                        </div>
-                        <div class="organigrama-col">
-                            <h4>Vocales Suplentes</h4>
-                            <ul class="organigrama-lista">${renderList(auth.provincial.vocalesSuplentes)}</ul>
-                        </div>
-                        <div class="organigrama-col">
-                            <h4>Delegados Congresales Titulares</h4>
-                            <ul class="organigrama-lista">${renderList(auth.provincial.delegadosCongresalesTitulares)}</ul>
-                        </div>
-                        <div class="organigrama-col">
-                            <h4>Delegados Congresales Suplentes</h4>
-                            <ul class="organigrama-lista">${renderList(auth.provincial.delegadosCongresalesSuplentes)}</ul>
-                        </div>
-                        <div class="organigrama-col">
-                            <h4>Comisión Revisora de Cuentas</h4>
-                            <p><strong>Titulares:</strong></p>
-                            <ul class="organigrama-lista">${renderList(auth.provincial.comisionRevisora.titulares)}</ul>
-                            <p><strong>Suplentes:</strong></p>
-                            <ul class="organigrama-lista">${renderList(auth.provincial.comisionRevisora.suplentes)}</ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
 }
 
 // ============================================
@@ -583,7 +796,7 @@ function escapeRegExp(string) {
 }
 
 // ============================================
-// RENDERIZADO - DASHBOARD (MEJORADO)
+// RENDERIZADO - DASHBOARD (con modal de bienvenida ya manejado en showApp)
 // ============================================
 function renderDashboard(container) {
     const convenios = getConvenios();
@@ -600,7 +813,7 @@ function renderDashboard(container) {
             <p>Panel de control del Campus Virtual AOMA San Juan</p>
         </div>
         
-        <!-- TARJETAS DE ESTADÍSTICAS PROFESIONALES -->
+        <!-- TARJETAS DE ESTADÍSTICAS -->
         <div class="stats-grid">
             <div class="stat-card accent" onclick="navigateTo('convenios')">
                 <div class="stat-icon-wrapper">
@@ -738,7 +951,7 @@ function renderDashboard(container) {
 }
 
 // ============================================
-// RENDERIZADO - BENEFICIOS
+// RENDERIZADO - BENEFICIOS (sin cambios)
 // ============================================
 function renderBeneficios(container) {
     const beneficios = DATA.beneficios;
@@ -864,7 +1077,7 @@ function renderBeneficios(container) {
 }
 
 // ============================================
-// RENDERIZADO - CURSOS (CON SOPORTE MODULAR)
+// RENDERIZADO - CURSOS (sin cambios)
 // ============================================
 function renderCursos(container) {
     const cursos = getCapacitaciones();
@@ -1004,7 +1217,7 @@ function showCursoDetalle(cursoId) {
 }
 
 // ============================================
-// FUNCIONES PARA PROGRESO DE MÓDULOS
+// FUNCIONES PARA PROGRESO DE MÓDULOS (sin cambios)
 // ============================================
 function obtenerProgresoModulo(cursoId, moduloIndex) {
     const key = `aoma_progreso_${cursoId}`;
@@ -1029,9 +1242,6 @@ function calcularProgresoCurso(cursoId) {
     return Math.round((completados / curso.modulosData.length) * 100);
 }
 
-// ============================================
-// MOSTRAR MÓDULO
-// ============================================
 function mostrarModulo(cursoId, moduloIndex) {
     const cursos = getCapacitaciones();
     const curso = cursos.find(c => c.id === cursoId);
@@ -1131,9 +1341,6 @@ function actualizarIndiceModulos(cursoId) {
     if (barra) barra.style.width = porcentaje + '%';
 }
 
-// ============================================
-// COMPLETAR CURSO (GENERAR CERTIFICADO)
-// ============================================
 function completarCurso(cursoId) {
     const cursos = getCapacitaciones();
     const curso = cursos.find(c => c.id === cursoId);
@@ -1158,15 +1365,12 @@ function generarCertificado(nombreCurso, cursoId) {
         `Felicidades, completaste "${nombreCurso}". Tu certificado se generará próximamente.`);
 }
 
-// ============================================
-// EVALUACIÓN (placeholder)
-// ============================================
 function iniciarEvaluacion(cursoId, moduloIndex) {
     toast('info', '📝 Evaluación', 'La evaluación del módulo se abrirá en breve.');
 }
 
 // ============================================
-// RENDERIZADO - CONVENIOS GENERAL
+// RENDERIZADO - CONVENIOS (sin cambios)
 // ============================================
 function renderConveniosGeneral(container) {
     const convenios = getConvenios();
@@ -1238,9 +1442,6 @@ function renderConveniosGeneral(container) {
     `;
 }
 
-// ============================================
-// RENDERIZADO - CONVENIOS POR ACTIVIDAD
-// ============================================
 function renderConveniosPorActividad(container, actividadId) {
     const act = DATA.actividades[actividadId];
     if (!act) {
@@ -1326,9 +1527,6 @@ function renderConveniosPorActividad(container, actividadId) {
     `;
 }
 
-// ============================================
-// RENDERIZADO - EMPRESA ESPECÍFICA
-// ============================================
 function renderEmpresa(container, empresaId) {
     const empresa = DATA.empresas[empresaId];
     if (!empresa) {
@@ -1404,9 +1602,6 @@ function renderEmpresa(container, empresaId) {
     `;
 }
 
-// ============================================
-// RENDERIZADO - CONVENIO DETALLE
-// ============================================
 function showConvenioDetalle(numero) {
     const convenios = getConvenios();
     const conv = convenios.find(c => c.numero === numero);
@@ -1557,42 +1752,118 @@ function showLeyDetalle(numero) {
 }
 
 // ============================================
-// RENDERIZADO - FAQ
+// RENDERIZADO - ORGANIGRAMA (sin cambios)
 // ============================================
-function renderFAQ(container) {
+function renderOrganigrama(container) {
+    const auth = DATA.autoridades;
+    if (!auth) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><h3>No hay datos de autoridades</h3></div>';
+        return;
+    }
+    
+    const renderList = (arr) => arr.map((n, i) => `<li>${i+1}. ${n}</li>`).join('');
+    
+    const renderComision = (comision, funciones) => {
+        return comision.map(m => {
+            const funcDesc = funciones[m.cargo] || 'Sin descripción de funciones.';
+            return `
+                <li>
+                    <strong>${m.cargo}:</strong> ${m.nombre}
+                    <button class="btn-funcion" onclick="this.nextElementSibling.classList.toggle('visible')">
+                        <i class="fas fa-info-circle"></i> Ver función
+                    </button>
+                    <div class="funcion-detalle">
+                        ${funcDesc}
+                    </div>
+                </li>
+            `;
+        }).join('');
+    };
+    
     container.innerHTML = `
         <div class="page-header">
-            <h1>Preguntas Frecuentes ❓</h1>
-            <p>Resolvé tus dudas organizadas por temática</p>
+            <h1>📋 Estructura Orgánica de AOMA</h1>
+            <p>Autoridades nacionales y de la Seccional San Juan</p>
         </div>
-        ${Object.entries(DATA.faqs).map(([catId, items]) => {
-            const act = DATA.actividades[catId];
-            const catName = act ? act.nombre : (catId === 'general' ? 'General' : catId === 'beneficios' ? 'Beneficios Sociales' : catId);
-            return `
-                <div class="section">
-                    <h2 class="section-title" style="margin-bottom: 1rem;">${catName}</h2>
-                    <div class="faq-list">
-                        ${items.map((faq, idx) => `
-                            <div class="faq-item" id="faq-${catId}-${idx}">
-                                <div class="faq-question" onclick="toggleFaq('faq-${catId}-${idx}')">
-                                    <span>${faq.pregunta}</span>
-                                    <i class="fas fa-chevron-down"></i>
-                                </div>
-                                <div class="faq-answer">
-                                    <div class="faq-answer-content">${faq.respuesta}</div>
-                                </div>
-                            </div>
-                        `).join('')}
+        
+        <div class="section organigrama-section">
+            <h2 class="section-title" style="margin-bottom: 1.5rem;">🇦🇷 Consejo Directivo Nacional</h2>
+            <div class="organigrama-card">
+                <div class="organigrama-header" style="background: var(--gradient-primary);">
+                    <h3>${auth.nacional.nombre}</h3>
+                    <p>${auth.nacional.agrupacion} - ${auth.nacional.periodo}</p>
+                </div>
+                <div class="organigrama-body">
+                    <div class="organigrama-grid">
+                        <div class="organigrama-col">
+                            <h4>Comisión Directiva</h4>
+                            <ul class="organigrama-lista">
+                                ${renderComision(auth.nacional.comisionDirectiva, auth.nacional.funciones)}
+                            </ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Vocales Titulares</h4>
+                            <ul class="organigrama-lista">${renderList(auth.nacional.vocalesTitulares)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Vocales Suplentes</h4>
+                            <ul class="organigrama-lista">${renderList(auth.nacional.vocalesSuplentes)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Comisión Revisora de Cuentas</h4>
+                            <p><strong>Titulares:</strong></p>
+                            <ul class="organigrama-lista">${renderList(auth.nacional.comisionRevisora.titulares)}</ul>
+                            <p><strong>Suplentes:</strong></p>
+                            <ul class="organigrama-lista">${renderList(auth.nacional.comisionRevisora.suplentes)}</ul>
+                        </div>
                     </div>
                 </div>
-            `;
-        }).join('')}
+            </div>
+        </div>
+        
+        <div class="section organigrama-section">
+            <h2 class="section-title" style="margin-bottom: 1.5rem;">🏔️ Seccional San Juan</h2>
+            <div class="organigrama-card">
+                <div class="organigrama-header" style="background: var(--gradient-accent);">
+                    <h3>${auth.provincial.nombre}</h3>
+                    <p>${auth.provincial.agrupacion} - ${auth.provincial.periodo}</p>
+                </div>
+                <div class="organigrama-body">
+                    <div class="organigrama-grid">
+                        <div class="organigrama-col">
+                            <h4>Comisión Directiva</h4>
+                            <ul class="organigrama-lista">
+                                ${renderComision(auth.provincial.comisionDirectiva, auth.provincial.funciones)}
+                            </ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Vocales Titulares</h4>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.vocalesTitulares)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Vocales Suplentes</h4>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.vocalesSuplentes)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Delegados Congresales Titulares</h4>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.delegadosCongresalesTitulares)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Delegados Congresales Suplentes</h4>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.delegadosCongresalesSuplentes)}</ul>
+                        </div>
+                        <div class="organigrama-col">
+                            <h4>Comisión Revisora de Cuentas</h4>
+                            <p><strong>Titulares:</strong></p>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.comisionRevisora.titulares)}</ul>
+                            <p><strong>Suplentes:</strong></p>
+                            <ul class="organigrama-lista">${renderList(auth.provincial.comisionRevisora.suplentes)}</ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     `;
-}
-
-function toggleFaq(id) {
-    const item = document.getElementById(id);
-    if (item) item.classList.toggle('open');
 }
 
 // ============================================
@@ -1623,7 +1894,7 @@ function toast(type, title, message) {
 }
 
 // ============================================
-// CHAT - Funciones auxiliares (con fallback de imagen)
+// CHAT - Funciones auxiliares
 // ============================================
 function addChatMessage(type, text) {
     const messages = document.getElementById('chatMessages');
@@ -1633,7 +1904,6 @@ function addChatMessage(type, text) {
     div.className = 'chat-message ' + type;
     
     const time = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute:'2-digit' });
-    // Avatar con fallback: si la imagen no carga, muestra el ícono de robot
     const avatar = type === 'user' 
         ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
         : `<img src="assets/chat-avatar.png" alt="AOMA" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-robot\\'></i>';">`;
