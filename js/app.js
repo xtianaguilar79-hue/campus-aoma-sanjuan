@@ -28,6 +28,7 @@ let modalBienvenidaMostrado = false;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 AOMA Campus: Iniciando...');
     try {
+        // Crear admin si no hay usuarios
         const usuariosActivos = obtenerUsuariosActivos();
         if (usuariosActivos.length === 0) {
             const admin = {
@@ -45,6 +46,16 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('✅ Usuario administrador creado automáticamente.');
         }
 
+        // ✅ ASIGNAR EVENTO DE REGISTRO UNA SOLA VEZ
+        const formReg = document.getElementById('formRegistro');
+        if (formReg) {
+            formReg.addEventListener('submit', handleRegistro);
+            console.log('✅ Evento de registro asignado permanentemente.');
+        } else {
+            console.warn('⚠️ Formulario de registro no encontrado.');
+        }
+
+        // Recuperar sesión
         const savedSession = localStorage.getItem('aoma_session');
         if (savedSession) {
             try {
@@ -65,28 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             showLogin();
         }
+
         setupEvents();
         const savedTheme = localStorage.getItem('aoma_theme');
         if (savedTheme === 'dark') toggleTheme();
 
-        // ============================================
-        // REGISTRO: Asignar evento GLOBAL (para que siempre funcione)
-        // ============================================
-        const formReg = document.getElementById('formRegistro');
-        if (formReg) {
-            console.log('✅ Formulario de registro encontrado.');
-            formReg.addEventListener('submit', function(e) {
-                e.preventDefault();
-                console.log('📝 Evento de registro DISPARADO');
-                handleRegistro(e);
-            });
-        } else {
-            console.warn('⚠️ Formulario de registro NO encontrado. Revisá el HTML.');
-        }
-
-        // ============================================
-        // RECUPERACIÓN
-        // ============================================
+        // Recuperación de contraseña
         const formRec = document.getElementById('formRecuperacion');
         if (formRec) {
             formRec.addEventListener('submit', handleRecuperacion);
@@ -99,30 +94,41 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
-// FUNCIÓN DE REGISTRO (desacoplada)
+// FUNCIÓN DE REGISTRO (mejorada)
 // ============================================
 function handleRegistro(e) {
     e.preventDefault();
     console.log('📝 handleRegistro ejecutándose...');
-    
+
+    // Obtener todos los campos
     const nombre = document.getElementById('regNombre').value.trim();
-    const usuario = document.getElementById('regUsuario').value.trim();
+    const dni = document.getElementById('regDni').value.trim();
     const email = document.getElementById('regEmail').value.trim();
+    const telefono = document.getElementById('regTelefono').value.trim();
+    const dirigente = document.getElementById('regDirigente').value;
+    const delegado = document.getElementById('regDelegado').value;
+    const empresa = document.getElementById('regEmpresa').value;
+    const actividad = document.getElementById('regActividad').value;
+    const convenio = document.getElementById('regConvenio').value;
+    const usuario = document.getElementById('regUsuario').value.trim();
     const password = document.getElementById('regPassword').value;
     const pregunta = document.getElementById('regPregunta').value;
     const respuesta = document.getElementById('regRespuesta').value.trim();
-    
-    console.log('📋 Datos:', { nombre, usuario, email, password: '***', pregunta, respuesta });
-    
-    if (!nombre || !usuario || !email || !password || !pregunta || !respuesta) {
-        alert('Completá todos los campos.');
+
+    // Validaciones básicas
+    if (!nombre || !dni || !email || !usuario || !password || !pregunta || !respuesta || !empresa || !actividad || !convenio) {
+        alert('Todos los campos marcados con * son obligatorios.');
         return;
     }
     if (password.length < 6) {
         alert('La contraseña debe tener al menos 6 caracteres.');
         return;
     }
-    
+    if (isNaN(dni) || dni.length < 7) {
+        alert('Ingresá un DNI válido (solo números).');
+        return;
+    }
+
     const activos = obtenerUsuariosActivos();
     const pendientes = obtenerUsuariosPendientes();
     const existe = activos.some(u => u.username === usuario || u.email === email) ||
@@ -131,35 +137,50 @@ function handleRegistro(e) {
         alert('Ese usuario o email ya está registrado.');
         return;
     }
-    
+
+    // Determinar rol
+    let role = 'afiliado';
+    if (dirigente === 'si') role = 'dirigente';
+    else if (delegado === 'si') role = 'delegado';
+
     const esPrimerUsuario = activos.length === 0 && pendientes.length === 0;
-    const role = esPrimerUsuario ? 'admin' : 'delegado';
-    const active = esPrimerUsuario ? true : false;
-    
+    if (esPrimerUsuario) {
+        role = 'admin';
+    }
+
     const nuevoUsuario = {
         id: Date.now(),
         username: usuario,
         email: email,
         password: password,
         name: nombre,
+        dni: dni,
+        telefono: telefono,
+        dirigente: dirigente === 'si',
+        delegado: delegado === 'si',
+        empresa: empresa,
+        actividad: actividad,
+        convenio: convenio,
         role: role,
-        active: active,
+        active: esPrimerUsuario,
         preguntaSeguridad: pregunta,
-        respuestaSeguridad: respuesta
+        respuestaSeguridad: respuesta,
+        fechaRegistro: new Date().toISOString()
     };
-    
+
     if (esPrimerUsuario) {
         activos.push(nuevoUsuario);
         guardarUsuariosActivos(activos);
-        alert('¡Usuario administrador creado exitosamente! Ahora podés iniciar sesión.');
+        alert('✅ ¡Usuario administrador creado exitosamente! Ahora podés iniciar sesión.');
+        cerrarModalRegistro();
+        location.reload();
     } else {
         pendientes.push(nuevoUsuario);
         guardarUsuariosPendientes(pendientes);
-        alert('Tu registro ha sido enviado. Esperá la aprobación del administrador.');
+        alert('📩 Tu registro ha sido enviado. Esperá la aprobación del administrador.');
+        cerrarModalRegistro();
+        document.getElementById('formRegistro').reset();
     }
-    
-    cerrarModalRegistro();
-    console.log('✅ Registro completado');
 }
 
 // ============================================
@@ -240,15 +261,15 @@ function showLogin() {
             </div>
         `;
         document.body.innerHTML = html;
-        
+
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const usuariosActivos = obtenerUsuariosActivos();
-            const user = usuariosActivos.find(u => 
-                (u.username === username || u.email === username) && 
-                u.password === password && 
+            const user = usuariosActivos.find(u =>
+                (u.username === username || u.email === username) &&
+                u.password === password &&
                 u.active === true
             );
             if (user) {
@@ -261,14 +282,6 @@ function showLogin() {
             }
         });
 
-        // RE-ASIGNAR EVENTO DE REGISTRO DESPUÉS DE RECARGAR EL LOGIN
-        const formReg = document.getElementById('formRegistro');
-        if (formReg) {
-            console.log('✅ Formulario de registro re-asignado después del login.');
-            formReg.removeEventListener('submit', handleRegistro);
-            formReg.addEventListener('submit', handleRegistro);
-        }
-
     } catch (e) {
         console.error('Error en showLogin:', e);
         document.body.innerHTML = '<p style="color:red;">Error al cargar el login. Revisá la consola.</p>';
@@ -279,7 +292,7 @@ function showApp() {
     try {
         if (!currentUser) { showLogin(); return; }
         document.getElementById('userName').textContent = currentUser.name;
-        const roleText = currentUser.role === 'admin' ? 'Administrador' : 
+        const roleText = currentUser.role === 'admin' ? 'Administrador' :
                          currentUser.role === 'dirigente' ? 'Dirigente' : 'Delegado';
         document.getElementById('userRole').textContent = roleText;
         document.getElementById('userAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -327,13 +340,6 @@ function cerrarModalBienvenida() {
 function mostrarRegistro() {
     const modal = document.getElementById('modalRegistro');
     if (modal) modal.style.display = 'flex';
-    // Asegurar que el evento esté asignado
-    const form = document.getElementById('formRegistro');
-    if (form) {
-        form.removeEventListener('submit', handleRegistro);
-        form.addEventListener('submit', handleRegistro);
-        console.log('🔁 Evento de registro re-asignado al abrir el modal');
-    }
 }
 function cerrarModalRegistro() {
     const modal = document.getElementById('modalRegistro');
@@ -409,6 +415,7 @@ function actualizarListasUsuarios() {
                         <div class="info">
                             <span class="nombre">${u.name}</span>
                             <span class="email">${u.email} (${u.username})</span>
+                            <span style="font-size:0.8rem; color:var(--text-muted);">DNI: ${u.dni || 'N/A'} - ${u.empresa || ''} - ${u.actividad || ''}</span>
                         </div>
                         <div class="acciones">
                             <button class="btn-aprobar" onclick="aprobarUsuario(${u.id})"><i class="fas fa-check"></i> Aprobar</button>
@@ -429,6 +436,7 @@ function actualizarListasUsuarios() {
                         <div class="info">
                             <span class="nombre">${u.name} (${u.role})</span>
                             <span class="email">${u.email}</span>
+                            <span style="font-size:0.8rem; color:var(--text-muted);">${u.empresa || ''} - ${u.actividad || ''}</span>
                         </div>
                         <div class="acciones">
                             <button class="btn-eliminar" onclick="eliminarUsuario(${u.id})"><i class="fas fa-trash"></i> Eliminar</button>
@@ -482,7 +490,7 @@ function eliminarUsuario(id) {
 }
 
 // ============================================
-// NAVEGACIÓN (sin cambios)
+// NAVEGACIÓN
 // ============================================
 function navigateTo(page) {
     currentPage = page;
@@ -607,7 +615,7 @@ function closeMobileMenu() {
 }
 
 // ============================================
-// BÚSQUEDA (sin cambios)
+// BÚSQUEDA
 // ============================================
 function setupContentSearch(contentSelector) {
     const searchInput = document.getElementById('contentSearchInput');
@@ -1256,7 +1264,7 @@ function addChatMessage(type, text) {
     const div = document.createElement('div');
     div.className = 'chat-message ' + type;
     const time = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute:'2-digit' });
-    const avatar = type === 'user' 
+    const avatar = type === 'user'
         ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
         : `<img src="assets/chat-avatar.png" alt="AOMA" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-robot\\'></i>';">`;
     div.innerHTML = `
