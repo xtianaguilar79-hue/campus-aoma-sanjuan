@@ -3,107 +3,39 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Campus Virtual AOMA San Juan - Plataforma cerrada para dirigentes y delegados" />
-    <meta name="theme-color" content="#1a1a1a" />
     <title>Campus Virtual AOMA | Asociación Obrera Minera Argentina</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-    <!-- ========== HEADER ========== -->
-    <header class="header">
+    <!-- HEADER -->
+    <header class="header" id="mainHeader" style="display:none;">
         <div class="header-container">
             <div class="header-left">
-                <button class="menu-btn" id="menuBtn" aria-label="Menú">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="brand" onclick="navigateTo('inicio')" style="cursor: pointer;" title="Ir al Inicio">
-                    <div class="brand-icon">
-                        <img src="assets/logo-aoma.png" alt="AOMA San Juan" />
-                    </div>
-                    <div class="brand-text">
-                        <h1>AOMA San Juan</h1>
-                        <span>Campus Virtual</span>
-                    </div>
+                <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+                <div class="brand" onclick="navigateTo('inicio')" style="cursor:pointer;">
+                    <div class="brand-icon"><img src="assets/logo-aoma.png" alt="AOMA" /></div>
+                    <div class="brand-text"><h1>AOMA San Juan</h1><span>Campus Virtual</span></div>
                 </div>
             </div>
-
-            <!-- Nav Pills (desktop) -->
             <nav class="nav-pills" id="navPills">
-                <button class="nav-pill active" data-page="inicio">
-                    <i class="fas fa-home"></i> Inicio
-                </button>
-                <button class="nav-pill" data-page="cursos">
-                    <i class="fas fa-graduation-cap"></i> Capacitaciones
-                </button>
-                <button class="nav-pill" data-page="beneficios">
-                    <i class="fas fa-gift"></i> Beneficios
-                </button>
-
-                <!-- DROPDOWN: Convenios CCT -->
-                <div class="nav-dropdown">
-                    <button class="nav-pill" data-page="convenios">
-                        <i class="fas fa-file-contract"></i> Convenios CCT
-                        <i class="fas fa-chevron-down" style="font-size: 0.7em; margin-left: 4px;"></i>
-                    </button>
-                    <div class="dropdown-menu-convenios">
-                        <div class="dropdown-section">
-                            <div class="dropdown-section-title">Por Actividad</div>
-                            <a class="dropdown-link" onclick="navigateTo('convenios-mineria')">
-                                <i class="fas fa-gem"></i> Minería Extractiva
-                            </a>
-                            <a class="dropdown-link" onclick="navigateTo('convenios-cemento')">
-                                <i class="fas fa-industry"></i> Cemento
-                            </a>
-                            <a class="dropdown-link" onclick="navigateTo('convenios-cal')">
-                                <i class="fas fa-mountain"></i> Cal y Piedra
-                            </a>
-                            <a class="dropdown-link" onclick="navigateTo('convenios-molienda')">
-                                <i class="fas fa-cogs"></i> Molienda de Minerales
-                            </a>
-                        </div>
-                        <div class="dropdown-section">
-                            <div class="dropdown-section-title">Convenios por Empresa</div>
-                            <a class="dropdown-link" onclick="navigateTo('empresa-veladero')">
-                                <i class="fas fa-building"></i> Mina Veladero
-                            </a>
-                            <a class="dropdown-link" onclick="navigateTo('empresa-gualcamayo')">
-                                <i class="fas fa-building"></i> Mina Gualcamayo
-                            </a>
-                            <a class="dropdown-link" onclick="navigateTo('empresa-vicuna')">
-                                <i class="fas fa-building"></i> Mina Vicuña
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="nav-pill" data-page="legislacion">
-                    <i class="fas fa-balance-scale"></i> Legislación
-                </button>
-                <button class="nav-pill" data-page="gremio">
-                    <i class="fas fa-users"></i> El Gremio
-                </button>
+                <button class="nav-pill active" data-page="inicio"><i class="fas fa-home"></i> Inicio</button>
+                <button class="nav-pill" data-page="cursos"><i class="fas fa-graduation-cap"></i> Capacitaciones</button>
+                <button class="nav-pill" data-page="beneficios"><i class="fas fa-gift"></i> Beneficios</button>
+                <button class="nav-pill" data-page="convenios"><i class="fas fa-file-contract"></i> Convenios</button>
+                <button class="nav-pill" data-page="legislacion"><i class="fas fa-balance-scale"></i> Legislación</button>
+                <button class="nav-pill" data-page="gremio"><i class="fas fa-users"></i> El Gremio</button>
             </nav>
-
             <div class="header-right">
-                <button class="icon-btn" id="themeBtn" title="Cambiar tema">
-                    <i class="fas fa-moon"></i>
-                </button>
-
+                <button class="icon-btn" id="themeBtn"><i class="fas fa-moon"></i></button>
                 <div class="user-menu" id="userMenu">
-                    <div class="user-info">
-                        <span class="user-name" id="userName">Usuario</span>
-                        <span class="user-role" id="userRole">Delegado</span>
-                    </div>
+                    <div class="user-info"><span class="user-name" id="userName">Usuario</span><span class="user-role" id="userRole">Rol</span></div>
                     <div class="user-avatar" id="userAvatar">U</div>
                     <div class="user-dropdown" id="userDropdown">
-                        <a href="#" class="dropdown-item" id="adminPanelLink" style="display:none;" onclick="mostrarPanelUsuarios()"><i class="fas fa-users-cog"></i> Gestionar Usuarios</a>
                         <a href="#" class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
                     </div>
                 </div>
@@ -111,395 +43,73 @@
         </div>
     </header>
 
-    <!-- ========== MOBILE MENU ========== -->
+    <!-- MOBILE MENU -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
     <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-header">
-            <span class="mobile-menu-title">Menú</span>
-            <button class="mobile-menu-close" id="mobileMenuClose">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-
+        <div class="mobile-menu-header"><span class="mobile-menu-title">Menú</span><button class="mobile-menu-close" id="mobileMenuClose"><i class="fas fa-times"></i></button></div>
         <div class="mobile-menu-section">
-            <div class="mobile-menu-section-title">Principal</div>
-            <button class="mobile-nav-pill active" data-page="inicio">
-                <i class="fas fa-home"></i> Inicio
-            </button>
-            <button class="mobile-nav-pill" data-page="cursos">
-                <i class="fas fa-graduation-cap"></i> Capacitaciones
-            </button>
-            <button class="mobile-nav-pill" data-page="beneficios">
-                <i class="fas fa-gift"></i> Beneficios
-            </button>
-            <button class="mobile-nav-pill" data-page="legislacion">
-                <i class="fas fa-balance-scale"></i> Legislación
-            </button>
-            <button class="mobile-nav-pill" data-page="gremio">
-                <i class="fas fa-users"></i> El Gremio
-            </button>
-        </div>
-
-        <div class="mobile-menu-section">
-            <div class="mobile-menu-section-title">Convenios por Actividad</div>
-            <button class="mobile-nav-pill" data-page="convenios-mineria">
-                <i class="fas fa-gem"></i> Minería Extractiva
-            </button>
-            <button class="mobile-nav-pill" data-page="convenios-cemento">
-                <i class="fas fa-industry"></i> Cemento
-            </button>
-            <button class="mobile-nav-pill" data-page="convenios-cal">
-                <i class="fas fa-mountain"></i> Cal y Piedra
-            </button>
-            <button class="mobile-nav-pill" data-page="convenios-molienda">
-                <i class="fas fa-cogs"></i> Molienda de Minerales
-            </button>
-        </div>
-
-        <div class="mobile-menu-section">
-            <div class="mobile-menu-section-title">Convenios por Empresa</div>
-            <button class="mobile-nav-pill" data-page="empresa-veladero">
-                <i class="fas fa-building"></i> Mina Veladero
-            </button>
-            <button class="mobile-nav-pill" data-page="empresa-gualcamayo">
-                <i class="fas fa-building"></i> Mina Gualcamayo
-            </button>
-            <button class="mobile-nav-pill" data-page="empresa-vicuna">
-                <i class="fas fa-building"></i> Mina Vicuña
-            </button>
+            <button class="mobile-nav-pill active" data-page="inicio"><i class="fas fa-home"></i> Inicio</button>
+            <button class="mobile-nav-pill" data-page="cursos"><i class="fas fa-graduation-cap"></i> Capacitaciones</button>
+            <button class="mobile-nav-pill" data-page="beneficios"><i class="fas fa-gift"></i> Beneficios</button>
+            <button class="mobile-nav-pill" data-page="convenios"><i class="fas fa-file-contract"></i> Convenios</button>
+            <button class="mobile-nav-pill" data-page="legislacion"><i class="fas fa-balance-scale"></i> Legislación</button>
+            <button class="mobile-nav-pill" data-page="gremio"><i class="fas fa-users"></i> El Gremio</button>
         </div>
     </div>
 
-    <!-- ========== MAIN CONTENT ========== -->
-    <main class="main-content" id="mainContent">
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="mainContent" style="display:none;">
         <div id="pageContent"></div>
     </main>
 
-    <!-- ========== LOGIN OVERLAY ========== -->
-    <div id="loginOverlay" style="display: none; position: fixed; inset: 0; background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem;">
-        <div style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 20px 25px rgba(0,0,0,0.15); width: 100%; max-width: 420px;">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #f47b20, #f69b4c); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; margin: 0 auto 1rem;">
+    <!-- LOGIN OVERLAY -->
+    <div id="loginOverlay" style="position:fixed; inset:0; background:linear-gradient(135deg,#1a1a1a 0%,#333333 100%); z-index:2000; display:flex; align-items:center; justify-content:center; padding:1rem;">
+        <div style="background:white; padding:2.5rem; border-radius:16px; box-shadow:0 20px 25px rgba(0,0,0,0.15); width:100%; max-width:420px;">
+            <div style="text-align:center; margin-bottom:2rem;">
+                <div style="width:70px; height:70px; background:linear-gradient(135deg,#f47b20,#f69b4c); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:2rem; color:white; margin:0 auto 1rem;">
                     <i class="fas fa-mountain"></i>
                 </div>
-                <h1 style="font-size: 1.5rem; color: #1a1a1a; margin-bottom: 0.5rem;">Campus Virtual AOMA</h1>
-                <p style="color: #6b7280; font-size: 0.875rem;">Asociación Obrera Minera Argentina<br>Seccional San Juan</p>
-                <p style="font-size: 0.75rem; color: #f47b20; margin-top: 0.5rem; background: #fef3c7; padding: 0.25rem 0.75rem; border-radius: 9999px; display: inline-block;">
-                    <i class="fas fa-info-circle"></i> El primer registro será el Administrador
-                </p>
+                <h1 style="font-size:1.5rem; color:#1a1a1a; margin-bottom:0.5rem;">Campus Virtual AOMA</h1>
+                <p style="color:#6b7280; font-size:0.875rem;">Asociación Obrera Minera Argentina<br>Seccional San Juan</p>
             </div>
             <form id="loginForm">
-                <div style="margin-bottom: 1.25rem;">
-                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #1a1a1a;">
-                        <i class="fas fa-user" style="color: #f47b20;"></i> Usuario o Email
-                    </label>
-                    <input type="text" id="username" style="width: 100%; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;" placeholder="Tu usuario o email" required>
+                <div style="margin-bottom:1.25rem;">
+                    <label style="display:block; font-weight:600; font-size:0.875rem; color:#1a1a1a; margin-bottom:0.25rem;"><i class="fas fa-user" style="color:#f47b20;"></i> Usuario</label>
+                    <input type="text" id="username" style="width:100%; padding:0.75rem 1rem; background:#f9fafb; border:2px solid #e5e7eb; border-radius:8px; font-size:1rem;" placeholder="Ingresá tu usuario" required>
                 </div>
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #1a1a1a;">
-                        <i class="fas fa-lock" style="color: #f47b20;"></i> Contraseña
-                    </label>
-                    <input type="password" id="password" style="width: 100%; padding: 0.75rem 1rem; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;" placeholder="••••••••" required>
-                </div>
-                <button type="submit" style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, #f47b20, #f69b4c); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">Ingresar al Campus</button>
-            </form>
-            <div style="text-align: center; padding-top: 1rem; font-size: 0.875rem; color: #6b7280;">
-                <a href="#" onclick="event.preventDefault(); mostrarRegistro();" style="color: #f47b20; text-decoration: none; font-weight: 600;">¿No tenés cuenta? Registrate</a>
-                <span style="margin: 0 0.5rem;">|</span>
-                <a href="#" onclick="event.preventDefault(); mostrarRecuperacion();" style="color: #6b7280; text-decoration: none;">¿Olvidaste tu contraseña?</a>
-            </div>
-            <!-- Botones de emergencia -->
-            <div style="text-align: center; margin-top: 0.75rem; display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-                <button onclick="resetearUsuarios()" style="background: none; border: none; color: #9ca3af; font-size: 0.7rem; cursor: pointer; text-decoration: underline;">
-                    <i class="fas fa-trash-alt"></i> Reiniciar usuarios
-                </button>
-                <button onclick="forzarAdmin()" style="background: none; border: none; color: #f47b20; font-size: 0.7rem; cursor: pointer; text-decoration: underline; font-weight: 600;">
-                    <i class="fas fa-user-cog"></i> Forzar creación de administrador
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== MODAL DE BIENVENIDA ========== -->
-    <div class="modal-overlay" id="modalBienvenida" style="display:none;">
-        <div class="modal-container modal-bienvenida">
-            <div class="modal-header modal-header-bienvenida">
-                <div class="modal-header-icon">
-                    <i class="fas fa-handshake"></i>
-                </div>
-                <h2>Mensaje del Secretario General</h2>
-                <button class="modal-close" onclick="cerrarModalBienvenida()" aria-label="Cerrar">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body modal-body-bienvenida">
-                <div class="modal-autoridad">
-                    <img src="assets/logo-aoma.png" alt="AOMA San Juan" class="modal-autoridad-logo" />
-                    <h3>Iván Marcelo Malla</h3>
-                    <p><strong>Secretario General</strong><br />AOMA Seccional San Juan</p>
-                </div>
-                <div class="modal-mensaje">
-                    <p>Estimada/o compañera/o:</p>
-                    <p>En nombre de la Comisión Directiva de AOMA San Juan, te damos la más cordial bienvenida a nuestro <strong>Campus Virtual</strong>.</p>
-                    <p>Este espacio ha sido creado para fortalecer la formación sindical, el acceso a la información laboral y la participación activa de todos los trabajadores mineros de nuestra provincia.</p>
-                    <p>Te invitamos a recorrer cada sección: capacitaciones, beneficios, convenios y toda la información que hemos preparado para vos.</p>
-                    <p>Juntos, seguimos construyendo un sindicalismo más fuerte y preparado para los desafíos del futuro.</p>
-                    <p style="margin-top: 1rem; text-align: right;">
-                        <strong>Iván Marcelo Malla</strong><br />
-                        Secretario General<br />
-                        AOMA Seccional San Juan
-                    </p>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-bienvenida">
-                <button class="btn btn-primary" onclick="cerrarModalBienvenida()">
-                    <i class="fas fa-arrow-right"></i> Ingresar al Campus
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== MODAL DE REGISTRO (COMPLETO) ========== -->
-    <div class="modal-overlay" id="modalRegistro" style="display:none;">
-        <div class="modal-container" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2><i class="fas fa-user-plus"></i> Registro de Afiliado</h2>
-                <button class="modal-close" onclick="cerrarModalRegistro()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="formRegistro">
-                    <!-- Datos personales -->
-                    <div class="form-row">
-                        <div class="form-group half">
-                            <label>Nombre completo <span class="required">*</span></label>
-                            <input type="text" id="regNombre" placeholder="Ej: Juan Pérez" required />
-                        </div>
-                        <div class="form-group half">
-                            <label>DNI <span class="required">*</span></label>
-                            <input type="number" id="regDni" placeholder="Número de documento" required />
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group half">
-                            <label>Email <span class="required">*</span></label>
-                            <input type="email" id="regEmail" placeholder="ejemplo@correo.com" required />
-                        </div>
-                        <div class="form-group half">
-                            <label>Teléfono</label>
-                            <input type="tel" id="regTelefono" placeholder="264-1234567" />
-                        </div>
-                    </div>
-
-                    <!-- Datos sindicales -->
-                    <div class="form-row">
-                        <div class="form-group half">
-                            <label>¿Dirigente de Comisión Directiva?</label>
-                            <select id="regDirigente">
-                                <option value="no">No</option>
-                                <option value="si">Sí</option>
-                            </select>
-                        </div>
-                        <div class="form-group half">
-                            <label>¿Es delegado?</label>
-                            <select id="regDelegado">
-                                <option value="no">No</option>
-                                <option value="si">Sí</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group half">
-                            <label>Empresa <span class="required">*</span></label>
-                            <select id="regEmpresa" required>
-                                <option value="">Seleccionar</option>
-                                <option value="veladero">Mina Veladero</option>
-                                <option value="gualcamayo">Mina Gualcamayo</option>
-                                <option value="vicuna">Mina Vicuña</option>
-                                <option value="otra">Otra</option>
-                            </select>
-                        </div>
-                        <div class="form-group half">
-                            <label>Actividad <span class="required">*</span></label>
-                            <select id="regActividad" required>
-                                <option value="">Seleccionar</option>
-                                <option value="mineria-extractiva">Minería Extractiva</option>
-                                <option value="cemento">Cemento</option>
-                                <option value="cal-piedra">Cal y Piedra</option>
-                                <option value="molienda">Molienda de Minerales</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Convenio que le aplica <span class="required">*</span></label>
-                        <select id="regConvenio" required>
-                            <option value="">Seleccionar</option>
-                            <option value="36/89">CCT 36/89 (Minería)</option>
-                            <option value="38/89">CCT 38/89 (Cemento)</option>
-                            <option value="54/89">CCT 54/89 (Cal y Piedra)</option>
-                            <option value="673/04">CCT 673/04 (Molienda)</option>
-                            <option value="veladero">CCT Veladero (empresa)</option>
-                            <option value="vicuna">CCT Vicuña (empresa)</option>
-                            <option value="gualcamayo">CCT Gualcamayo (empresa)</option>
-                        </select>
-                    </div>
-
-                    <!-- Credenciales de acceso -->
-                    <div class="form-row">
-                        <div class="form-group half">
-                            <label>Usuario <span class="required">*</span></label>
-                            <input type="text" id="regUsuario" placeholder="Elegí un usuario" required />
-                        </div>
-                        <div class="form-group half">
-                            <label>Contraseña <span class="required">*</span></label>
-                            <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" />
-                        </div>
-                    </div>
-
-                    <!-- Pregunta de seguridad -->
-                    <div class="form-group">
-                        <label>Pregunta de seguridad <span class="required">*</span></label>
-                        <select id="regPregunta" required>
-                            <option value="">Selecciona una pregunta</option>
-                            <option value="¿Cuál es el nombre de tu madre?">¿Cuál es el nombre de tu madre?</option>
-                            <option value="¿Cuál es tu ciudad natal?">¿Cuál es tu ciudad natal?</option>
-                            <option value="¿Cuál es el nombre de tu primera mascota?">¿Cuál es el nombre de tu primera mascota?</option>
-                            <option value="¿Cuál es tu color favorito?">¿Cuál es tu color favorito?</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Respuesta <span class="required">*</span></label>
-                        <input type="text" id="regRespuesta" placeholder="Tu respuesta" required />
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" style="width:100%;">
-                        <i class="fas fa-user-check"></i> Registrarme
+                <div style="margin-bottom:1.5rem; position:relative;">
+                    <label style="display:block; font-weight:600; font-size:0.875rem; color:#1a1a1a; margin-bottom:0.25rem;"><i class="fas fa-lock" style="color:#f47b20;"></i> Contraseña</label>
+                    <input type="password" id="password" style="width:100%; padding:0.75rem 1rem; background:#f9fafb; border:2px solid #e5e7eb; border-radius:8px; font-size:1rem; padding-right:3rem;" placeholder="••••••••" required>
+                    <button type="button" id="togglePassword" style="position:absolute; right:12px; bottom:10px; background:none; border:none; color:#9ca3af; cursor:pointer; font-size:1.2rem;">
+                        <i class="fas fa-eye"></i>
                     </button>
-                </form>
-                <p style="margin-top:1rem; text-align:center;">
-                    ¿Ya tenés cuenta? <a href="#" onclick="cerrarModalRegistro(); mostrarLogin();">Iniciá sesión</a>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== MODAL DE RECUPERACIÓN ========== -->
-    <div class="modal-overlay" id="modalRecuperacion" style="display:none;">
-        <div class="modal-container" style="max-width: 450px;">
-            <div class="modal-header">
-                <h2><i class="fas fa-key"></i> Recuperar Contraseña</h2>
-                <button class="modal-close" onclick="cerrarModalRecuperacion()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="formRecuperacion">
-                    <div class="form-group">
-                        <label>Usuario o Email</label>
-                        <input type="text" id="recUser" placeholder="Tu usuario o email" required />
-                    </div>
-                    <div id="recPreguntaContainer" style="display:none;">
-                        <div class="form-group">
-                            <label id="recPreguntaLabel">Pregunta de seguridad</label>
-                            <input type="text" id="recRespuesta" placeholder="Tu respuesta" required />
-                        </div>
-                    </div>
-                    <div id="recNuevaPassContainer" style="display:none;">
-                        <div class="form-group">
-                            <label>Nueva contraseña</label>
-                            <input type="password" id="recNuevaPass" placeholder="Mínimo 6 caracteres" required minlength="6" />
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%;" id="recBtn">Buscar usuario</button>
-                </form>
-                <p style="margin-top:1rem; text-align:center;">
-                    <a href="#" onclick="cerrarModalRecuperacion(); mostrarLogin();">Volver al inicio de sesión</a>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== PANEL DE GESTIÓN DE USUARIOS (ADMIN) ========== -->
-    <div class="modal-overlay" id="modalPanelUsuarios" style="display:none;">
-        <div class="modal-container" style="max-width: 800px;">
-            <div class="modal-header">
-                <h2><i class="fas fa-users-cog"></i> Gestión de Usuarios</h2>
-                <button class="modal-close" onclick="cerrarPanelUsuarios()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <h3>Pendientes de aprobación</h3>
-                <div id="listaPendientes">
-                    <p>Cargando...</p>
                 </div>
-                <hr />
-                <h3>Usuarios activos</h3>
-                <div id="listaActivos">
-                    <p>Cargando...</p>
-                </div>
+                <button type="submit" style="width:100%; padding:0.875rem; background:linear-gradient(135deg,#f47b20,#f69b4c); color:white; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer;">Ingresar al Campus</button>
+            </form>
+            <div style="text-align:center; padding-top:1rem; font-size:0.75rem; color:#9ca3af;">
+                <p>Usuarios de prueba:</p>
+                <p><strong>admin</strong> / admin123 | <strong>dirigente</strong> / dirigente123 | <strong>delegado</strong> / delegado123</p>
             </div>
         </div>
     </div>
 
-    <!-- ========== CHAT WIDGET ========== -->
-    <div class="chat-widget">
-        <button class="chat-btn" id="chatBtn">
-            <img src="assets/chat-avatar.png" alt="Chat AOMA" style="width:100%; height:100%; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-robot\\' style=\\'font-size:2rem; color:white;\\'></i>';" />
-        </button>
+    <!-- CHAT WIDGET -->
+    <div class="chat-widget" id="chatWidget" style="display:none;">
+        <button class="chat-btn" id="chatBtn"><i class="fas fa-robot" style="font-size:1.8rem; color:white;"></i></button>
         <div class="chat-window hidden" id="chatWindow">
             <div class="chat-header">
-                <div class="chat-header-info">
-                    <div class="chat-avatar">
-                        <img src="assets/chat-avatar.png" alt="AOMA" style="width:40px; height:40px; border-radius:50%; object-fit:cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-robot\\' style=\\'font-size:1.5rem; color:white;\\'></i>';" />
-                    </div>
-                    <div>
-                        <h3>Asistente AOMA</h3>
-                        <span class="chat-status"><span class="status-dot online"></span>En línea</span>
-                    </div>
-                </div>
+                <div class="chat-header-info"><div class="chat-avatar"><i class="fas fa-robot"></i></div><div><h3>Asistente AOMA</h3><span class="chat-status"><span class="status-dot online"></span>En línea</span></div></div>
                 <button class="chat-close" id="chatClose"><i class="fas fa-times"></i></button>
             </div>
             <div class="chat-messages" id="chatMessages"></div>
             <form class="chat-form" id="chatForm">
-                <input type="text" id="chatInput" placeholder="Escribe tu consulta..." autocomplete="off" />
+                <input type="text" id="chatInput" placeholder="Escribe tu consulta...">
                 <button type="submit"><i class="fas fa-paper-plane"></i></button>
             </form>
         </div>
     </div>
 
-    <!-- ========== SCRIPTS ========== -->
     <script src="js/data.js"></script>
-    <script src="js/content/leyes/lct-20744.js"></script>
-    <script src="js/content/leyes/ley-19587.js"></script>
-    <script src="js/content/leyes/ley-23551.js"></script>
-    <script src="js/content/leyes/ley-24557.js"></script>
-    <script src="js/content/leyes/ley-24013.js"></script>
-    <script src="js/content/convenios/cct-veladero.js"></script>
-    <script src="js/content/convenios/cct-vicuna.js"></script>
-    <script src="js/content/convenios/cct-36-89.js"></script>
-    <script src="js/content/convenios/cct-38-89.js"></script>
-    <script src="js/content/convenios/cct-54-89.js"></script>
-    <script src="js/content/convenios/cct-gualcamayo.js"></script>
-
-    <!-- Capacitaciones -->
-    <script src="js/content/capacitaciones/index.js"></script>
-    <script src="js/content/capacitaciones/negociacion-colectiva/index.js"></script>
-    <script src="js/content/capacitaciones/negociacion-colectiva/modulo-1.js"></script>
-    <script src="js/content/capacitaciones/negociacion-colectiva/modulo-2.js"></script>
-    <script src="js/content/capacitaciones/negociacion-colectiva/modulo-3.js"></script>
-    <script src="js/content/capacitaciones/negociacion-colectiva/modulo-4.js"></script>
-    <script src="js/content/capacitaciones/negociacion-colectiva/modulo-5.js"></script>
-    <script src="js/content/capacitaciones/negociacion-colectiva/modulo-6.js"></script>
-    <script src="js/content/capacitaciones/negociacion-colectiva/modulo-7.js"></script>
-    <script src="js/content/capacitaciones/negociacion-colectiva/modulo-8.js"></script>
-
-    <script src="js/content/capacitaciones/movimiento-obrero/index.js"></script>
-    <script src="js/content/capacitaciones/movimiento-obrero/modulo-1.js"></script>
-    <script src="js/content/capacitaciones/movimiento-obrero/modulo-2.js"></script>
-    <script src="js/content/capacitaciones/movimiento-obrero/modulo-3.js"></script>
-    <script src="js/content/capacitaciones/movimiento-obrero/modulo-4.js"></script>
-    <script src="js/content/capacitaciones/movimiento-obrero/modulo-5.js"></script>
-    <script src="js/content/capacitaciones/movimiento-obrero/modulo-6.js"></script>
-
-    <script src="js/chat-ia.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
