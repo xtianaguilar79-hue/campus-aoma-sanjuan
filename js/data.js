@@ -148,7 +148,7 @@ const DATA = {
             actividad: 'mineria-extractiva',
             empresa: 'veladero',
             variable: 'CCT_VELADERO',
-            resumen: 'Convenio colectivo específico de la Mina Veladero (Barrick Gold / Shandong Gold)',
+            resumen: 'Convenio colectivo específico de la Mina Veladero',
             contenido: null
         },
         {
@@ -158,7 +158,7 @@ const DATA = {
             actividad: 'mineria-extractiva',
             empresa: 'gualcamayo',
             variable: 'CCT_GUALCAMAYO',
-            resumen: 'Convenio colectivo específico de la Mina Gualcamayo (Grupo AISA)',
+            resumen: 'Convenio colectivo específico de la Mina Gualcamayo',
             contenido: null
         },
         {
@@ -168,7 +168,7 @@ const DATA = {
             actividad: 'mineria-extractiva',
             empresa: 'vicuna',
             variable: 'CCT_VICUNA',
-            resumen: 'Convenio colectivo específico del Proyecto Josemaría/Vicuña (Deprominsa)',
+            resumen: 'Convenio colectivo específico del Proyecto Josemaría/Vicuña',
             contenido: null
         }
     ],
@@ -214,7 +214,7 @@ const DATA = {
     cursos: [],
 
     // ==========================================
-    // 6. BENEFICIOS SOCIALES (CORREGIDO)
+    // 6. BENEFICIOS SOCIALES
     // ==========================================
     beneficios: {
         reintegros: {
@@ -234,7 +234,7 @@ const DATA = {
                     titulo: 'Ortopedia y Ortodoncia',
                     porcentaje: '30%',
                     montoMax: 'Tope máximo: $75.000 (30% de $250.000)',
-                    descripcion: 'Reintegro del 30% del valor de la factura, con un tope máximo de $75.000 (30% de un límite de $250.000).',
+                    descripcion: 'Reintegro del 30% del valor de la factura, con tope máximo de $75.000.',
                     exclusiones: 'Quedan excluidos los productos estéticos.',
                     documentacion: 'Ticket o factura avalada por ARCA, copia receta médica, carnet de afiliado y último recibo de sueldo.'
                 },
@@ -242,156 +242,9 @@ const DATA = {
                     titulo: 'Anteojos y Lentes de Contacto',
                     porcentaje: '40%',
                     montoMax: 'Tope máximo: $100.000 (40% de $250.000)',
-                    descripcion: 'Reintegro del 40% del valor de la factura, con un tope máximo de $100.000 (40% de un límite de $250.000).',
+                    descripcion: 'Reintegro del 40% del valor de la factura, con tope máximo de $100.000.',
                     exclusiones: 'Quedan excluidos los productos estéticos.',
                     documentacion: 'Ticket o factura avalada por ARCA, copia receta médica, carnet de afiliado y último recibo de sueldo.'
-                },
-                {
-                    titulo: 'Hotel por Enfermedad o Fuerza Mayor',
-                    porcentaje: '20%',
-                    montoMax: null,
-                    descripcion: 'Reintegro del 20% del valor de la factura, sin tope máximo.',
-                    exclusiones: null,
-                    documentacion: 'Ticket o factura avalada por ARCA, documentación respaldatoria del motivo, carnet de afiliado y último recibo de sueldo.'
-                },
-                {
-                    titulo: 'Pasajes de Colectivos de Larga Distancia',
-                    porcentaje: '20%',
-                    montoMax: null,
-                    descripcion: 'Reintegro del 20% del valor del pasaje, sin tope máximo.',
-                    exclusiones: null,
-                    documentacion: 'Pasajes originales, carnet de afiliado y último recibo de sueldo.'
-                },
-                {
-                    titulo: 'Salones de Eventos Familiares',
-                    porcentaje: 'Monto Fijo',
-                    montoMax: '$100.000',
-                    descripcion: 'Beneficio de monto fijo de $100.000 para el alquiler de salones de eventos en Capital San Juan.',
-                    exclusiones: null,
-                    documentacion: 'Ticket o factura avalada por ARCA, documentación respaldatoria del evento, carnet de afiliado y último recibo de sueldo.'
-                }
-            ]
-        },
-        hoteles: {
-            titulo: 'Estadías y Hoteles AOMA/OSAM',
-            icono: 'fa-hotel',
-            color: '#3b82f6',
-            items: [
-                {
-                    titulo: 'Matrimonio / Unión Civil o Convivencial',
-                    porcentaje: null,
-                    montoMax: '7 días + 100 litros de nafta',
-                    descripcion: '7 días de estadía y media pensión (desayuno y cena, sin bebidas) en hoteles AOMA: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo. Incluye valor de 100 litros de nafta súper a cancelar al regreso.',
-                    exclusiones: 'No aplica para temporada alta ni fines de semana largo.',
-                    documentacion: 'Copia libreta de matrimonio o certificación de turno, carnet de afiliado y último recibo de sueldo.'
-                },
-                {
-                    titulo: '30 Años de Afiliado',
-                    porcentaje: null,
-                    montoMax: '7 días + 100 litros de nafta',
-                    descripcion: '7 días de estadía y media pensión en hoteles AOMA. Incluye valor de 100 litros de nafta súper.',
-                    exclusiones: 'No aplica para temporada alta ni fines de semana largo.',
-                    documentacion: 'Documentación que acredite 30 años de afiliación, carnet de afiliado y último recibo de sueldo.'
-                }
-            ]
-        },
-        familia: {
-            titulo: 'Familia',
-            icono: 'fa-users',
-            color: '#ec4899',
-            items: [
-                {
-                    titulo: 'Nacimiento',
-                    porcentaje: null,
-                    montoMax: 'Leche por 12 meses + ajuar',
-                    descripcion: 'Entrega de 2 unidades por 800grs de leche por 12 meses (1 año). Por única vez, 1 ajuar completo.',
-                    exclusiones: null,
-                    documentacion: 'Copia partida de nacimiento o DNI del bebé, carnet de afiliado y último recibo de sueldo.'
-                },
-                {
-                    titulo: 'Kits Escolares',
-                    porcentaje: null,
-                    montoMax: null,
-                    descripcion: 'Útiles escolares y guardapolvos para estudiantes primarios. Útiles escolares para estudiantes secundarios. Una vez al año.',
-                    exclusiones: null,
-                    documentacion: 'Documentación correspondiente según solicitud.'
-                },
-                {
-                    titulo: 'Campings',
-                    porcentaje: null,
-                    montoMax: null,
-                    descripcion: 'En temporada estival, uso de campings e instalaciones contratadas.',
-                    exclusiones: null,
-                    documentacion: 'Consultar en sedes de AOMA San Juan con documentación correspondiente.'
-                },
-                {
-                    titulo: 'Becas Educativas',
-                    porcentaje: null,
-                    montoMax: null,
-                    descripcion: 'Para estudiantes de niveles terciarios y universitarios avalados por el Ministerio de Educación.',
-                    exclusiones: null,
-                    documentacion: 'Documentación correspondiente según solicitud.'
-                }
-            ]
-        },
-        salones: {
-            titulo: 'Salones de Eventos Familiares',
-            icono: 'fa-glass-cheers',
-            color: '#8b5cf6',
-            items: [
-                {
-                    titulo: 'Salón Albardón',
-                    porcentaje: null,
-                    montoMax: null,
-                    descripcion: 'Salón Sede AOMA ubicado en Calle La Laja s/n, Las Lomitas (Albardón).',
-                    exclusiones: 'Beneficio exclusivo para afiliado titular y grupo familiar primario.',
-                    documentacion: 'Reservas y condiciones: consultar en AOMA Albardón o AOMA Capital.'
-                },
-                {
-                    titulo: 'Salón Los Berros',
-                    porcentaje: null,
-                    montoMax: null,
-                    descripcion: 'Salón Sede AOMA ubicado en callejón Díaz s/n.',
-                    exclusiones: 'Beneficio exclusivo para afiliado titular y grupo familiar primario.',
-                    documentacion: 'Reservas y condiciones: consultar en AOMA Los Berros.'
-                }
-            ]
-        },
-        hoteles_tarifa: {
-            titulo: 'Hoteles AOMA-OSAM (Tarifa Promocional)',
-            icono: 'fa-bed',
-            color: '#06b6d4',
-            items: [
-                {
-                    titulo: 'Tarifa Promocional todo el año',
-                    porcentaje: null,
-                    montoMax: null,
-                    descripcion: 'Durante todo el año, tarifa promocional para los hoteles ubicados en: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo, Villa Gesell, Tierra Mora.',
-                    exclusiones: 'Aplica para titular y grupo familiar directo.',
-                    documentacion: 'Reservas en sedes de AOMA Capital, Albardón, Jáchal.'
-                }
-            ]
-        },
-        subsidios: {
-            titulo: 'Subsidios',
-            icono: 'fa-hand-holding-heart',
-            color: '#ef4444',
-            items: [
-                {
-                    titulo: 'Fallecimiento - Afiliado AOMA San Juan',
-                    porcentaje: null,
-                    montoMax: '$100.000',
-                    descripcion: 'Subsidio por fallecimiento del afiliado y grupo familiar primario.',
-                    exclusiones: null,
-                    documentacion: 'Documentación correspondiente según solicitud.'
-                },
-                {
-                    titulo: 'Fallecimiento - Afiliado OSAM',
-                    porcentaje: null,
-                    montoMax: 'Consultar',
-                    descripcion: 'Subsidio por fallecimiento para afiliado y grupo familiar primario.',
-                    exclusiones: null,
-                    documentacion: 'Consultar en oficinas habilitadas.'
                 }
             ]
         }
@@ -403,32 +256,7 @@ const DATA = {
     faqs: {
         general: [
             { pregunta: '¿Cómo me inscribo a una capacitación?', respuesta: 'Ingresá a la sección "Capacitaciones", seleccioná el curso deseado y hacé clic en "Inscribirme".' },
-            { pregunta: '¿Los cursos tienen certificación?', respuesta: 'Sí, al completar la capacitación y aprobar la evaluación, recibirás un certificado digital con validez gremial.' },
-            { pregunta: '¿Cómo recupero mi contraseña?', respuesta: 'Contactá al administrador al email campus@aomasanjuan.org.ar indicando tu DNI y legajo.' },
-            { pregunta: '¿Qué beneficios tengo como afiliado?', respuesta: 'Como afiliado tenés acceso a: reintegros de medicamentos (30%), anteojos (40%), estadías en hoteles AOMA, kits escolares, becas educativas, subsidio por fallecimiento y mucho más. Consultá la sección "Beneficios".' },
-            { pregunta: '¿Qué beneficios tengo como delegado?', respuesta: 'Como delegado tenés acceso a: capacitaciones gratuitas, escalas salariales actualizadas, asesoramiento legal, horas gremiales y representación ante la empresa.' }
-        ],
-        beneficios: [
-            { pregunta: '¿Qué requisitos necesito para solicitar un reintegro?', respuesta: 'Generalmente necesitás: ticket o factura avalada por ARCA (ex AFIP), carnet de afiliado, último recibo de sueldo, y documentación específica del beneficio (receta médica, partida de nacimiento, etc.).' },
-            { pregunta: '¿Qué es un ticket o factura avalada por ARCA?', respuesta: 'Es un comprobante digital o físico electrónico (factura A, B, C o tickets factura) autorizado con CAE/CAI. Se emite vía web (Comprobantes en Línea), el facturador para monotributistas, o controladores fiscales.' },
-            { pregunta: '¿A qué hoteles de AOMA puedo acceder?', respuesta: 'AOMA tiene hoteles en: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo, Villa Gesell y Tierra Mora. Todos con tarifa promocional todo el año para afiliados.' },
-            { pregunta: '¿El beneficio de hoteles aplica en temporada alta?', respuesta: 'Los beneficios de estadía por matrimonio y por 30 años de afiliado NO aplican para temporada alta ni fines de semana largo. Pero las tarifas promocionales están disponibles todo el año.' },
-            { pregunta: '¿Dónde puedo solicitar los beneficios?', respuesta: 'Dirigite o llamá a AOMA Seccional San Juan de lunes a viernes de 08:00 a 17:00 hs. Dirección: Entre Ríos 468 (S) - San Juan. Tel: 0264-4220191. Email: accionsocialyturismo@aomaosamsanjuan.com.ar' }
-        ],
-        'cal-piedra': [
-            { pregunta: '¿Qué diferencia salarial hay entre cal y piedra?', respuesta: 'Ambas actividades comparten el CCT 36/89 con escalas similares. Ver tabla en Escalas.' },
-            { pregunta: '¿Qué permisos necesito para operar explosivos en canteras?', respuesta: 'Se requiere habilitación de la Policía de Minería, curso específico y renovación anual.' }
-        ],
-        cemento: [
-            { pregunta: '¿Cuál es el adicional por zona en cemento?', respuesta: 'El adicional por zona varía según el establecimiento. Consultá la escala vigente en "Escalas salariales".' },
-            { pregunta: '¿Cómo se computan las horas extras?', respuesta: 'Las horas extras se pagan con recargo del 50% días hábiles y 100% sábados, domingos y feriados.' }
-        ],
-        molienda: [
-            { pregunta: '¿Cuáles son los riesgos de la molienda húmeda?', respuesta: 'Riesgo de atrapamiento, exposición a ruido y contacto con reactivos. Uso obligatorio de EPP específico.' }
-        ],
-        'mineria-extractiva': [
-            { pregunta: '¿Cuál es el régimen de turnos en mina?', respuesta: 'Generalmente 4x4 (4 días de trabajo, 4 de descanso) en campamento, o 12x12 según el establecimiento.' },
-            { pregunta: '¿Qué controles médicos son obligatorios?', respuesta: 'Examen preocupacional, audiometrías, espirometrías y controles anuales obligatorios por ley.' }
+            { pregunta: '¿Los cursos tienen certificación?', respuesta: 'Sí, al completar la capacitación y aprobar la evaluación, recibirás un certificado digital con validez gremial.' }
         ]
     },
 
@@ -446,22 +274,11 @@ const DATA = {
             autor: 'Secretaría Gremial',
             fecha: '2024-01-15',
             destacado: true
-        },
-        {
-            id: 2,
-            titulo: 'Nuevas capacitaciones disponibles',
-            categoria: 'Capacitaciones',
-            resumen: 'Se incorporaron nuevos cursos al campus virtual.',
-            contenido: 'Contenido completo...',
-            imagen: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80',
-            autor: 'Secretaría de Formación',
-            fecha: '2024-02-20',
-            destacado: false
         }
     ],
 
     // ==========================================
-    // 9. AUTORIDADES DEL SINDICATO (CON FUNCIONES)
+    // 9. AUTORIDADES DEL SINDICATO
     // ==========================================
     autoridades: {
         nacional: {
@@ -500,18 +317,14 @@ const DATA = {
                 titulares: ['Cristian Eugenio Aguilar', 'Enrique Verdenelli', 'César Carlos Costello'],
                 suplentes: ['Marcelo David Cervantes', 'María Silvana Aurbone', 'Lucas Muñiz']
             },
-            // FUNCIONES DE CADA CARGO (según imágenes)
             funciones: {
-                'Secretario General': 'Representar a la organización. Firmar las actas resoluciones del Secretariado, Consejo Directivo y Congresos. Firmar cheques conjuntamente con el Tesorero. Adoptar resoluciones urgentes al referéndum del Consejo Directivo. Firmar correspondencia con el secretario del área correspondiente. Presidir las reuniones del Consejo Directivo y del Secretariado. Autorizar con el Tesorero las cuentas de gastos y demás documentos de la tesorería.',
+                'Secretario General': 'Representar a la organización. Firmar actas, cheques, presidir reuniones.',
                 'Secretario Adjunto': 'Colaborar con el Secretario General. Reemplazarlo en caso de ausencia.',
-                'Secretario Administrativo': 'Tiene a su cargo la confección de las actas. Controla, organiza y ordena los archivos de la Institución. Redacta la memoria a elevarse al Congreso. Controla al personal empleado y aconseja medidas. Gira la correspondencia a las distintas Secretarías. Resuelve y atiende todas las cuestiones administrativas.',
-                'Tesorero': 'Controlar el ingreso y egreso de los fondos sociales y el activo patrimonial. Organiza y perfecciona la contabilidad. Presenta balances, los firma y los somete a consideración del Consejo Directivo. Facilita la tarea a la Comisión Revisora de Cuentas. Efectuar en institución bancaria, a nombre de la Asociación y a la orden conjunta del Secretario General, del Adjunto y del Tesorero los depósitos ingresados.',
-                'Secretario Gremial e Interior': 'Coordinar la acción entre el Consejo Directivo y las Seccionales. Dar cumplimiento a las resoluciones de los Congresos, Consejo Directivo y Secretariado orientando la acción gremial. Llevar las afiliaciones, control de altas y bajas, confección de padrones. Llevar estadísticas de despidos, suspensiones, desocupación, huelgas. Controlar las funciones de las Seccionales. Preparar y confeccionar anteproyecto de CCT.',
-                'Secretario Social y Turismo': 'Defender y representar los intereses de los afiliados ante el Estado, la autoridad del Trabajo y organismos de Previsión Social. Organizar y poner en funcionamiento las obras de Asistencia Social. Proyectar y controlar los servicios que se presten. Informar semanalmente al Secretariado sobre la prestación de los servicios de la Asistencia Social.',
-                'Secretario Prensa y Cultura': 'Gestionar la comunicación institucional, prensa y difusión de actividades culturales y gremiales.',
-                'Secretario de Higiene, Seguridad y Medicina del Trabajo': 'Relevamiento y diagnóstico de los trabajadores en higiene, seguridad y medicina del trabajo. Asesoramiento sobre la materia. Organizar y dirigir cursos, seminarios y jornadas sobre la materia. Representar ante los organismos públicos y privados sobre higiene, seguridad y medicina del trabajo. Promover las mejoras del medio ambiente de trabajo. Proponer asesores en la materia al Consejo Directivo y Secretariado. Elevar los proyectos al Secretario Gremial a implementarse en los futuros CCT.',
-                'Vocales Titulares': 'Desempeñan las funciones que el Consejo Directivo les confía.',
-                'Vocales Suplentes': 'Forman parte del Consejo Directivo solo en caso de renuncia o fallecimiento de los titulares.'
+                'Secretario Administrativo': 'Confección de actas, archivos, redacción de memoria, control de personal.',
+                'Tesorero': 'Controlar ingresos y egresos, contabilidad, balances, depósitos bancarios.',
+                'Secretario Gremial e Interior': 'Coordinar acción entre Consejo Directivo y Seccionales, afiliaciones, estadísticas.',
+                'Secretario Social y Turismo': 'Organizar obras de asistencia social, turismo, representación ante organismos.',
+                'Secretario de Higiene, Seguridad y Medicina del Trabajo': 'Relevamiento, asesoramiento, cursos, representación en seguridad laboral.'
             }
         },
         provincial: {
@@ -563,15 +376,14 @@ const DATA = {
                 titulares: ['Alfredo Daniel Morales', 'Joaquín Alejandro Muñoz', 'Diego Orlando Varela'],
                 suplentes: ['Andrés Raúl Alcayaga', 'Jorge Fabián Agudo', 'Francisco Fabián Ibaceta']
             },
-            // Funciones para los cargos provinciales (similares a las nacionales, pero adaptadas al ámbito provincial)
             funciones: {
-                'Secretario General': 'Representar a la organización a nivel provincial. Firmar actas y resoluciones del ámbito provincial. Coordinar con el Consejo Directivo Nacional.',
+                'Secretario General': 'Representar a la organización a nivel provincial. Coordinar con el Consejo Directivo Nacional.',
                 'Secretario Adjunto': 'Colaborar con el Secretario General provincial. Reemplazarlo en caso de ausencia.',
                 'Secretario Administrativo': 'Gestionar la administración de la seccional, archivos, actas, personal y correspondencia.',
                 'Tesorero': 'Controlar los fondos de la seccional, contabilidad, balances y depósitos bancarios.',
-                'Secretario Gremial e Interior': 'Coordinar la acción gremial entre la seccional y las bases, afiliaciones, estadísticas y anteproyectos de convenios.',
+                'Secretario Gremial e Interior': 'Coordinar la acción gremial entre la seccional y las bases, afiliaciones, estadísticas.',
                 'Secretario Social y Turismo': 'Organizar y gestionar los beneficios sociales, turismo y asistencia social para los afiliados de la provincia.',
-                'Secretario de Higiene, Seguridad y Medicina del Trabajo': 'Velar por la higiene, seguridad y salud de los trabajadores en el ámbito provincial, cursos y representación ante organismos locales.'
+                'Secretario de Higiene, Seguridad y Medicina del Trabajo': 'Velar por la higiene, seguridad y salud de los trabajadores en el ámbito provincial.'
             }
         }
     },
@@ -596,8 +408,7 @@ const DATA = {
             name: 'Juan Carlos Delegado',
             email: 'delegado@aoma.org.ar',
             role: 'delegado',
-            active: true,
-            department: 'cemento'
+            active: true
         }
     ],
 
@@ -606,35 +417,10 @@ const DATA = {
     // ==========================================
     chatResponses: {
         'hola|buenas|buenos días': '¡Hola! 👋 Soy el asistente virtual de AOMA San Juan. ¿En qué puedo ayudarte hoy?',
-        'gracias|thanks': '¡De nada! 😊 Estoy aquí para lo que necesites.',
-        'adiós|chau|bye': '¡Hasta luego! 👋 Que tengas un excelente día.',
-        'escala|salarial|sueldo': '💰 Podés consultar las escalas salariales en el menú → "Convenios CCT" → Elegí tu actividad. Están separadas por actividad: Minería Extractiva, Cemento, Cal y Piedra, y Molienda.',
-        'convenio|ctt': '📋 Tenemos 8 convenios colectivos organizados por actividad y por empresa. Consultalos en "Convenios CCT".',
-        'ley|legislación|legislacion': '⚖️ Tenemos 5 leyes laborales cargadas: LCT 20.744, Ley 19.587, Ley 24.557, Ley 24.013 y Ley 23.551. Consultalas en "Legislación".',
-        'curso|capacitacion|capacitación': '🎓 Tenemos cursos disponibles. Ver en "Capacitaciones".',
-        'beneficio|reintegro|medicamento|hotel|subsidio': '🎁 AOMA San Juan ofrece múltiples beneficios: reintegros de medicamentos (30%), anteojos (40%), estadías en hoteles, kits escolares, becas y subsidios. Consultalos en "Beneficios".',
-        'hotel|hoteles|estadía|vacaciones': '🏨 AOMA tiene hoteles en: Villa Carlos Paz, Mar del Plata, Buenos Aires, Villa La Angostura, Salta, Merlo, Villa Gesell y Tierra Mora. Consultá los beneficios en la sección "Beneficios".',
-        'contraseña|clave|password': '🔑 Para recuperar tu contraseña, contactá al administrador al email campus@aomasanjuan.org.ar indicando tu DNI y legajo.',
-        'horario|atiende|dirección': '🕐 La Seccional San Juan atiende de lunes a viernes de 8:00 a 17:00 hs. Dirección: Entre Ríos 468 (S), San Juan Capital. Tel: (0264) 422-0191. Email: accionsocialyturismo@aomaosamsanjuan.com.ar',
-        'veladero|gualcamayo|vicuña': '🏭 Estas son las empresas de minería extractiva en San Juan. Cada una tiene su convenio colectivo específico. Consultalos en "Convenios CCT" → "Convenios por Empresa".',
         'default': 'No encontré información específica sobre eso. Te recomiendo revisar las secciones del menú o contactar a la Seccional al (0264) 422-0191.'
     }
 };
-// ==========================================
-// 12. SISTEMA DE USUARIOS (extendido)
-// ==========================================
-// Usuarios pendientes de aprobación (se guardan en localStorage)
-// Esta estructura se usa como base, pero los datos reales se leen de localStorage
-usuariosPendientes: [],
 
-// Preguntas de seguridad predefinidas
-preguntasSeguridad: [
-    '¿Cuál es el nombre de tu madre?',
-    '¿Cuál es tu ciudad natal?',
-    '¿Cuál es el nombre de tu primera mascota?',
-    '¿Cuál es tu color favorito?',
-    '¿Cuál es el apellido de soltera de tu madre?'
-]
 // ============================================
 // FUNCIONES AUXILIARES
 // ============================================
@@ -660,10 +446,4 @@ if (typeof window !== 'undefined') {
     window.DATA = DATA;
 }
 
-console.log('✅ Base de datos AOMA cargada');
-console.log('📋 ' + Object.keys(DATA.actividades).length + ' actividades');
-console.log('🏢 ' + Object.keys(DATA.empresas).length + ' empresas');
-console.log('📜 ' + DATA.convenios.length + ' convenios colectivos');
-console.log('🎁 ' + Object.keys(DATA.beneficios).length + ' categorías de beneficios');
-console.log('🎓 ' + DATA.cursos.length + ' cursos cargados');
-console.log('👥 Autoridades nacionales y provinciales cargadas');
+console.log('✅ Base de datos AOMA cargada correctamente');
