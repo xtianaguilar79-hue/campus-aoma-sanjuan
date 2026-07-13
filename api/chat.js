@@ -1,5 +1,5 @@
 // ============================================
-// API PROXY PARA GROQ (Vercel Serverless Function)
+// API PROXY PARA DEEPSEEK (Vercel Serverless Function)
 // ============================================
 
 export default async function handler(req, res) {
@@ -9,36 +9,36 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Obtenemos los mensajes del cuerpo de la petición
         const { messages } = req.body;
 
         if (!messages) {
             return res.status(400).json({ error: 'Faltan los mensajes' });
         }
 
-        // Llamamos a la API de Groq con la clave secreta (guardada en Vercel)
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        // Llamamos a la API de DeepSeek
+        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
+                'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`
             },
             body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
+                model: 'deepseek-chat', // o 'deepseek-reasoner' para razonamiento avanzado
                 messages: messages,
                 temperature: 0.3,
-                max_tokens: 500
+                max_tokens: 600,
+                stream: false
             })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            console.error('Error de Groq:', data);
-            return res.status(response.status).json({ error: data.error?.message || 'Error en Groq' });
+            console.error('Error de DeepSeek:', data);
+            return res.status(response.status).json({ error: data.error?.message || 'Error en DeepSeek' });
         }
 
-        // Devolvemos la respuesta al frontend
+        // Devolvemos la respuesta al frontend (mismo formato que Groq)
         return res.status(200).json(data);
 
     } catch (error) {
