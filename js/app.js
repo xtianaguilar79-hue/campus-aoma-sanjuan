@@ -1,6 +1,6 @@
 // ============================================
 // APLICACIÓN PRINCIPAL - CAMPUS VIRTUAL AOMA
-// VERSIÓN DEFINITIVA (TODAS LAS FUNCIONES)
+// VERSIÓN DEFINITIVA (CON TOGGLE PASSWORD)
 // ============================================
 
 if (typeof DATA === 'undefined') {
@@ -84,7 +84,7 @@ function forzarAdmin() {
 }
 
 // ============================================
-// ASEGURAR QUE HAYA UN ADMINISTRADOR
+// ASEGURAR ADMINISTRADOR
 // ============================================
 function asegurarAdministrador() {
     let activos = obtenerUsuariosActivos();
@@ -138,7 +138,23 @@ function asegurarAdministrador() {
 }
 
 // ============================================
-// REGISTRO (CORREGIDO)
+// TOGGLE PASSWORD (ver/ocultar contraseña)
+// ============================================
+function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (!input || !icon) return;
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+// ============================================
+// REGISTRO
 // ============================================
 function handleRegistro(e) {
     e.preventDefault();
@@ -1090,3 +1106,75 @@ function addChatMessage(type, text) {
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
 }
+
+// ============================================
+// INICIALIZACIÓN (llamada desde DOMContentLoaded)
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 AOMA Campus: Iniciando...');
+
+    // Asegurar administrador
+    asegurarAdministrador();
+
+    // Evento de registro
+    const formReg = document.getElementById('formRegistro');
+    if (formReg) {
+        formReg.addEventListener('submit', handleRegistro);
+        console.log('✅ Evento de registro asignado.');
+    }
+
+    // Evento de login
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const usuariosActivos = obtenerUsuariosActivos();
+            const user = usuariosActivos.find(u =>
+                (u.username === username || u.email === username) &&
+                u.password === password &&
+                u.active === true
+            );
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('aoma_session', JSON.stringify(user));
+                modalBienvenidaMostrado = false;
+                showApp();
+            } else {
+                alert('❌ Usuario o contraseña incorrectos, o tu cuenta no ha sido aprobada aún.');
+            }
+        });
+    }
+
+    // Recuperar sesión
+    const savedSession = localStorage.getItem('aoma_session');
+    if (savedSession) {
+        try {
+            currentUser = JSON.parse(savedSession);
+            const activos = obtenerUsuariosActivos();
+            if (!activos.some(u => u.id === currentUser.id && u.active === true)) {
+                localStorage.removeItem('aoma_session');
+                currentUser = null;
+                showLogin();
+            } else {
+                showApp();
+            }
+        } catch (e) {
+            console.error('Error al parsear sesión:', e);
+            localStorage.removeItem('aoma_session');
+            showLogin();
+        }
+    } else {
+        showLogin();
+    }
+
+    setupEvents();
+    const savedTheme = localStorage.getItem('aoma_theme');
+    if (savedTheme === 'dark') toggleTheme();
+
+    const formRec = document.getElementById('formRecuperacion');
+    if (formRec) {
+        formRec.addEventListener('submit', handleRecuperacion);
+    }
+});
