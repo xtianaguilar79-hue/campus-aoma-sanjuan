@@ -69,6 +69,21 @@ document.addEventListener('DOMContentLoaded', () => {
         setupEvents();
         const savedTheme = localStorage.getItem('aoma_theme');
         if (savedTheme === 'dark') toggleTheme();
+
+        // Asignar evento de registro (UNA SOLA VEZ)
+        const formReg = document.getElementById('formRegistro');
+        if (formReg) {
+            formReg.addEventListener('submit', handleRegistro);
+            console.log('✅ Evento de registro asignado correctamente.');
+        } else {
+            console.warn('⚠️ Formulario de registro no encontrado al cargar.');
+        }
+
+        // Asignar evento de recuperación (si existe)
+        const formRec = document.getElementById('formRecuperacion');
+        if (formRec) {
+            formRec.addEventListener('submit', handleRecuperacion);
+        }
     } catch (e) {
         console.error('Error en inicialización:', e);
         showLogin();
@@ -189,13 +204,6 @@ function cerrarModalBienvenida() {
 function mostrarRegistro() {
     const modal = document.getElementById('modalRegistro');
     if (modal) modal.style.display = 'flex';
-    // Asignar evento al formulario de registro cada vez que se abre el modal
-    const form = document.getElementById('formRegistro');
-    if (form) {
-        // Eliminar eventos previos para evitar duplicados
-        form.removeEventListener('submit', handleRegistro);
-        form.addEventListener('submit', handleRegistro);
-    }
 }
 function cerrarModalRegistro() {
     const modal = document.getElementById('modalRegistro');
@@ -274,6 +282,42 @@ function cerrarModalRecuperacion() {
     if (modal) modal.style.display = 'none';
 }
 
+function handleRecuperacion(e) {
+    e.preventDefault();
+    const identifier = document.getElementById('recUser').value.trim();
+    const btn = document.getElementById('recBtn');
+    if (!identifier) { alert('Ingresá tu usuario o email.'); return; }
+    const activos = obtenerUsuariosActivos();
+    const usuario = activos.find(u => u.username === identifier || u.email === identifier);
+    if (!usuario) { alert('No se encontró ningún usuario con esos datos.'); return; }
+    if (!usuario.preguntaSeguridad) { alert('Este usuario no tiene configurada una pregunta de seguridad. Contactá al administrador.'); return; }
+    const preguntaContainer = document.getElementById('recPreguntaContainer');
+    const nuevaPassContainer = document.getElementById('recNuevaPassContainer');
+    if (btn.textContent === 'Buscar usuario') {
+        document.getElementById('recPreguntaLabel').textContent = usuario.preguntaSeguridad;
+        preguntaContainer.style.display = 'block';
+        btn.textContent = 'Verificar respuesta';
+        btn.dataset.userId = usuario.id;
+    } else if (btn.textContent === 'Verificar respuesta') {
+        const respuesta = document.getElementById('recRespuesta').value.trim();
+        if (respuesta.toLowerCase() !== usuario.respuestaSeguridad.toLowerCase()) { alert('Respuesta incorrecta.'); return; }
+        nuevaPassContainer.style.display = 'block';
+        btn.textContent = 'Cambiar contraseña';
+        btn.dataset.step = 'reset';
+        document.getElementById('recRespuesta').setAttribute('readonly', true);
+    } else if (btn.textContent === 'Cambiar contraseña') {
+        const nuevaPass = document.getElementById('recNuevaPass').value;
+        if (!nuevaPass || nuevaPass.length < 6) { alert('La nueva contraseña debe tener al menos 6 caracteres.'); return; }
+        const userId = parseInt(btn.dataset.userId);
+        const userIndex = activos.findIndex(u => u.id === userId);
+        if (userIndex === -1) { alert('Usuario no encontrado.'); return; }
+        activos[userIndex].password = nuevaPass;
+        guardarUsuariosActivos(activos);
+        alert('Contraseña actualizada correctamente. Iniciá sesión con tu nueva contraseña.');
+        cerrarModalRecuperacion();
+    }
+}
+
 function obtenerUsuariosActivos() {
     try {
         const almacenados = JSON.parse(localStorage.getItem('aoma_usuarios_activos') || '[]');
@@ -298,51 +342,6 @@ function guardarUsuariosActivos(activos) {
     const paraGuardar = activos.filter(u => !baseIds.includes(u.id));
     localStorage.setItem('aoma_usuarios_activos', JSON.stringify(paraGuardar));
 }
-
-// ============================================
-// MANEJO DE RECUPERACIÓN
-// ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    // El evento de registro se asigna en mostrarRegistro()
-    const formRec = document.getElementById('formRecuperacion');
-    if (formRec) {
-        formRec.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const identifier = document.getElementById('recUser').value.trim();
-            const btn = document.getElementById('recBtn');
-            if (!identifier) { alert('Ingresá tu usuario o email.'); return; }
-            const activos = obtenerUsuariosActivos();
-            const usuario = activos.find(u => u.username === identifier || u.email === identifier);
-            if (!usuario) { alert('No se encontró ningún usuario con esos datos.'); return; }
-            if (!usuario.preguntaSeguridad) { alert('Este usuario no tiene configurada una pregunta de seguridad. Contactá al administrador.'); return; }
-            const preguntaContainer = document.getElementById('recPreguntaContainer');
-            const nuevaPassContainer = document.getElementById('recNuevaPassContainer');
-            if (btn.textContent === 'Buscar usuario') {
-                document.getElementById('recPreguntaLabel').textContent = usuario.preguntaSeguridad;
-                preguntaContainer.style.display = 'block';
-                btn.textContent = 'Verificar respuesta';
-                btn.dataset.userId = usuario.id;
-            } else if (btn.textContent === 'Verificar respuesta') {
-                const respuesta = document.getElementById('recRespuesta').value.trim();
-                if (respuesta.toLowerCase() !== usuario.respuestaSeguridad.toLowerCase()) { alert('Respuesta incorrecta.'); return; }
-                nuevaPassContainer.style.display = 'block';
-                btn.textContent = 'Cambiar contraseña';
-                btn.dataset.step = 'reset';
-                document.getElementById('recRespuesta').setAttribute('readonly', true);
-            } else if (btn.textContent === 'Cambiar contraseña') {
-                const nuevaPass = document.getElementById('recNuevaPass').value;
-                if (!nuevaPass || nuevaPass.length < 6) { alert('La nueva contraseña debe tener al menos 6 caracteres.'); return; }
-                const userId = parseInt(btn.dataset.userId);
-                const userIndex = activos.findIndex(u => u.id === userId);
-                if (userIndex === -1) { alert('Usuario no encontrado.'); return; }
-                activos[userIndex].password = nuevaPass;
-                guardarUsuariosActivos(activos);
-                alert('Contraseña actualizada correctamente. Iniciá sesión con tu nueva contraseña.');
-                cerrarModalRecuperacion();
-            }
-        });
-    }
-});
 
 function mostrarPanelUsuarios() {
     if (currentUser.role !== 'admin') { alert('Solo el administrador puede acceder a este panel.'); return; }
