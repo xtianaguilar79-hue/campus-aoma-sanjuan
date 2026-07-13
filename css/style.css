@@ -6,12 +6,12 @@
 
 :root {
     /* Colores institucionales - NEGRO Y NARANJA */
-    --primary: #1a1a1a;          /* Negro institucional */
-    --primary-dark: #000000;     /* Negro puro */
-    --primary-light: #333333;    /* Gris oscuro */
-    --accent: #f47b20;           /* Naranja AOMA */
-    --accent-dark: #d96b1a;      /* Naranja oscuro */
-    --accent-light: #f69b4c;     /* Naranja claro */
+    --primary: #1a1a1a;
+    --primary-dark: #000000;
+    --primary-light: #333333;
+    --accent: #f47b20;
+    --accent-dark: #d96b1a;
+    --accent-light: #f69b4c;
     
     --white: #ffffff;
     --gray-50: #f9fafb;
@@ -47,6 +47,7 @@
     --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
     --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
     --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+    --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.25);
     
     --gradient-primary: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
     --gradient-accent: linear-gradient(135deg, #f47b20 0%, #f69b4c 100%);
@@ -67,11 +68,9 @@
     --bg-card: #1e293b;
     --bg-header: #1e293b;
     --bg-input: #334155;
-    
     --text-primary: #f1f5f9;
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
-    
     --border: #334155;
     --border-light: #1e293b;
 }
@@ -2632,11 +2631,11 @@ body {
     .modulo-contenido { padding: 0; }
     .cita-destacada { padding: 1rem 1.25rem; font-size: 1rem; }
     .pregunta { padding: 0.75rem 1rem; }
+}
 
 /* ============================================
    ESTILOS PARA ORGANIGRAMA (El Gremio)
    ============================================ */
-
 .organigrama-section {
     padding: 1.5rem 1rem;
 }
@@ -2721,7 +2720,6 @@ body {
     color: var(--text-primary);
 }
 
-/* Botón para ver función */
 .btn-funcion {
     background: none;
     border: none;
@@ -2739,7 +2737,6 @@ body {
     color: white;
 }
 
-/* Detalle de función - oculto por defecto, se muestra con clase 'visible' */
 .funcion-detalle {
     display: none;
     padding: 0.5rem;
@@ -2755,7 +2752,6 @@ body {
     display: block;
 }
 
-/* Ajuste de la imagen del chat */
 .chat-avatar img {
     border-radius: 50%;
     object-fit: cover;
@@ -2783,6 +2779,9 @@ body {
     }
     .organigrama-body {
         padding: 1rem;
+    }
+}
+
 /* ============================================
    MODALES (Bienvenida, Registro, Recuperación, Panel Admin)
    ============================================ */
@@ -2856,10 +2855,62 @@ body {
     border-radius: 0 0 var(--radius-xl) var(--radius-xl);
 }
 
-/* Modal de bienvenida específico */
-.modal-autoridad {
-    text-align: center;
-    margin-bottom: 1.5rem;
+/* Modal de Bienvenida (moderno) */
+.modal-bienvenida {
+    max-width: 550px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+}
+
+.modal-header-bienvenida {
+    background: var(--gradient-accent);
+    border-bottom: none;
+    padding: 1.5rem 2rem;
+    position: relative;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.modal-header-bienvenida .modal-header-icon {
+    background: rgba(255,255,255,0.2);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.modal-header-bienvenida h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    flex: 1;
+}
+
+.modal-header-bienvenida .modal-close {
+    color: white;
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+
+.modal-header-bienvenida .modal-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+.modal-body-bienvenida {
+    padding: 2rem 2rem 1.5rem;
+    background: var(--bg-card);
+}
+
+.modal-autoridad-logo {
+    width: 80px;
+    margin-bottom: 1rem;
 }
 
 .modal-autoridad h3 {
@@ -2875,15 +2926,38 @@ body {
 
 .modal-mensaje {
     background: var(--bg-input);
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     padding: 1.5rem;
     border-left: 4px solid var(--accent);
     line-height: 1.8;
+    margin-top: 1rem;
 }
 
 .modal-mensaje p {
     margin-bottom: 0.75rem;
     color: var(--text-secondary);
+}
+
+.modal-footer-bienvenida {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-light);
+    padding: 1rem 2rem 1.5rem;
+    text-align: center;
+}
+
+.modal-footer-bienvenida .btn {
+    font-size: 1rem;
+    padding: 0.75rem 2.5rem;
+    border-radius: var(--radius-full);
+    background: var(--gradient-accent);
+    color: white;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.modal-footer-bienvenida .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 /* Formularios dentro de modales */
@@ -2997,19 +3071,35 @@ body {
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* Responsive */
+/* Responsive modales */
 @media (max-width: 768px) {
     .modal-container {
         max-width: 100%;
         margin: 0.5rem;
     }
-    
+    .modal-bienvenida {
+        max-width: 95%;
+    }
+    .modal-header-bienvenida {
+        padding: 1rem 1.25rem;
+        flex-wrap: wrap;
+    }
+    .modal-header-bienvenida .modal-header-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.25rem;
+    }
+    .modal-header-bienvenida h2 {
+        font-size: 1rem;
+    }
+    .modal-body-bienvenida {
+        padding: 1.25rem;
+    }
     .usuario-item {
         flex-direction: column;
         align-items: stretch;
         gap: 0.5rem;
     }
-    
     .usuario-item .acciones {
         display: flex;
         gap: 0.5rem;
